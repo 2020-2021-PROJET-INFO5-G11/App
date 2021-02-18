@@ -1,7 +1,6 @@
 <template>
   <q-layout view="lHh LpR lFf" style="font-family: Lato"
-    ><!-- 
-    <q-header reveal elevated style="background-color: #1f509e;"> -->
+    >
 
     <q-header reveal elevated style="background-color: #1f509e">
       <q-toolbar v-if="!$q.platform.is.desktop" class="q-py-sm">
@@ -17,8 +16,7 @@
               <span
                 class="float-left q-mt-xs q-ml-md text-h6 text-weight-bold"
                 style="font-size: 17px"
-                >Quasar Shopping</span
-              >
+                >Osons Sortir</span>
             </q-toolbar-title>
           </div>
           <div class="col-sm-12 col-xs-12 q-mt-md">
@@ -42,9 +40,6 @@
             </div>
           </div>
         </div>
-        <!--          <q-btn @click="left = !left" flat round dense icon="menu" class="q-mr-sm" />-->
-
-        <!--<q-btn flat dense icon="shopping_cart" class="text-capitalize q-mr-md text-bold" label="Cart"/>-->
 </q-toolbar>
 
 
@@ -64,7 +59,7 @@
           <span
             class="float-left q-mt-xs text-h6 text-weight-bold"
             style="font-size: 17px"
-            >Quasar Shopping</span
+            >Osons Sortir</span
           >
           <q-input
             class="float-left q-ml-xl"
@@ -83,23 +78,52 @@
           <q-list style="min-width: 100px">
 
             <q-item clickable v-close-popup>
-              <q-item-section>Fleurs</q-item-section>
+              <q-item-section>Mes sorties</q-item-section>
             </q-item>
 
             <q-item clickable v-close-popup>
-              <q-item-section>Huiles</q-item-section>
+              <q-item-section>Mes groupes</q-item-section>
             </q-item>
           
           </q-list>
         </q-menu> 
       </q-btn>
 
-        <!--<q-btn flat dense icon="shopping_cart" class="text-capitalize q-mr-md text-bold" label="Cart"/>-->
-        <q-btn class="q-mr-md" dense round flat icon="shopping_cart">
-          <q-badge color="red" class="text-bold" floating transparent> 4 </q-badge>
-        </q-btn>
+
+
+      <q-btn color="primary" label="Menu Principal2">
+        <q-menu>
+          <q-list style="min-width: 100px">
+          
+            <q-item clickable v-close-popup>
+              <q-item-section>Mes sorties</q-item-section>
+            </q-item>
+
+          <q-item clickable v-close-popup>
+          <img
+          @click="$router.push('/')"
+          class="cursor-pointer"
+          src="https://cdn0.iconfinder.com/data/icons/pinpoint-interface/48/profile-512.png"
+          style="width: 3%"
+        />
+        </q-item>
+
+
+          
+          </q-list>
+        </q-menu> 
+          </q-btn>
+
+
+
         <q-btn flat round dense icon="settings" class="q-mr-md" />
-        <q-btn flat round dense icon="fas fa-sign-out-alt" to="/" />
+        <img
+          @click="$router.push('/')"
+          class="cursor-pointer"
+          src="https://cdn0.iconfinder.com/data/icons/pinpoint-interface/48/profile-512.png"
+          style="width: 3%"
+        />
+
       </q-toolbar>
 
 

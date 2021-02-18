@@ -9,13 +9,6 @@
     <q-img src="https://www.famous-cbd.fr/214-large_default/cbd-amnesia-haze.jpg"></q-img>
 
     <q-card-section class="q-pb-xs q-pt-md">
-      <!--<q-btn-->
-      <!--fab-->
-      <!--color="primary"-->
-      <!--icon="shopping_cart"-->
-      <!--class="absolute"-->
-      <!--style="top: 0; right: 12px; transform: translateY(-50%);"-->
-      <!--&gt;</q-btn>-->
 
       <div class="row no-wrap items-center">
         <div class="col text-subtitle2 ellipsis-2-lines text-grey-10">
@@ -41,12 +34,6 @@
           >20% off</span
         >
       </div>
-      <!--<div class="text-subtitle1">-->
-      <!--$・Italian, Cafe-->
-      <!--</div>-->
-      <!--<div class="text-caption text-grey">-->
-      <!--Small plates, salads & sandwiches in an intimate setting.-->
-      <!--</div>-->
     </q-card-section>
 
     <q-separator></q-separator>
