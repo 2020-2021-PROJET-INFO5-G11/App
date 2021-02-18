@@ -49,12 +49,9 @@
       
       <q-toolbar v-if="$q.platform.is.desktop" class="q-py-sm">
         <!--          <q-btn @click="left = !left" flat round dense icon="menu" class="q-mr-sm" />-->
-        <img
-          @click="$router.push('/home')"
-          class="cursor-pointer"
-          src="statics/images/logo.png"
-          style="width: 3%"
-        />
+        <q-btn color="primary" icon="home" @click="$router.push('/home')"></q-btn>
+       
+
         <q-toolbar-title>
           <span
             class="float-left q-mt-xs text-h6 text-weight-bold"
@@ -77,11 +74,11 @@
 
 
 
-      <q-btn color="primary" label="Menu" icon="home">
+      <q-btn color="primary" label="Menu" icon="menu">
         <q-menu>
           <q-list style="min-width: 100px">
 
-          <q-item clickable v-close-popup>
+          <q-item clickable v-close-popup @click="$router.push('/my_profile')">
             <q-item-section>Mon profil</q-item-section>
           </q-item>  
 
