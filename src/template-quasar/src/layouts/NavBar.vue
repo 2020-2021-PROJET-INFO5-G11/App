@@ -93,7 +93,7 @@
             <q-item-section>Mes groupes</q-item-section>
           </q-item>
 
-          <q-item clickable v-close-popup>
+          <q-item clickable v-close-popup @click="$router.push('/')">
             <q-item-section>Deconnexion</q-item-section>
           </q-item>
  
