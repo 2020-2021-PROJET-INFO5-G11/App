@@ -73,56 +73,41 @@
           />
         </q-toolbar-title>
 
-        <q-btn color="primary" label="Menu Principal">
+
+
+
+
+      <q-btn color="primary" label="Menu" icon="home">
         <q-menu>
           <q-list style="min-width: 100px">
-
-            <q-item clickable v-close-popup>
-              <q-item-section>Mes sorties</q-item-section>
-            </q-item>
-
-            <q-item clickable v-close-popup>
-              <q-item-section>Mes groupes</q-item-section>
-            </q-item>
-          
-          </q-list>
-        </q-menu> 
-      </q-btn>
-
-
-
-      <q-btn color="primary" label="Menu Principal2">
-        <q-menu>
-          <q-list style="min-width: 100px">
-          
-            <q-item clickable v-close-popup>
-              <q-item-section>Mes sorties</q-item-section>
-            </q-item>
 
           <q-item clickable v-close-popup>
-          <img
-          @click="$router.push('/')"
-          class="cursor-pointer"
-          src="https://cdn0.iconfinder.com/data/icons/pinpoint-interface/48/profile-512.png"
-          style="width: 3%"
-        />
-        </q-item>
+            <q-item-section>Mon profil</q-item-section>
+          </q-item>  
 
+          <q-item clickable v-close-popup>
+            <q-item-section>Mes sorties</q-item-section>
+          </q-item>
 
+          <q-item clickable v-close-popup>
+            <q-item-section>Mes groupes</q-item-section>
+          </q-item>
+
+          <q-item clickable v-close-popup>
+            <q-item-section>Deconnexion</q-item-section>
+          </q-item>
+ 
+          <q-btn flat round dense icon="settings" class="q-mr-md" />
           
           </q-list>
+          
+   
         </q-menu> 
           </q-btn>
 
 
 
-        <q-btn flat round dense icon="settings" class="q-mr-md" />
-        <img
-          @click="$router.push('/')"
-          class="cursor-pointer"
-          src="https://cdn0.iconfinder.com/data/icons/pinpoint-interface/48/profile-512.png"
-          style="width: 3%"
-        />
+
 
       </q-toolbar>
 
