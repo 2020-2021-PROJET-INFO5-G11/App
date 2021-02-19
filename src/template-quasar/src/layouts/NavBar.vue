@@ -27,7 +27,7 @@
               dense
               outlined
               v-model="text"
-              label="Search for products, brands and more"
+              label="Rechercher une sortie ou un utilisateur"
             />
           </div>
           <div class="col-sm-12 col-xs-12 q-mt-md">
@@ -66,7 +66,7 @@
             dense
             outlined
             v-model="text"
-            label="Search for products, brands and more"
+            label="Rechercher une sortie ou un utilisateur"
           />
         </q-toolbar-title>
 
