@@ -17,7 +17,7 @@
               <div>
                 <div v-if="!$q.platform.is.desktop" class="text-weight-bolder text-center q-mb-md text-primary text-h6">Quasar Shopping</div>
                 <q-form :style="$q.platform.is.desktop ? 'width:55%;margin: auto;' : 'margin: auto;'" class="q-gutter-md">
-                  <span class="text-subtitle1 text-weight-bold text-grey-7">Bienvenue !</span>
+                  <span class="text-subtitle1 text-weight-bold text-grey-7">Inscrivez-vous !</span>
                   <q-input
                     dense
                     outlined
@@ -34,12 +34,18 @@
                     label="Mot de passe"
                     lazy-rules
                   />
-                  <q-checkbox class="text-grey-8" dense v-model="remember_me" label="Se souvenir de moi"/>
+
+                  <q-input
+                    dense
+                    type="email"
+                    outlined
+                    v-model="email"
+                    label="adresse email"
+                    lazy-rules
+                  />
                   <div>
-                    <q-btn class="text-capitalize" size="sm" style="width:75px" dense label="Connexion" to="/home" type="button"
-                           color="primary"/>
                     <q-btn class="float-right text-blue-9 text-capitalize" size="sm" style="width:75px;border: 1px solid #36669e;" dense label="S'inscrire"
-                           type="button" @click="$router.push('/inscription')"/>
+                           type="button"/>
                   </div>
                 </q-form>
 

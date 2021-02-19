@@ -24,6 +24,11 @@ const routes = [
         path: "/changement_de_mot_de_passe",
         component: () => import("pages/changement_de_mot_de_passe.vue")
       },
+      {
+        name: "inscription",
+        path: "/inscription",
+        component: () => import("pages/inscription.vue")
+      },
     ]
   }
 ];
