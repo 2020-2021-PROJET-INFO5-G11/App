@@ -6,7 +6,7 @@
     @mouseover="class_val = 'my-card shadow-20'"
     @mouseleave="class_val = 'my-card shadow-'"
   >
-    <q-img src="https://www.famous-cbd.fr/214-large_default/cbd-amnesia-haze.jpg"></q-img>
+    <q-img src="http://www.maximumwall.com/wp-content/uploads/2015/07/fonds-ecran-paysage-de-reve-13.jpg"></q-img>
 
     <q-card-section class="q-pb-xs q-pt-md">
 

@@ -17,13 +17,13 @@
 </template>
 
 <script>
-import productCard from "../components/sortie";
+import sortie from "../components/sortie";
 import filters from "../components/filters";
 
 export default {
   name: "category.vue",
   components: {
-    productCard,
+    sortie,
     filters,
   },
   data() {
