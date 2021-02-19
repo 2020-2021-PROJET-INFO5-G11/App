@@ -9,7 +9,7 @@
       </div>
       <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
         <div class="no-row q-pa-md q-gutter-md" v-for="i in [1, 2, 3]" :key="i">
-          <productCard></productCard>
+          <sortie></sortie>
         </div>
       </div>
     </div>
@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import productCard from "../components/productCard";
+import productCard from "../components/sortie";
 import filters from "../components/filters";
 
 export default {
