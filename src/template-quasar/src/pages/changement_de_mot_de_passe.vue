@@ -16,7 +16,7 @@
                     outlined
                     v-model="password"
                     label="Mot de passe"
-                    lazy-rules
+                    lazy-rules 
                   />
                   <div>
                     <q-btn class="text-capitalize" size="sm" style="width:75px" dense label="Mettre à jour" to="/home" type="button"
