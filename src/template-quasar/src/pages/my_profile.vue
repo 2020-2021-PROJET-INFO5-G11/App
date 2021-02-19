@@ -5,15 +5,11 @@
         <q-card class="my-card" flat bordered>
           <q-card-section horizontal>
             <q-card-section class="q-pt-xs">
-              <div class="text-overline">US Region</div>
-              <div class="text-h5 q-mt-sm q-mb-xs">Mayur Patel</div>
-              <div class="text-caption text-grey">
-                Sales and Marketing Executive | Graduate and past committee | Keynote
-                speaker on Selling and Recruiting Topics
-              </div>
+      <!-- info sur le compte -->
             </q-card-section>
 
             <q-card-section class="col-5 flex flex-center">
+              
               <q-img
                 class="rounded-borders"
                 src="https://cdn.quasar.dev/img/boy-avatar.png"
@@ -23,11 +19,7 @@
 
           <q-separator />
 
-          <q-card-section>
-            Assessing clients needs and present suitable promoted products. Liaising with
-            and persuading targeted doctors to prescribe our products utilizing effective
-            sales skills.
-          </q-card-section>
+
         </q-card>
       </div>
       <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -45,7 +37,8 @@
               <q-input filled v-model="user.phone" label="Phone" lazy-rules />
 
               <div>
-                <q-btn label="Update" type="submit" color="primary" />
+                <q-btn label="Update" type="submit" color="primary" /> <!-- rajouter la fonction de mise a jour -->
+                <q-btn label="Changer le mot de passe" type="submit" color="primary" @click="$router.push('/changement_de_mot_de_passe')"/>
               </div>
             </q-form>
           </q-card-section>
@@ -56,7 +49,7 @@
 </template>
 
 <script>
-export default {
+export default { //rajouter ici les fonctions de récupération des données via la BD
   data() {
     return {
       user: {

@@ -10,11 +10,6 @@ const routes = [
         component: () => import("pages/home.vue")
       },
       {
-        name: "customer_management",
-        path: "/customer_management",
-        component: () => import("pages/customer_management.vue")
-      },
-      {
         name: "my_profile",
         path: "/my_profile",
         component: () => import("pages/my_profile.vue")
@@ -23,7 +18,12 @@ const routes = [
         name: "sorties",
         path: "/sorties",
         component: () => import("pages/sorties.vue")
-      }
+      },
+      {
+        name: "changement_de_mot_de_passe",
+        path: "/changement_de_mot_de_passe",
+        component: () => import("pages/changement_de_mot_de_passe.vue")
+      },
     ]
   }
 ];
