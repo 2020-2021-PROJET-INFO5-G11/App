@@ -1,75 +1,140 @@
 <template>
-  <q-card
-    @click="$router.push('/details')"
-    class="cursor-pointer"
-    :class="class_val"
-    @mouseover="class_val = 'my-card shadow-20'"
-    @mouseleave="class_val = 'my-card shadow-'"
-  >
-    <q-img src="http://www.maximumwall.com/wp-content/uploads/2015/07/fonds-ecran-paysage-de-reve-13.jpg"></q-img>
-
-    <q-card-section class="q-pb-xs q-pt-md">
-
-      <div class="row no-wrap items-center">
-        <div class="col text-subtitle2 ellipsis-2-lines text-grey-10">
-          Benling C200-BLK Smartwatch (Black Strap Free Size)
-        </div>
-        <div class="col-auto text-grey text-caption q-pt-md row no-wrap items-center">
-          <!--<q-icon name="place"></q-icon>-->
-          <!--250 ft-->
-        </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-10">
+        <h1>sorties</h1>
+        <hr><br><br>
+        <button type="button" class="btn btn-success btn-sm" v-b-modal.sortie-modal>Add Sortie</button>
+        <br><br>
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Type</th>
+              <th scope="col">Private?</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(sortie, index) in sorties" :key="index">
+              <td>{{ sortie.name }}</td>
+              <td>{{ sortie.type }}</td>
+              <td>
+                <span v-if="sortie.private">Yes</span>
+                <span v-else>No</span>
+              </td>
+              <td>
+                <div class="btn-group" role="group">
+                  <button type="button" class="btn btn-warning btn-sm">Update</button>
+                  <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-
-      <q-rating v-model="stars" color="orange" :max="5" readonly size="17px"></q-rating>
-    </q-card-section>
-
-    <q-card-section class="q-py-sm">
-      <div>
-        <div class="text-caption text-green-8 text-weight-bolder">Special Price</div>
-        <span class="text-h6">₹3,149</span
-        ><span class="q-ml-sm text-grey-6" style="text-decoration: line-through"
-          >₹3,699</span
-        >
-        <span class="q-ml-md text-caption text-green-8 text-weight-bolder q-mt-md"
-          >20% off</span
-        >
-      </div>
-    </q-card-section>
-
-    <q-separator></q-separator>
-
-    <q-card-actions>
-      <q-btn flat class="text-weight-bold text-capitalize" dense color="primary">
-        View details
-      </q-btn>
-    </q-card-actions>
-  </q-card>
+    </div>
+    <b-modal ref="addSortieModal"
+         id="sortie-modal"
+         title="Add a new sortie"
+         hide-footer>
+  <b-form @submit="onSubmit" @reset="onReset" class="w-100">
+  <b-form-group id="form-title-group"
+                label="Title:"
+                label-for="form-title-input">
+      <b-form-input id="form-title-input"
+                    type="text"
+                    v-model="addSortieForm.title"
+                    required
+                    placeholder="Enter title">
+      </b-form-input>
+    </b-form-group>
+    <b-form-group id="form-author-group"
+                  label="Author:"
+                  label-for="form-author-input">
+        <b-form-input id="form-author-input"
+                      type="text"
+                      v-model="addSortieForm.author"
+                      required
+                      placeholder="Enter author">
+        </b-form-input>
+      </b-form-group>
+    <b-form-group id="form-read-group">
+      <b-form-checkbox-group v-model="addSortieForm.read" id="form-checks">
+        <b-form-checkbox value="true">Read?</b-form-checkbox>
+      </b-form-checkbox-group>
+    </b-form-group>
+    <b-button type="submit" variant="primary">Submit</b-button>
+    <b-button type="reset" variant="danger">Reset</b-button>
+  </b-form>
+</b-modal>
+  </div>
 </template>
 
-
 <script>
+import axios from 'axios';
+
 export default {
-  name: "category.vue",
   data() {
     return {
-      stars: 4,
-      class_val: "shadow-1 my-card",
+      sorties: [],
+      addSortieForm: {
+        name: '',
+        type: '',
+        private: [],
+      },
     };
   },
-  computed: {
-    win_width() {
-      return this.$q.screen.width - 59;
+  methods: {
+    getSorties() {
+      const path = 'http://localhost:5000/sorties';
+      axios.get(path)
+        .then((res) => {
+          this.sorties = res.data.sorties;
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.error(error);
+        });
     },
-    win_height() {
-      return this.$q.screen.height - 0;
+    addSortie(payload) {
+      const path = 'http://localhost:5000/sorties';
+      axios.post(path, payload)
+        .then(() => {
+          this.getSorties();
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.log(error);
+          this.getSorties();
+        });
     },
+    initForm() {
+      this.addSortieForm.title = '';
+      this.addSortieForm.author = '';
+      this.addSortieForm.read = [];
+    },
+    onSubmit(evt) {
+      evt.preventDefault();
+      this.$refs.addSortieModal.hide();
+      let read = false;
+      if (this.addSortieForm.read[0]) read = true;
+      const payload = {
+        title: this.addSortieForm.title,
+        author: this.addSortieForm.author,
+        read, // property shorthand
+      };
+      this.addSortie(payload);
+      this.initForm();
+    },
+    onReset(evt) {
+      evt.preventDefault();
+      this.$refs.addSortieModal.hide();
+      this.initForm();
+    },
+  },
+  created() {
+    this.getSorties();
   },
 };
 </script>
-
-<style scoped>
-.my-card {
-  width: 100%;
-  max-width: 300px;
-}
-</style>
