@@ -23,7 +23,15 @@ SORTIES = [
         'organisateurs': '',
         'description': '',
         'dateLimite': '',
-        'commentaires': ''
+        'commentaires': [
+            {
+                'id': uuid.uuid4().hex,
+                'utilisateur': 'Utilisateur089',
+                'contenu': 'Ceci est un commentaire sur une sortie',
+                'date': '',
+                'réponses': '',
+    },
+        ]
     },
     {
         'id': uuid.uuid4().hex,
@@ -76,7 +84,29 @@ GROUPES = [
         'nom': 'Popo',
         'membres': '',
         'créateur': '',
-        'activités': '',
+        'activités': [
+            {
+        'id': uuid.uuid4().hex,
+        'nom': 'Balade au PPM',
+        'location': 'Parc Paul Mistral',
+        'date': '',
+        'heure': '',
+        'durée': '',
+        'rdv': 'Polytech',
+        'capacityMin': '',
+        'capacaityMax': '',
+        'privée': True,
+        'groupID': '',
+        'type': 'Autre',
+        'photo': '',
+        'registered': '',
+        'nbRegistered': '',
+        'organisateurs': '',
+        'description': '',
+        'dateLimite': '',
+        'commentaires': ''
+    }
+        ],
         'description': 'test',
     },
 ]
@@ -88,6 +118,27 @@ COMMENTAIRES = [
         'contenu': 'Ceci est un commentaire',
         'date': '',
         'réponses': '',
+    },
+]
+
+UTILISATEURS = [
+    {
+        'id': uuid.uuid4().hex,
+        'pseudo': 'pseudoExemple',
+        'prénom': 'Rim',
+        'nom': 'El Jraidi',
+        'email': 'exemple@gmail.com',
+        'photo': '',
+        'dateNaissance': '',
+        'ville': 'Grenoble',
+        'préférences': '',
+        'sexe': 'Femme',
+        'bio': 'cc haha lol',
+        'activitésAVenir': '',
+        'activitésFaites': 'Autre',
+        'activitésOrganisées': '',
+        'role': '',
+        'feedbacks': '',
     },
 ]
 
@@ -123,6 +174,13 @@ def remove_commentaire(commentaire_id):
     for commentaire in COMMENTAIRES:
         if commentaire['id'] == commentaire_id:
             COMMENTAIRES.remove(commentaire)
+            return True
+    return False
+
+def remove_utilisateur(utilisateur_id):
+    for utilisateur in UTILISATEURS:
+        if utilisateur['id'] == utilisateur_id:
+            UTILISATEURS.remove(utilisateur)
             return True
     return False
 
@@ -194,6 +252,35 @@ def all_commentaires():
     else:
         response_object['commentaires'] = COMMENTAIRES
     return jsonify(response_object)
+
+@app.route('/utilisateurs', methods=['GET', 'POST'])
+def all_utilisateurs():
+    response_object = {'status': 'success'}
+    if request.method == 'POST':
+        post_data = request.get_json()
+        UTILISATEURS.append({
+            'id': uuid.uuid4().hex,
+            'pseudo': post_data.get('pseudo'),
+            'prénom': post_data.get('prénom'),
+            'nom': post_data.get('nom'),
+            'email': post_data.get('email'),
+            'photo': post_data.get('photo'),
+            'dateNaissance': post_data.get('dateNaissance'),
+            'ville': post_data.get('ville'),
+            'préférences': post_data.get('préférences'),
+            'sexe': post_data.get('sexe'),
+            'bio': post_data.get('bio'),
+            'activitésAVenir': post_data.get('activitésAVenir'),
+            'activitésFaites': post_data.get('activitésFaites'),
+            'activitésOrganisées': post_data.get('activitésOrganisées'),
+            'role': post_data.get('role'),
+            'feedbacks': post_data.get('feedbacks'),
+        })
+        response_object['message'] = 'Utilisateur ajouté!'
+    else:
+        response_object['utilisateurs'] = UTILISATEURS
+    return jsonify(response_object)
+
 
 
 @app.route('/sorties/<sortie_id>', methods=['PUT', 'DELETE'])
@@ -269,6 +356,37 @@ def single_commentaire(commentaire_id):
         remove_commentaire(commentaire_id)
         response_object['message'] = 'Commentaire supprimé!'
     return jsonify(response_object)
+
+@app.route('/utilisateurs/<utilisateur_id>', methods=['PUT', 'DELETE'])
+def single_utilisateur(utilisateur_id):
+    response_object = {'status': 'success'}
+    if request.method == 'PUT':
+        post_data = request.get_json()
+        remove_utilisateur(utilisateur_id)
+        UTILISATEURS.append({
+            'id': uuid.uuid4().hex,
+            'pseudo': post_data.get('pseudo'),
+            'prénom': post_data.get('prénom'),
+            'nom': post_data.get('nom'),
+            'email': post_data.get('email'),
+            'photo': post_data.get('photo'),
+            'dateNaissance': post_data.get('dateNaissance'),
+            'ville': post_data.get('ville'),
+            'préférences': post_data.get('préférences'),
+            'sexe': post_data.get('sexe'),
+            'bio': post_data.get('bio'),
+            'activitésAVenir': post_data.get('activitésAVenir'),
+            'activitésFaites': post_data.get('activitésFaites'),
+            'activitésOrganisées': post_data.get('activitésOrganisées'),
+            'role': post_data.get('role'),
+            'feedbacks': post_data.get('feedbacks'),
+        })
+        response_object['message'] = 'Utilisateur mise à jour!'
+    if request.method == 'DELETE':
+        remove_utilisateur(utilisateur_id)
+        response_object['message'] = 'Utilisateur supprimé!'
+    return jsonify(response_object)
+
 
 if __name__ == '__main__':
     app.run()
