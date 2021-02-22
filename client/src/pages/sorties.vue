@@ -14,7 +14,7 @@
             <tr>
               <th scope="col">Nom</th>
               <th scope="col">Type</th>
-              <th scope="col">Priv?</th>
+              <th scope="col">Privée ?</th>
               <th></th>
             </tr>
           </thead>
@@ -23,7 +23,7 @@
               <td>{{ sortie.nom }}</td>
               <td>{{ sortie.type }}</td>
               <td>
-                <span v-if="sortie.priv">Oui</span>
+                <span v-if="sortie.privée">Oui</span>
                 <span v-else>Non</span>
               </td>
               <td>
@@ -74,8 +74,8 @@
             </b-form-input>
           </b-form-group>
         <b-form-group id="form-read-group">
-          <b-form-checkbox-group v-model="addSortieForm.priv" id="form-checks">
-            <b-form-checkbox value="true">Priv?</b-form-checkbox>
+          <b-form-checkbox-group v-model="addSortieForm.privée" id="form-checks">
+            <b-form-checkbox value="true">Privée?</b-form-checkbox>
           </b-form-checkbox-group>
         </b-form-group>
         <b-button-group>
@@ -110,8 +110,8 @@
             </b-form-input>
           </b-form-group>
         <b-form-group id="form-read-edit-group">
-          <b-form-checkbox-group v-model="editForm.priv" id="form-checks">
-            <b-form-checkbox value="true">Priv?</b-form-checkbox>
+          <b-form-checkbox-group v-model="editForm.privée" id="form-checks">
+            <b-form-checkbox value="true">Privée?</b-form-checkbox>
           </b-form-checkbox-group>
         </b-form-group>
         <b-button-group>
@@ -134,7 +134,7 @@ export default {
       addSortieForm: {
         nom: '',
         type: '',
-        priv: [],
+        privée: [],
       },
       message: '',
       showMessage: false,
@@ -142,7 +142,7 @@ export default {
         id: '',
         nom: '',
         type: '',
-        priv: [],
+        privée: [],
       },
     };
   },
@@ -177,21 +177,21 @@ export default {
     initForm() {
       this.addSortieForm.nom = '';
       this.addSortieForm.type = '';
-      this.adSortieForm.priv = [];
+      this.adSortieForm.privée = [];
       this.editForm.id = '';
       this.editForm.nom = '';
       this.editForm.typr = '';
-      this.editForm.priv = [];
+      this.editForm.privée = [];
     },
     onSubmit(evt) {
       evt.preventDefault();
       this.$refs.addSortieModal.hide();
-      let priv = false;
-      if (this.addSortieForm.priv[0]) priv = true;
+      let privée = false;
+      if (this.addSortieForm.privée[0]) privée = true;
       const payload = {
         nom: this.addSortieForm.nom,
         type: this.addSortieForm.type,
-        priv, // property shorthand
+        privée, // property shorthand
       };
       this.addSortie(payload);
       this.initForm();
@@ -207,12 +207,12 @@ export default {
     onSubmitUpdate(evt) {
       evt.preventDefault();
       this.$refs.editSortieModal.hide();
-      let priv = false;
-      if (this.editForm.priv[0]) priv = true;
+      let privée = false;
+      if (this.editForm.privée[0]) privée = true;
       const payload = {
         nom: this.editForm.nom,
         type: this.editForm.type,
-        priv,
+        privée,
       };
       this.updateSortie(payload, this.editForm.id);
     },
