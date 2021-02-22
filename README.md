@@ -1,18 +1,15 @@
-## Install the dependencies
-```bash
-npm install
-```
+//SERVER
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
-```bash
-quasar dev
-```
+    cd server
+    virtualenv env
+    source env/bin/activate
+    
+    pip install -r requirements.txt
+    python app.py
 
+//CLIENT
+    cd client
+    npm install
+    npm run serve
 
-### Build the app for production
-```bash
-quasar build
-```
-
-### Customize the configuration
-See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
+    http://localhost:808
