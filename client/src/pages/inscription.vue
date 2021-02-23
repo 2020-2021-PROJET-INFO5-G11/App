@@ -37,7 +37,6 @@
       <b-button type="submit" variant="primary">S'inscrire</b-button>
       <b-button type="reset" variant="danger">Réinitialiser</b-button>
     </b-form>
-  
 </div>
 </template>
 
