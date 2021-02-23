@@ -26,7 +26,7 @@ const routes = [
       },
       {
         name: 'inscription',
-        path: 'inscription',
+        path: '/inscription',
         component: () => import('../pages/inscription.vue'),
       },
 

@@ -1,6 +1,8 @@
 <template>
-  <q-page class="q-mt-sm">
-  </q-page>
+<div>
+  aegaegae
+  </div>
+
 </template>
 
 <script>
