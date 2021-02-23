@@ -2,10 +2,12 @@
 
 <div class="container" >
     
-   <b-form @submit="onSubmit" @reset="onReset"  oninput='up2.setCustomValidity(up2.value != up.value ? "Passwords do not match." : "")'>
+   <b-form @submit="onSubmit" @reset="onReset"  oninput='up2.setCustomValidity(up2.value != up.value ? "Passwords do not match." : "")' >
 
+
+     
     <b-form-group
-        id="input-group-1" label="Email address:" label-for="input-1" description="Le mail ne sera pas partagé aux autres utilisateurs">
+        id="input-group-1" label="Adresse email:" label-for="input-1" description="Le mail ne sera pas partagé aux autres utilisateurs">
         <b-form-input
           id="input-1"
           v-model="form.email"
@@ -29,7 +31,7 @@
     </b-form-text>
       </b-form-group>
 
-      <b-form-group id="input-group-3" label="Répétez votre mot de passe:" label-for="input-3" aria-describedby="password-help-block">
+      <b-form-group id="input-group-3" label="Confirmation mot de passe:" label-for="input-3" aria-describedby="password-help-block">
         <b-form-input
           id="input-3"
           type="password"
@@ -88,9 +90,6 @@
           this.show = true
         })
       },
-      passwordConfirmationRule() {
-      return () => (this.password === this.rePassword) || 'Password must match'
-    },
     }
   }
 </script>
