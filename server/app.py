@@ -1,26 +1,29 @@
 import uuid
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-
+import os
+import connexion
+from flask_sqlalchemy import SQLAlchemy
+from flask_marshmallow import Marshmallow
 
 SORTIES = [
     {
         'id': uuid.uuid4().hex,
         'name': 'Rando entre copains',
         'type': 'Sport',
-        'priv': True
+        'priv': True,
     },
     {
         'id': uuid.uuid4().hex,
         'nom': 'Harry Potter and the Philosopher\'s Stone',
         'type': 'Cinéma',
-        'priv': False
+        'priv': False,
     },
     {
         'id': uuid.uuid4().hex,
         'nom': 'Balade au PPM',
         'type': 'Autre',
-        'priv': True
+        'priv': True,
     }
 ]
 
