@@ -35,6 +35,13 @@
                 <div class="btn-group" role="group">
                   <button
                           type="button"
+                          class="bouton"
+                          v-b-modal.sortie-view-modal
+                          @click="$router.push({name: 'sortie', params: { id: sortie.id }})">
+                      Voir sortie
+                  </button>
+                  <button
+                          type="button"
                           class="btn btn-warning btn-sm"
                           v-b-modal.sortie-update-modal
                           @click="editSortie(sortie)">
@@ -196,7 +203,7 @@ export default {
       this.adSortieForm.privée = [];
       this.editForm.id = '';
       this.editForm.nom = '';
-      this.editForm.typr = '';
+      this.editForm.type = '';
       this.editForm.privée = [];
     },
     onSubmit(evt) {
@@ -275,3 +282,9 @@ export default {
   },
 };
 </script>
+
+<style>
+  .bouton {
+    background-color: rgb(65, 192, 171);
+  }
+</style>
