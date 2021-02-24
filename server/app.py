@@ -1,48 +1,41 @@
-import uuid
 from flask import Flask, jsonify, request
-from flask_cors import CORS
-import os
-import connexion
-from flask_sqlalchemy import SQLAlchemy
-from flask_marshmallow import Marshmallow
+
+from config import *
+from models import Sortie, SortieSchema
 
 SORTIES = [
     {
-        'id': uuid.uuid4().hex,
         'name': 'Rando entre copains',
         'type': 'Sport',
         'priv': True,
     },
     {
-        'id': uuid.uuid4().hex,
         'nom': 'Harry Potter and the Philosopher\'s Stone',
         'type': 'Cinéma',
         'priv': False,
     },
     {
-        'id': uuid.uuid4().hex,
         'nom': 'Balade au PPM',
         'type': 'Autre',
         'priv': True,
     }
 ]
 
+# Read the swagger.yml file to configure the endpoints
+app.add_api('swagger.yml')
 
-# configuration
-DEBUG = True
 
-# instantiate the app
-app = Flask(__name__)
-app.config.from_object(__name__)
-
-# enable CORS
-CORS(app, resources={r'/*': {'origins': '*'}})
-
+"""
+# home
+@app.route('/')
+def home():
+    return 'Ceci est la racine'
 
 # sanity check route
 @app.route('/ping', methods=['GET'])
 def ping_pong():
     return jsonify('pong!')
+
 
 
 def remove_sortie(sortie_id):
@@ -87,7 +80,7 @@ def single_sortie(sortie_id):
         remove_sortie(sortie_id)
         response_object['message'] = 'Sortie removed!'
     return jsonify(response_object)
-
+"""
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='localhost')

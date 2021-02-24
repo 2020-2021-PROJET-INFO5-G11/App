@@ -1,0 +1,91 @@
+swagger: "2.0"
+info:
+  description: This is the swagger file that goes with the server code
+  version: "1.0.0"
+  title: Swagger REST Article
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+basePath: "/api"
+
+
+# Paths supported by the server application
+paths:
+  /sorties:
+    get:
+      operationId: "sortie.read_all_sorties"
+      tags:
+        - "Sortie"
+      summary: "The sortie data structure supported by the server application"
+      description: "Read the list of sortie"
+      responses:
+        200:
+          description: "Successful read sortie list operation"
+          schema:
+            type: "array"
+            items:
+              properties:
+                id_sortie:
+                  type: "integer"
+                nomSortie:
+                  type: "string"
+                typeSortie:
+                  type: "string"
+
+  /sortie:
+    get:
+      operationId: "sortie.get_sorties_names"
+      tags:
+        - "Sortie"
+      summary: "The sortie data structure supported by the server application"
+      description: "Read the list of sortie"
+      responses:
+        200:
+          description: "Successful read sortie list operation"
+          schema:
+            type: "array"
+            items:
+              properties:
+                nomSortie:
+                  type: "string"
+
+
+
+
+
+
+
+  /user:
+    post:
+      operationId: user.create
+      tags:
+        - User
+      summary: Create a user
+      description: Create a new user
+      parameters:
+        - name: user
+          in: body
+          description: User to create
+          required: True
+          schema:
+            type: object
+            properties:
+              firstName:
+                type: string
+                description: First name of person to create
+              lastName:
+                type: string
+                description: Last name of person to create
+      responses:
+        201:
+          description: Successfully created person
+          schema:
+            properties:
+              firstName:
+                type: string
+                description: First name of the person
+              lastName:
+                type: string
+                description: Last name of the person
