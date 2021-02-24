@@ -1,5 +1,10 @@
 <template>
-  <div class="container">
+  <div>
+    <!-- Header -->
+    <Header title="Page temporaire"/>
+    <!-- NavBar -->
+    <NavBar> </NavBar>
+    <!-- Sorties -->
     <div class="row">
       <div class="col-sm-10">
         <h1>Sorties</h1>
@@ -120,16 +125,24 @@
         </b-button-group>
       </b-form>
     </b-modal>
+
+    <!-- Footer -->
+    <Footer />
+    <div :key="key"></div>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
 import Alert from './Alert.vue';
+import Header from './header.vue';
+import NavBar from './navBar.vue';
+import Footer from './footer.vue';
 
 export default {
   data() {
     return {
+      key: 0,
       sorties: [],
       addSortieForm: {
         nom: '',
@@ -147,9 +160,12 @@ export default {
     };
   },
   components: {
-    alert: Alert,
+    alert: Alert, Header, NavBar, Footer,
   },
   methods: {
+    forceRerender() {
+      this.key += 1;
+    },
     getSorties() {
       const path = 'http://localhost:5000/sorties';
       axios.get(path)
