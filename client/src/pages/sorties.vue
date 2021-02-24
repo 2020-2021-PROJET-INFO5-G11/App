@@ -37,7 +37,7 @@
                           type="button"
                           class="bouton"
                           v-b-modal.sortie-view-modal
-                          @click="$router.push({name: 'sortie', params: { id: sortie.id }})">
+                          @click="$router.push({name: 'sortie', params: { nom: sortie.nom }})">
                       Voir sortie
                   </button>
                   <button

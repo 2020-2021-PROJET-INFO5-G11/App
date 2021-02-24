@@ -48,7 +48,7 @@ export default {
       axios.get(path)
         .then((res) => {
           this.sorties = res.data.sorties;
-          this.sortie = this.sorties.find(s => s.id === this.$route.params.id);
+          this.sortie = this.sorties.find(s => s.nom === this.$route.params.nom);
         })
         .catch((error) => {
           console.error(error);
