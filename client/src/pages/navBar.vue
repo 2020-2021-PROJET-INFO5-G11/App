@@ -1,185 +1,218 @@
 <template>
-  <q-layout view="lHh LpR lFf" style="font-family: Lato">
-    <q-header reveal elevated style="background-color: #1f509e">
-      <q-toolbar v-if="!$q.platform.is.desktop" class="q-py-sm">
-        <div class="row">
-          <div class="col-sm-12 col-xs-12">
-            <q-toolbar-title>
-              <img
-                @click="$router.push({ name: 'home' })"
-                class="cursor-pointer float-left"
-                src="statics/images/logo.png"
-                style="width: 12%"
-              />
-              <span
-                class="float-left q-mt-xs q-ml-md text-h6 text-weight-bold"
-                style="font-size: 17px"
-              >Osons Sortir</span>
-            </q-toolbar-title>
-          </div>
-          <div class="col-sm-12 col-xs-12 q-mt-md">
-            <q-input
-              class="float-left q-mx-md full-width"
-              square
-              bg-color="white"
-              dense
-              outlined
-              v-model="text"
-              label="Rechercher une sortie ou un utilisateur"
-            />
-          </div>
-          <div class="col-sm-12 col-xs-12 q-mt-md">
-            <div>
-              <q-btn class="q-mr-md" dense round flat icon="shopping_cart">
-                <q-badge color="red" class="text-bold" floating transparent>4</q-badge>
-              </q-btn>
-              <q-btn flat round dense icon="settings" class="q-mr-md" />
-              <q-btn flat round dense icon="fas fa-sign-out-alt" to="/" />
+  <!-- NavBar -->
+  <div class="navBand">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+
+    <!-- Inline block list -->
+    <ul>
+      <!-- Left block -->
+
+      <li class="left">
+        <ul>
+          <!-- Home -->
+          <li class="home">
+            <div click="$router.push('/accueil')">
+              <div>
+                <i class="fa fa-home fa-3x"></i>
+              </div>
+              <span> Acceuil </span>
             </div>
-          </div>
-        </div>
-      </q-toolbar>
+          </li>
 
-      <q-toolbar v-if="$q.platform.is.desktop" class="q-py-sm">
-        <!--     <q-btn @click="left = !left" flat round dense icon="menu" class="q-mr-sm" />-->
-        <q-btn color="primary" icon="home" @click="$router.push('/home')"></q-btn>
+          <!-- Activity -->
+          <li class="activity" click="$router.push('/sorties')">
+            <div @click="$router.push('/sorties')">
+              <div>
+                <i class="fa fa-shopping-bag fa-3x"></i>
+              </div>
+              <span> Sorties </span>
+            </div>
+          </li>
 
-        <q-toolbar-title>
-          <span
-            class="float-left q-mt-xs text-h6 text-weight-bold"
-            style="font-size: 17px"
-          >Osons Sortir</span>
-          <q-input
-            class="float-left q-ml-xl"
-            style="width: 650px"
-            square
-            bg-color="white"
-            dense
-            outlined
-            v-model="text"
-            label="Rechercher une sortie ou un utilisateur"
-          />
-        </q-toolbar-title>
+          <!-- Group -->
+          <li class="group" click="$router.push('/sorties')">
+            <div>
+              <i class="fa fa-group fa-3x"></i>
+            </div>
+            <span> Groupes </span>
+          </li>
 
-        <q-btn color="primary" label="Menu" icon="menu">
-          <q-menu>
-            <q-list style="min-width: 100px">
-              <q-item clickable v-close-popup @click="$router.push('/my_profile')">
-                <q-item-section>Mon profil</q-item-section>
-              </q-item>
+          <!-- Utilisateurs -->
+          <li v-show="false">
+            <button>Gérer les Utilisateurs</button>
+          </li>
+        </ul>
+      </li>
 
-              <q-item clickable v-close-popup>
-                <q-item-section>Mes sorties</q-item-section>
-              </q-item>
+      <!-- Center block -->
 
-              <q-item clickable v-close-popup>
-                <q-item-section>Mes groupes</q-item-section>
-              </q-item>
+      <li class="center">
+        <ul>
+          <!-- Search bar -->
+          <li class="searchBar">
+            <div style="padding-left: 10px; font: bold">
+              Rechercher une sortie
+            </div>
+            <input
+              type="text"
+              style="width: 650px; height: 50px; padding: 5px"
+              bg-color="white"
+              placeholder="ID sortie, mots clés ..."
+            />
+          </li>
+        </ul>
+      </li>
 
-              <q-item clickable v-close-popup @click="$router.push('/')">
-                <q-item-section>Deconnexion</q-item-section>
-              </q-item>
+      <!-- Right block -->
 
-              <q-btn flat round dense icon="settings" class="q-mr-md" />
-            </q-list>
-          </q-menu>
-        </q-btn>
-      </q-toolbar>
-    </q-header>
+      <li class="right">
+        <ul>
+          <!-- Back button -->
+          <li class="back" click="$router.push('/sorties')">
+            <div>
+              <i class="fa fa-arrow-left fa-3x"></i>
+            </div>
+            <span> Retour </span>
+          </li>
 
-    <q-page-container style="background-color: #f1f2f6">
-      <router-view />
-      <div class="q-mt-sm">
-        <div class="row q-pa-md bg-primary">
-          <div class="col-lg-1 col-md-1 col-sm-12 col-xs-12"></div>
+          <!-- Notifications -->
+          <li class="activity" click="$router.push('/sorties')">
+            <div @click="$router.push('/sorties')">
+              <div>
+                <i class="fa fa-bell-o fa-3x"></i>
+              </div>
+              <span> Alertes </span>
+            </div>
+          </li>
 
-          <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 text-white">
-            <div class="text-subtitle1 text-weight-bold">Policy</div>
-            <div class="text-caption hover_underline_white">Terms Of Use</div>
-            <div class="text-caption hover_underline_white">Security</div>
-            <div class="text-caption hover_underline_white">Privacy</div>
-          </div>
-          <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 text-white">
-            <div class="text-subtitle1 text-weight-bold">Help</div>
-            <div class="text-caption hover_underline_white">FAQ</div>
-          </div>
-          <div
-            class="col-lg-3 col-md-3 col-sm-12 col-xs-12 text-white"
-            :class="$q.platform.is.desktop ? 'q-pl-xl' : ''"
-            :style="$q.platform.is.desktop ? 'border-left: 1px solid grey;' : ''"
-          >
-            <div class="text-subtitle1 text-weight-bold">By Polytech's students</div>
-          </div>
-        </div>
-        <div style="background-color: #163758">
-          <div class="q-mr-md text-right q-py-xs text-weight-bold text-grey-6" style>
-            Made with
-            <span style="color: #e25555; font-size: 16px">&#9829;</span> using
-            <a
-              target="_blank"
-              class="text-blue-1 hover_underline_white"
-              style="text-decoration: none"
-              href="https://quasar-framework.org"
-            >&nbsp;Quasar&nbsp;</a>
-            by
-            <a
-              target="_blank"
-              class="text-blue-1 hover_underline_white"
-              style="text-decoration: none"
-              href="https://github.com/mayur091193"
-            >Mayur</a>.
-          </div>
-        </div>
-      </div>
-    </q-page-container>
-  </q-layout>
+          <!-- Profil button -->
+          <li class="profil" click="$router.push('/sorties')">
+            <div>
+              <i class="fa fa-user fa-3x"></i>
+            </div>
+            <span> Profil </span>
+          </li>
+
+          <!-- log out button -->
+          <li class="logout" click="$router.push('/sorties')">
+            <div>
+              <i class="fa fa-sign-out fa-3x"></i>
+            </div>
+            <span> Quitter</span>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script>
 export default {
-  data() {
-    return {
-      left: false,
-      menu_cat_elc: false,
-      menu_cat_tvs: false,
-      menu_cat_men: false,
-      text: '',
-    };
-  },
+  data() {},
 };
 </script>
 
 <style>
-.q-drawer {
-  /*background-image: url(https://demos.creative-tim.com/vue-material-dashboard/img/sidebar-2.32103624.jpg) !important;*/
-  background-image: url("/statics/images/lake.jpg") !important;
-  background-size: cover !important;
+/* objects */
+
+.navBand {
+  padding: 10px;
+  background-color: black;
+  color: whitesmoke;
+  opacity: 0.9;
 }
 
-.q-drawer__content {
-  background-color: rgba(1, 1, 1, 0.75);
+span {
+  font-size: 10 px;
+  font-family: "Georgia";
 }
 
-.navigation-item {
-  border-radius: 5px;
+li {
+  display: inline-block;
 }
 
-.tab-active {
-  background-color: green;
+/* blocs */
+
+.left,
+.center,
+.right {
+  padding-top: 10px;
 }
 
-.hover-blue:hover {
-  color: #1f509e;
+.right {
+  float: right;
+  padding-right: 80px;
 }
 
-.hover_underline_white:hover {
-  text-decoration: underline !important;
+.left {
+  float: left;
+}
+
+/* Icons */
+
+.home {
+  font-size: 18px;
+}
+
+.home:hover {
   cursor: pointer;
+  color: rgb(65, 192, 171);
 }
 
-.hover_border_grey:hover {
-  border: 1px solid lightgrey;
+.activity {
+  padding-left: 50px;
+  font-size: 18px;
+}
+
+.activity:hover {
   cursor: pointer;
-  border-radius: 3px;
+  color: rgb(65, 192, 171);
+}
+
+.group {
+  padding-left: 50px;
+  font-size: 18px;
+}
+
+.group:hover {
+  cursor: pointer;
+  color: rgb(65, 192, 171);
+}
+
+.searchBar {
+  padding-left: 200px;
+  font-size: 18px;
+}
+
+.back {
+  font-size: 18px;
+}
+
+.back:hover {
+  cursor: pointer;
+  color: rgb(65, 192, 171);
+}
+
+.profil {
+  padding-left: 50px;
+  font-size: 18px;
+}
+
+.profil:hover {
+  cursor: pointer;
+  color: rgb(65, 192, 171);
+}
+
+.logout {
+  padding-left: 50px;
+  font-size: 18px;
+}
+
+.logout:hover {
+  cursor: pointer;
+  color: rgb(65, 192, 171);
 }
 </style>

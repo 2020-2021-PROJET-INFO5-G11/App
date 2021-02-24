@@ -24,6 +24,14 @@ export default new Router({
       path: '/inscription',
       name: 'inscription',
       component: Inscription,
+      path: '/accueil',
+      name: 'accueil',
+      component: () => import('../pages/home.vue'),
+    },
+    {
+      path: '/groupes',
+      name: 'groupes',
+      component: () => import('../pages/groupes.vue'),
     },
   ],
 });
