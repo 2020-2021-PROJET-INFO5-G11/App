@@ -1,8 +1,4 @@
 const routes = [
-  // {
-  //   path: '/',
-  //   component: () => import('../pages/navBar.vue'),
-  //   children: [
       {
         name: 'home',
         path: '/home',
@@ -28,9 +24,6 @@ const routes = [
         path: '/inscription',
         component: () => import('../pages/inscription.vue'),
       },
-
-    //],
-  //},
 ];
 
 // Always leave this as last one
