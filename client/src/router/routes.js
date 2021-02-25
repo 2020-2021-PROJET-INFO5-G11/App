@@ -1,9 +1,8 @@
 const routes = [
-  { path: '/', component: () => import('../pages/login.vue') },
-  {
-    path: '/',
-    component: () => import('../pages/navBar.vue'),
-    children: [
+  // {
+  //   path: '/',
+  //   component: () => import('../pages/navBar.vue'),
+  //   children: [
       {
         name: 'home',
         path: '/home',
@@ -22,7 +21,7 @@ const routes = [
       {
         name: 'changement_de_mot_de_passe',
         path: '/changement_de_mot_de_passe',
-        component: () => import('../pages/changementDeMoDePasse.vue'),
+        component: () => import('../pages/changementDeMotDePasse.vue'),
       },
       {
         name: 'inscription',
@@ -30,8 +29,8 @@ const routes = [
         component: () => import('../pages/inscription.vue'),
       },
 
-    ],
-  },
+    //],
+  //},
 ];
 
 // Always leave this as last one

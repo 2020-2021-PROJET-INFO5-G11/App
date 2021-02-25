@@ -55,6 +55,7 @@
       
       <b-button type="submit" variant="primary">S'inscrire</b-button>
       <b-button type="reset" variant="danger">Réinitialiser</b-button>
+      
     </b-form>
     
 
@@ -84,6 +85,7 @@
         this.form.email = ''
         this.form.name = ''
         this.form.password = ''
+        this.form.rePassword = ''
         // Trick to reset/clear native browser form validation state
         this.show = false
         this.$nextTick(() => {
