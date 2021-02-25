@@ -24,17 +24,9 @@ paths:
         200:
           description: "Successful read sortie list operation"
           schema:
-            type: "array"
+            type: array
             items:
-              properties:
-                id_sortie:
-                  type: "integer"
-                nomSortie:
-                  type: "string"
-                typeSortie:
-                  type: "string"
-
-
+              $ref: '#/definitions/Sortie'
 
   /user:
     post:
@@ -68,3 +60,44 @@ paths:
               lastName:
                 type: string
                 description: Last name of the person
+
+
+
+definitions:
+  Sortie:
+    type: "object"
+    properties:
+      id_sortie:
+        type: "integer"
+      nom:
+        type: "string"
+      location:
+        type: "string"
+      date:
+        type: "string"
+      heure:
+        type: "string"
+      duree:
+        type: "string"
+      point_rdv:
+        type: "string"
+      capaciteMin:
+        type: "integer"
+      capacitemax:
+        type: "integer"
+      privee:
+        type: "boolean"
+      id_groupe:
+        type: "integer"
+      typeSortie:
+        type: "string"
+      photo:
+        type: "string"
+      nbInscrits:
+        type: "integer"
+      description:
+        type: "string"
+      dateLimite:
+        type: "string"
+      nom:
+        commentaires: "string"
