@@ -64,6 +64,8 @@ SORTIES = [
     }
 ]
 
+USERS = []
+
 # Delete database file if it exists currently
 if os.path.exists('entities.db'):
     os.remove('entities.db')
@@ -76,5 +78,9 @@ for sort in SORTIES:
     s = Sortie(nom=sort['nom'], typeSortie=sort['typeSortie'])
     #s = sort.Sortie()
     db.session.add(s)
+
+for user in USERS:
+    u = User(prenom=user['prenom'], nom=user['nom'])
+    db.session.add(u)
 
 db.session.commit()

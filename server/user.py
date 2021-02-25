@@ -1,37 +1,44 @@
+from flask import make_response, abort
+
+from config import db
 from models import User
 from models import UserSchema
 
 
-def create(person):
-    """
-    This function creates a new person in the people structure
-    based on the passed-in person data
 
-    :param person:  person to create in people structure
-    :return:        201 on success, 406 on person exists
+def get_all_users():
+    users = User.query.all()
+
+    user_schema = UserSchema(many=True)
+    return user_schema.dump(users)
+
+
+def create(user):
     """
-    firstName = person.get('firstName')
-    lastname = person.get('lastname')
+    This function creates a new user
+    based on the passed-in user data
+
+    :param user:    user to create
+    :return:        201 on success, 406 on user exists
+    """
+    prenom = user.get('prenom')
+    nom = user.get('nom')
+
+    db.
 
     existing_user = User.query \
-        .filter(User.firstName == firstName) \
-        .filter(User.lastName == lastName) \
+        .filter(User.prenom == prenom) \
+        .filter(User.nom == nom) \
         .one_or_none()
 
-    # Can we insert this person?
     if existing_user is None:
-
-        # Create a person instance using the schema and the passed-in person
         schema = UserSchema()
-        new_user = schema.load(user, session=db.session).data
+        new_user = schema.load(user, session=db.session)
 
-        # Add the person to the database
         db.session.add(new_user)
         db.session.commit()
 
-        # Serialize and return the newly created person in the response
-        return schema.dump(new_user).data, 201
+        return schema.dump(new_user), 201
 
-    # Otherwise, nope, person exists already
     else:
-        abort(409, f'User {fname} {lname} exists already')
+        abort(409, f'User {prenom} {nom} exists already')

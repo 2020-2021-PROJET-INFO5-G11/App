@@ -13,7 +13,7 @@ basePath: "/api"
 
 # Paths supported by the server application
 paths:
-  /sorties:
+  /sorties/get_all:
     get:
       operationId: "sortie.read_all_sorties"
       tags:
@@ -28,7 +28,26 @@ paths:
             items:
               $ref: '#/definitions/Sortie'
 
-  /user:
+  /sorties/get_one/{id}:
+    get:
+      operationId: "sortie.read_one_sortie_by_id"
+      tags:
+        - "Sortie"
+      summary: "The sortie data structure supported by the server application"
+      description: "Read one sortie corresponding to the given id"
+      parameters:
+        - name: id
+          in: path
+          description: Id of the user to get
+          type: integer
+          required: True
+      responses:
+        200:
+          description: "Successful read sortie list operation"
+          schema:
+            $ref: '#/definitions/Sortie'
+
+  /user/create:
     post:
       operationId: user.create
       tags:
@@ -41,26 +60,28 @@ paths:
           description: User to create
           required: True
           schema:
-            type: object
-            properties:
-              firstName:
-                type: string
-                description: First name of person to create
-              lastName:
-                type: string
-                description: Last name of person to create
+            $ref: '#/definitions/User'
       responses:
         201:
-          description: Successfully created person
+          description: Successfully created user
           schema:
-            properties:
-              firstName:
-                type: string
-                description: First name of the person
-              lastName:
-                type: string
-                description: Last name of the person
+            $ref: '#/definitions/User'
 
+
+  /user/get_all:
+    post:
+      operationId: user.get_all_users
+      tags:
+        - User
+      summary: Get all users
+      description: Get all users
+      responses:
+        201:
+          description: Successfully got user list
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
 
 
 definitions:
@@ -83,7 +104,7 @@ definitions:
         type: "string"
       capaciteMin:
         type: "integer"
-      capacitemax:
+      capaciteMax:
         type: "integer"
       privee:
         type: "boolean"
@@ -99,5 +120,41 @@ definitions:
         type: "string"
       dateLimite:
         type: "string"
+      commentaires:
+        type: "string"
+
+  User:
+    type: "object"
+    properties:
+      id_user:
+        type: "integer"
+      pseudo:
+        type: "string"
+      prenom:
+        type: "string"
       nom:
-        commentaires: "string"
+        type: "string"
+      email:
+        type: "string"
+      photo:
+        type: "string"
+      dateNaissance:
+        type: "string"
+      ville:
+        type: "string"
+      preferences:
+        type: "string"
+      sexe:
+        type: "string"
+      bio:
+        type: "string"
+      activites_a_venir:
+        type: "string"
+      activites_finies:
+        type: "string"
+      activites_organisees:
+        type: "string"
+      role:
+        type: "string"
+      feedbacks:
+        type: "string"
