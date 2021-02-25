@@ -2,7 +2,7 @@
   <div>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Header -->
-    <Header title="Page d'accueil"/>  
+    <Header title="Page d'accueil"/>
     <!-- NavBar -->
     <NavBar> </NavBar>
     <!-- Body -->
@@ -10,9 +10,12 @@
       <br>
 
       <!-- Boutton créer une sortie -->
-      <i class="right fa fa-plus-circle fa-3x"> Créer une sortie</i> <br>
+        <i class="right fa fa-plus-circle fa-3x"
+         @click="$router.push('/creation-sortie')"> Créer une sortie</i> <br>
 
       <!-- Sorties à venir -->
+      <!--  <li v-for="s in sorties" v-bind:key="s">{{ s.name }}</li> -->
+
       <h1> Mes sorties à venir </h1> <br>
       <ul class="scrollmenu">
         <li style="margin-left:0em;">

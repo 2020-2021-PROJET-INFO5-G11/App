@@ -14,7 +14,7 @@
         <ul>
           <!-- Home -->
           <li class="home">
-            <div click="$router.push('/accueil')">
+            <div @click="$router.push('/accueil')">
               <div>
                 <i class="fa fa-home fa-3x"></i>
               </div>
@@ -33,7 +33,7 @@
           </li>
 
           <!-- Group -->
-          <li class="group" click="$router.push('/sorties')">
+          <li class="group" @click="$router.push('/sorties')">
             <div>
               <i class="fa fa-group fa-3x"></i>
             </div>
@@ -71,7 +71,7 @@
       <li class="right">
         <ul>
           <!-- Back button -->
-          <li class="back" click="$router.push('/sorties')">
+          <li class="back" @click="$router.push('/sorties')">
             <div>
               <i class="fa fa-arrow-left fa-3x"></i>
             </div>
@@ -79,7 +79,7 @@
           </li>
 
           <!-- Notifications -->
-          <li class="activity" click="$router.push('/sorties')">
+          <li class="activity" @click="$router.push('/sorties')">
             <div @click="$router.push('/sorties')">
               <div>
                 <i class="fa fa-bell-o fa-3x"></i>
@@ -89,7 +89,7 @@
           </li>
 
           <!-- Profil button -->
-          <li class="profil" click="$router.push('/sorties')">
+          <li class="profil" @click="$router.push('/sorties')">
             <div>
               <i class="fa fa-user fa-3x"></i>
             </div>
@@ -97,7 +97,7 @@
           </li>
 
           <!-- log out button -->
-          <li class="logout" click="$router.push('/sorties')">
+          <li class="logout" @click="$router.push('/sorties')">
             <div>
               <i class="fa fa-sign-out fa-3x"></i>
             </div>
