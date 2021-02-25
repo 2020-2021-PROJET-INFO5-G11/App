@@ -34,27 +34,6 @@ paths:
                 typeSortie:
                   type: "string"
 
-  /sortie:
-    get:
-      operationId: "sortie.get_sorties_names"
-      tags:
-        - "Sortie"
-      summary: "The sortie data structure supported by the server application"
-      description: "Read the list of sortie"
-      responses:
-        200:
-          description: "Successful read sortie list operation"
-          schema:
-            type: "array"
-            items:
-              properties:
-                nomSortie:
-                  type: "string"
-
-
-
-
-
 
 
   /user:
