@@ -21,10 +21,13 @@ def create(user):
     :param user:    user to create
     :return:        201 on success, 406 on user exists
     """
+
+    id = user.get('id_user')
+    if User.query.get(id) is not None:
+        abort(409, f'id {id} is already used')
+
     prenom = user.get('prenom')
     nom = user.get('nom')
-
-    db.
 
     existing_user = User.query \
         .filter(User.prenom == prenom) \

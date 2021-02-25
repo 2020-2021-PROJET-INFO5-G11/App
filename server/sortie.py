@@ -24,4 +24,4 @@ def read_one_sortie_by_id(id):
         sortie_schema = SortieSchema()
         return sortie_schema.dump(sortie)
     else:
-        abort(404, 'Sortie not found for id: {id}'.format(id=id))
+        abort(404, f'Sortie not found for id: {id}')
