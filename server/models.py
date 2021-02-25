@@ -1,4 +1,5 @@
 from datetime import datetime
+from sqlalchemy import true
 from config import db, ma
 
 class User(db.Model):
@@ -23,6 +24,7 @@ class User(db.Model):
 class UserSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = User
+        sqla_session = db.session
         load_instance = True
 
 class Sortie(db.Model):
@@ -35,4 +37,5 @@ class Sortie(db.Model):
 class SortieSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Sortie
+        sqla_session = db.session
         load_instance = True

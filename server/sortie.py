@@ -14,18 +14,8 @@ def read_all_sorties():
     """
     
     # Create the list of sorties from our data
-    sortiess = Sortie.query.all()
-    #sorties = Sortie.nomSortie
-
-    sorties = sortiess[0]
-    return sorties.typeSortie
-
-
-def get_sorties_names():
-    
-    # Create the list of sorties from our data
     sorties = Sortie.query.all()
-    sor = sorties[0]
-    #sorties = Sortie.nomSortie
 
-    return sor.nomSortie
+    # Serialize the data for the response
+    sortie_schema = SortieSchema(many=True)
+    return sortie_schema.dump(sorties)
