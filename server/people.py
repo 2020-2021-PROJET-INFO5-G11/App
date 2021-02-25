@@ -1,5 +1,12 @@
 from datetime import datetime
 
+
+#
+# Fichier exterieur à l'appli, utilisé pour des tests
+#
+
+
+
 def get_timestamp():
     return datetime.now().strftime(("%Y-%m-%d %H:%M:%S"))
 
