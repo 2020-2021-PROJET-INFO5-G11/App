@@ -12,4 +12,4 @@
     npm install
     npm run serve
 
-    http://localhost:808
+    http://localhost:8080

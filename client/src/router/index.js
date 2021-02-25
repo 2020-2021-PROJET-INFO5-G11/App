@@ -13,5 +13,20 @@ export default new Router({
       name: 'sorties',
       component: Sorties,
     },
+    {
+      path: '/accueil',
+      name: 'accueil',
+      component: () => import('../pages/home.vue'),
+    },
+    {
+      path: '/groupes',
+      name: 'groupes',
+      component: () => import('../pages/groupes.vue'),
+    },
+    {
+      path: '/sortie/:nom',
+      name: 'sortie',
+      component: () => import('../pages/viewSortie.vue'),
+    },
   ],
 });
