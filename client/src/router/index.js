@@ -23,5 +23,10 @@ export default new Router({
       name: 'groupes',
       component: () => import('../pages/groupes.vue'),
     },
+    {
+      path: '/sortie/:nom',
+      name: 'sortie',
+      component: () => import('../pages/viewSortie.vue'),
+    },
   ],
 });
