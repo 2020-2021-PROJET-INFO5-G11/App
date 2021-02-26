@@ -24,6 +24,11 @@ const routes = [
         path: '/inscription',
         component: () => import('../pages/inscription.vue'),
       },
+        {
+          path: '/connexion',
+          name: 'connexion',
+          component: () => import('../pages/login.vue'),
+        },
 ];
 
 // Always leave this as last one

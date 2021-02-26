@@ -19,9 +19,16 @@
       </b-form-group>
 
       <b-button variant="primary">Connexion</b-button>
-      <b-button @click="$router.push('/inscription')">Inscription</b-button>
+
+  <b-button v-b-modal.modal-1 variant="primary">Inscription</b-button>
+  <b-modal id="modal-1">
+    <Inscription/>
+  </b-modal>
+
       </body>
 <Footer />
+
+
   </div>
   
 </template>
@@ -29,10 +36,11 @@
 <script>
 
 import Footer from './footer.vue';
+import Inscription from './inscription.vue';
 
 export default {
   
-  components: { Footer },
+  components: { Footer, Inscription },
   data() {
     return {
       username: 'mayu',
