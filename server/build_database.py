@@ -1,6 +1,7 @@
 import os
 from config import db
 from models import Sortie
+from models import User
 
 # Data to initialize database with
 SORTIES = [
@@ -12,13 +13,13 @@ SORTIES = [
         'heure': '',
         'duree': '',
         'point_rdv': 'Polytech',
-        'capaciteMin': '',
-        'capaciteMax': '',
+        'capaciteMin': 0,
+        'capaciteMax': 10,
         'privee': True,
-        'id_groupe': '',
+        'id_groupe': None,
         'typeSortie': 'Sport',
         'photo': '',
-        'nbInscrits': '',
+        'nbInscrits': 3,
         'description': '',
         'dateLimite': '',
         'commentaires': ''
@@ -31,13 +32,13 @@ SORTIES = [
         'heure': '',
         'duree': '',
         'point_rdv': 'Polytech',
-        'capaciteMin': '',
-        'capaciteMax': '',
+        'capaciteMin': 3,
+        'capaciteMax': 5,
         'privee': False,
-        'id_groupe': '',
+        'id_groupe': None,
         'typeSortie': 'Cinéma',
         'photo': '',
-        'nbInscrits': '',
+        'nbInscrits': 2,
         'description': '',
         'dateLimite': '',
         'commentaires': ''
@@ -51,13 +52,13 @@ SORTIES = [
         'heure': '',
         'duree': '',
         'point_rdv': 'Polytech',
-        'capaciteMin': '',
-        'capaciteMax': '',
+        'capaciteMin': 1,
+        'capaciteMax': 3,
         'privee': True,
-        'id_groupe': '',
+        'id_groupe': None,
         'typeSortie': 'Autre',
         'photo': '',
-        'nbInscrits': '',
+        'nbInscrits': 1,
         'description': '',
         'dateLimite': '',
         'commentaires': ''
@@ -75,12 +76,19 @@ db.create_all()
 
 # Iterate over the SORTIE structure and populate the database
 for sort in SORTIES:
-    s = Sortie(nom=sort['nom'], typeSortie=sort['typeSortie'])
-    #s = sort.Sortie()
+    s = Sortie(id_sortie=sort['id_sortie'], nom=sort['nom'], location=sort['location'], date=sort['date'], \
+        heure=sort['heure'], duree=sort['duree'], point_rdv=sort['point_rdv'], capaciteMin=sort['capaciteMin'], \
+        capaciteMax=sort['capaciteMax'], privee=sort['privee'], id_groupe=sort['id_groupe'], \
+        typeSortie=sort['typeSortie'], photo=sort['photo'], nbInscrits=sort['nbInscrits'], \
+        description=sort['description'], dateLimite=sort['dateLimite'], commentaires=sort['commentaires'])
     db.session.add(s)
 
 for user in USERS:
-    u = User(prenom=user['prenom'], nom=user['nom'])
+    u = User(id_user=user['id_user'], pseudo=user['pseudo'], prenom=user['prenom'], nom=user['nom'], \
+        email=user['email'], photo=user['photo'], dateNaissance=user['dateNaissance'], ville=user['ville'], \
+        preferences=user['preferences'], sexe=user['sexe'], bio=user['bio'], activites_a_venir=user['activites_a_venir'], \
+        activites_finies=user['activites_finies'], activites_organisees=user['activites_organisees'], role=user['role'], \
+        feedbacks=user['feedbacks'])
     db.session.add(u)
 
 db.session.commit()

@@ -45,3 +45,8 @@ def create(user):
 
     else:
         abort(409, f'User {prenom} {nom} exists already')
+
+
+
+def get_previous_activities(user):
+    return User.query.get(activites_finies)

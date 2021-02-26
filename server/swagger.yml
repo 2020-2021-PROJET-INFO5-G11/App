@@ -69,7 +69,7 @@ paths:
 
 
   /user/get_all:
-    post:
+    get:
       operationId: user.get_all_users
       tags:
         - User
