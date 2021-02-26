@@ -1,94 +1,46 @@
-    <template>
-  <q-layout>
-    <q-page-container>
-      <q-page class="flex flex-center" style="font-family: Lato;">
-        <!--        <div id="particles-js"></div>-->
-        <q-card
-          :style="$q.platform.is.desktop ? 'width:55%;' : ''"
-          class="row my-card items-center q-pa-none q-ma-none shadow-24"
-        >
-          <q-card-section
-            v-if="$q.platform.is.desktop"
-            class="col-md-4 col-lg-4 col-sm-12 sol-xs-12 items-center float-left"
-            style="background-color: #1f509e"
-            :style="{'height':(win_height-270)+'px'}"
-            horizontal
-          >
-            <div class="text-center full-width">
-              <div>
-                <img
-                  src="https://i1.rgstatic.net/ii/profile.image/300101550526464-1448561193179_Q512/Bernard_Tourancheau.jpg"
-                  style="width: 33%"
-                />
-              </div>
-              <div class="text-weight-bolder text-white text-h6">Osons Sortir</div>
-              <div
-                class="text-caption text-white"
-              >Réseau social dédiée aux sorties et aux rencontres</div>
-            </div>
-          </q-card-section>
-          <q-card-section class="col-md-8 col-lg-8 col-sm-12 sol-xs-12 float-left">
-            <q-card-section class="items-center">
-              <div>
-                <div
-                  v-if="!$q.platform.is.desktop"
-                  class="text-weight-bolder text-center q-mb-md text-primary text-h6"
-                >Quasar Shopping</div>
-                <q-form
-                  :style="$q.platform.is.desktop ? 'width:55%;margin: auto;' :
-                    'margin: auto;'"
-                  class="q-gutter-md"
-                >
-                  <span class="text-subtitle1 text-weight-bold text-grey-7">Bienvenue !</span>
-                  <q-input dense outlined v-model="username" label="Pseudo" lazy-rules />
+<template>
+  
+    <div class="container" >
+      <body>
+      <b-form-group
+        id="input-group-1" label="Adresse email:">
+        <b-form-input
+          id="input-1"
+          required
+        ></b-form-input>
+      </b-form-group>
 
-                  <q-input
-                    dense
-                    type="password"
-                    outlined
-                    v-model="password"
-                    label="Mot de passe"
-                    lazy-rules
-                  />
-                  <q-checkbox
-                    class="text-grey-8"
-                    dense
-                    v-model="remember_me"
-                    label="Se souvenir de moi"
-                  />
-                  <div>
-                    <q-btn
-                      class="text-capitalize"
-                      size="sm"
-                      style="width:75px"
-                      dense
-                      label="Connexion"
-                      to="/home"
-                      type="button"
-                      color="primary"
-                    />
-                    <q-btn
-                      class="float-right text-blue-9 text-capitalize"
-                      size="sm"
-                      style="width:75px;border: 1px solid #36669e;"
-                      dense
-                      label="S'inscrire"
-                      type="button"
-                      @click="$router.push('/inscription')"
-                    />
-                  </div>
-                </q-form>
-              </div>
-            </q-card-section>
-          </q-card-section>
-        </q-card>
-      </q-page>
-    </q-page-container>
-  </q-layout>
+      <b-form-group
+        id="input-group-2" label="Mot de passe:">
+        <b-form-input
+          id="input-2"
+          required
+        ></b-form-input>
+      </b-form-group>
+
+      <b-button variant="primary">Connexion</b-button>
+
+  <b-button v-b-modal.modal-1 variant="primary">Inscription</b-button>
+  <b-modal id="modal-1">
+    <Inscription/>
+  </b-modal>
+
+      </body>
+<Footer />
+
+
+  </div>
+  
 </template>
 
 <script>
+
+import Footer from './footer.vue';
+import Inscription from './inscription.vue';
+
 export default {
+  
+  components: { Footer, Inscription },
   data() {
     return {
       username: 'mayu',
@@ -107,24 +59,6 @@ export default {
   },
 };
 </script>
-    <style>
-.my-card {
-  /*width: 55%;*/
-  height: 30%;
-}
 
-#particles-js {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  /*background: linear-gradient(145deg, #abbaab 15%, #ffffff 70%);*/
-  /*background: linear-gradient(145deg,#f7f8f8 11%, #627e79 75%);*/
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: 50% 50%;
-}
-
-.login-form {
-  position: absolute;
-}
+<style>
 </style>
