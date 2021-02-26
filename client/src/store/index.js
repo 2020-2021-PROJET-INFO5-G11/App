@@ -19,7 +19,16 @@ export default function (/* { ssrContext } */) {
     modules: {
       // example
     },
-
+    getters:{
+      search(state,keyword){
+        //return state.items; //first question
+       //second question
+        return state.items.filter(item =>{
+          return item.name === keyword
+        });
+      },
+      sortieId: state => state.sortie.sortieId,
+    },
     // enable strict mode (adds overhead!)
     // for dev mode only
     strict: process.env.DEBUGGING

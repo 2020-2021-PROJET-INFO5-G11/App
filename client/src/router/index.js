@@ -9,6 +9,11 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
+      name: 'login',
+      path: '/',
+      component: () => import('../pages/login.vue'),
+    },
+    {
       path: '/sorties',
       name: 'sorties',
       component: Sorties,
@@ -23,10 +28,18 @@ export default new Router({
       name: 'groupes',
       component: () => import('../pages/groupes.vue'),
     },
-    {
+    {      
       path: '/creation-sortie',
       name: 'creation de sortie',
       component: () => import('../pages/creation-sortie.vue'),
+    },
+    {  
+      path: '/sortie/:nom',
+      name: 'sortie',
+      component: () => import('../pages/viewSortie.vue'),
+      meta: {
+        reload: true,
+      },
     },
   ],
 });
