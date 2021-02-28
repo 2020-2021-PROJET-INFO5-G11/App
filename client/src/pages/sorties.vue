@@ -236,7 +236,7 @@ export default {
         typeSortie: this.editForm.typeSortie,
         privee,
       };
-      this.updateSortie(payload, this.editForm.id);
+      this.updateSortie(payload, this.editForm.id_sortie);
     },
     updateSortie(payload, sortieID) {
       const path = `http://localhost:5000/api/sorties/get_one/${sortieID}`;
