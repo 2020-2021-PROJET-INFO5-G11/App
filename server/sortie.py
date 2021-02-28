@@ -59,3 +59,53 @@ def create(sortie):
     else:
         abort(409, f'Sortie {nom} {typeSortie} exists already')
 
+def update(id_sortie, sortie):
+    update_sortie = Sortie.query.filter(
+        Sortie.id_sortie == id_sortie
+    ).one_or_none()
+
+    if update_sortie is None:
+        abort(
+            404,
+            "Sortie not found for Id: {sortie_id}".format(sortie_id=sortie_id),
+        )
+
+    else:
+
+        schema = SortieSchema()
+        update = schema.load(sortie, session=db.session)
+
+        update.id_sortie = update_sortie.id_sortie
+
+        db.session.merge(update)
+        db.session.commit()
+
+        data = schema.dump(update_sortie)
+
+        return data, 200
+
+
+def delete(id_sortie):
+    """
+    This function deletes a person from the people structure
+    :param person_id:   Id of the person to delete
+    :return:            200 on successful delete, 404 if not found
+    """
+    # Get the person requested
+    sortie = Sortie.query.filter(Sortie.id_sortie == id_sortie).one_or_none()
+
+    # Did we find a person?
+    if sortie is not None:
+        db.session.delete(sortie)
+        db.session.commit()
+        return make_response(
+            "Sortie {id_sortie} deleted".format(id_sortie=id_sortie), 200
+        )
+
+    # Otherwise, nope, didn't find that person
+    else:
+        abort(
+            404,
+            "Sortie not found for Id: {id_sortie}".format(id_sortie=id_sortie),
+        )
+

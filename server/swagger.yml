@@ -28,7 +28,7 @@ paths:
             items:
               $ref: '#/definitions/Sortie'
 
-  /sorties/get_one/{id}:
+  /sorties/get_one/{id_sortie}:
     get:
       operationId: "sortie.read_one_sortie_by_id"
       tags:
@@ -36,9 +36,9 @@ paths:
       summary: "The sortie data structure supported by the server application"
       description: "Read one sortie corresponding to the given id"
       parameters:
-        - name: id
+        - name: id_sortie
           in: path
-          description: Id of the user to get
+          description: Id of the sortie to get
           type: integer
           required: True
       responses:
@@ -46,6 +46,45 @@ paths:
           description: "Successful read sortie list operation"
           schema:
             $ref: '#/definitions/Sortie'
+    
+    put:
+      operationId: sortie.update
+      tags:
+        - Sortie
+      summary: Update a sortie
+      description: Update a sortie
+      parameters:
+        - name: id_sortie
+          in: path
+          description: Id the sortie to update
+          type: integer
+          required: True
+        - name: sortie
+          in: body
+          schema:
+            $ref: '#/definitions/Sortie'
+      responses:
+        200:
+          description: Successfully updated sortie
+          schema:
+            $ref: '#/definitions/Sortie'
+
+    delete:
+      operationId: sortie.delete
+      tags:
+        - Sortie
+      summary: Delete a sortie from the sortie list
+      description: Delete a sortie
+      parameters:
+        - name: id_sortie
+          in: path
+          type: integer
+          description: Id of the sortie to delete
+          required: true
+      responses:
+        200:
+          description: Successfully deleted a sortie
+
 
   /sortie/create:
     post:
