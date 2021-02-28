@@ -37,7 +37,7 @@
                           type="button"
                           class="bouton"
                           v-b-modal.sortie-view-modal
-                          @click="$router.push({path: '/sortie', params: { id: sortie.id }})">
+                          @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
                       Voir sortie
                   </button>
                   <button
@@ -274,7 +274,7 @@ export default {
         });
     },
     onDeleteSortie(sortie) {
-      this.removeSortie(sortie.id);
+      this.removeSortie(sortie.id_sortie);
     },
   },
   created() {

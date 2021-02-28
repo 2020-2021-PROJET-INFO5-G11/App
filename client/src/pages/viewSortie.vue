@@ -8,10 +8,9 @@
     <!-- Body -->
     <td> {{ sortie.nom }} </td>
     <br>
-    <td> {{ sortie.type }} </td>
+    <td> {{ sortie.typeSortie }} </td>
     <!-- Footer -->
     <Footer />
-    <div :key="key"></div>
   </div>
 </template>
 
@@ -31,9 +30,6 @@ export default {
     };
   },
   methods: {
-    forceRerender() {
-      this.key += 1;
-    },
     getSortie() {
       const path = `http://localhost:5000/api/sorties/get_one/${this.$route.params.id}`;
       axios.get(path)
