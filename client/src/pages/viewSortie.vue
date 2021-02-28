@@ -6,15 +6,6 @@
     <!-- NavBar -->
     <NavBar/>
     <!-- Body -->
-    <div>
-      <button
-          type="button"
-          class="btn btn-warning btn-sm"
-          v-b-modal.sortie-show-modal
-          @click="getSortie()">
-        Détails
-      </button>
-    </div>
     <td> {{ sortie.nom }} </td>
     <br>
     <td> {{ sortie.type }} </td>
@@ -48,15 +39,14 @@ export default {
       axios.get(path)
         .then((res) => {
           this.sortie = res.data;
-          // this.sortie = this.sorties.find(s => s.nom === this.$route.params.nom);
         })
         .catch((error) => {
           console.error(error);
         });
     },
+  },
   created() {
     this.getSortie();
-  },
   },
 };
 </script>
