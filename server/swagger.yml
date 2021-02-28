@@ -47,6 +47,26 @@ paths:
           schema:
             $ref: '#/definitions/Sortie'
 
+  /sortie/create:
+    post:
+      operationId: sortie.create
+      tags:
+        - Sortie
+      summary: Create a sortie
+      description: Create a new sortie
+      parameters:
+        - name: sortie
+          in: body
+          description: Sortie to create
+          required: True
+          schema:
+            $ref: '#/definitions/Sortie'
+      responses:
+        201:
+          description: Successfully created sortie
+          schema:
+            $ref: '#/definitions/Sortie'
+
   /user/create:
     post:
       operationId: user.create
