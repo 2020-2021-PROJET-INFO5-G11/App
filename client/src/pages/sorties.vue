@@ -239,7 +239,7 @@ export default {
       this.updateSortie(payload, this.editForm.id);
     },
     updateSortie(payload, sortieID) {
-      const path = `http://localhost:5000/sorties/${sortieID}`;
+      const path = `http://localhost:5000/api/sorties/get_one/${sortieID}`;
       axios.put(path, payload)
         .then(() => {
           this.getSorties();
@@ -247,7 +247,6 @@ export default {
           this.showMessage = true;
         })
         .catch((error) => {
-          // eslint-disable-next-line
           console.error(error);
           this.getSorties();
         });
@@ -256,10 +255,10 @@ export default {
       evt.preventDefault();
       this.$refs.editSortieModal.hide();
       this.initForm();
-      this.getSorties(); // why?
+      this.getSorties();
     },
     removeSortie(sortieID) {
-      const path = `http://localhost:5000/sorties/${sortieID}`;
+      const path = `http://localhost:5000/api/sorties/get_one/${sortieID}`;
       axios.delete(path)
         .then(() => {
           this.getSorties();
@@ -267,7 +266,6 @@ export default {
           this.showMessage = true;
         })
         .catch((error) => {
-          // eslint-disable-next-line
           console.error(error);
           this.getSorties();
         });
