@@ -86,15 +86,8 @@ def update(id_sortie, sortie):
 
 
 def delete(id_sortie):
-    """
-    This function deletes a person from the people structure
-    :param person_id:   Id of the person to delete
-    :return:            200 on successful delete, 404 if not found
-    """
-    # Get the person requested
     sortie = Sortie.query.filter(Sortie.id_sortie == id_sortie).one_or_none()
 
-    # Did we find a person?
     if sortie is not None:
         db.session.delete(sortie)
         db.session.commit()
@@ -102,7 +95,6 @@ def delete(id_sortie):
             "Sortie {id_sortie} deleted".format(id_sortie=id_sortie), 200
         )
 
-    # Otherwise, nope, didn't find that person
     else:
         abort(
             404,
