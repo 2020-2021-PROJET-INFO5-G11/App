@@ -44,11 +44,11 @@ export default {
       this.key += 1;
     },
     getSortie() {
-      const path = 'http://localhost:5000/sorties';
+      const path = `http://localhost:5000/api/sorties/get_one/${this.$route.params.id}`;
       axios.get(path)
         .then((res) => {
-          this.sorties = res.data.sorties;
-          this.sortie = this.sorties.find(s => s.nom === this.$route.params.nom);
+          this.sortie = res.data;
+          // this.sortie = this.sorties.find(s => s.nom === this.$route.params.nom);
         })
         .catch((error) => {
           console.error(error);

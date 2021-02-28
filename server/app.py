@@ -72,6 +72,7 @@ UTILISATEURS = [
 # Read the swagger.yml file to configure the endpoints
 app.add_api('swagger.yml')
 
+# @app.route('/api/sorties/get_all', methods=['GET', 'POST'])
 """
 # home
 @app.route('/')

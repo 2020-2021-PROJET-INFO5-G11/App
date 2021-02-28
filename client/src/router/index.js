@@ -24,7 +24,7 @@ export default new Router({
       component: () => import('../pages/groupes.vue'),
     },
     {
-      path: '/sortie/:nom',
+      path: '/sortie/:id',
       name: 'sortie',
       component: () => import('../pages/viewSortie.vue'),
     },

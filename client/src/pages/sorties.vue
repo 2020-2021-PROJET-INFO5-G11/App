@@ -37,7 +37,7 @@
                           type="button"
                           class="bouton"
                           v-b-modal.sortie-view-modal
-                          @click="$router.push({name: 'sortie', params: { nom: sortie.nom }})">
+                          @click="$router.push({name: 'sortie', params: { id: sortie.id }})">
                       Voir sortie
                   </button>
                   <button
@@ -174,10 +174,10 @@ export default {
       this.key += 1;
     },
     getSorties() {
-      const path = 'http://localhost:5000/sorties';
+      const path = 'http://localhost:5000/api/sorties/get_all';
       axios.get(path)
         .then((res) => {
-          this.sorties = res.data.sorties;
+          this.sorties = res.data;
         })
         .catch((error) => {
           console.error(error);
