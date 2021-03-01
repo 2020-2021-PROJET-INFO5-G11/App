@@ -56,7 +56,8 @@
             <div style="padding-left: 10px; font: bold">
               Rechercher une sortie
             </div>
-            <input
+            <input @keyup.enter="search"
+              v-model="search_expression"
               type="text"
               style="width: 650px; height: 50px; padding: 5px"
               bg-color="white"
@@ -112,7 +113,15 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      search: [],
+      search_expression: '',
+    };
+  },
+  methods: {
+    search() {
+      $router.push({path: `/search/${this.search_expression}`})
+    },
   },
 };
 </script>

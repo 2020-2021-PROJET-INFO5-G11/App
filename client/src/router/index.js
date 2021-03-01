@@ -1,9 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Sorties from '../pages/sorties.vue';
-import Home from '../pages/home.vue';
 import Inscription from '../pages/inscription.vue';
-import routes from './routes';
+
 Vue.use(Router);
 
 export default new Router({
@@ -39,6 +38,11 @@ export default new Router({
       path: '/sortie/:id',
       name: 'viewSortie',
       component: () => import('../pages/viewSortie.vue'),
+    },
+    {
+      path: '/search/:search',
+      name: 'searchSortie',
+      component: () => import('../pages/searchSortie.vue'),
     },
   ],
 });
