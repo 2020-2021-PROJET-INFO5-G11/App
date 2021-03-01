@@ -13,7 +13,7 @@ basePath: "/api"
 
 # Paths supported by the server application
 paths:
-  /sorties/get_all:
+  /sortie:
     get:
       operationId: "sortie.read_all_sorties"
       tags:
@@ -28,7 +28,26 @@ paths:
             items:
               $ref: '#/definitions/Sortie'
 
-  /sorties/get_one/{id_sortie}:
+    post:
+      operationId: sortie.create
+      tags:
+        - Sortie
+      summary: Create a sortie
+      description: Create a new sortie
+      parameters:
+        - name: sortie
+          in: body
+          description: Sortie to create
+          required: True
+          schema:
+            $ref: '#/definitions/Sortie'
+      responses:
+        201:
+          description: Successfully created sortie
+          schema:
+            $ref: '#/definitions/Sortie'
+
+  /sortie/{id_sortie}:
     get:
       operationId: "sortie.read_one_sortie_by_id"
       tags:
@@ -46,7 +65,7 @@ paths:
           description: "Successful read sortie list operation"
           schema:
             $ref: '#/definitions/Sortie'
-    
+
     put:
       operationId: sortie.update
       tags:
@@ -86,27 +105,7 @@ paths:
           description: Successfully deleted a sortie
 
 
-  /sortie/create:
-    post:
-      operationId: sortie.create
-      tags:
-        - Sortie
-      summary: Create a sortie
-      description: Create a new sortie
-      parameters:
-        - name: sortie
-          in: body
-          description: Sortie to create
-          required: True
-          schema:
-            $ref: '#/definitions/Sortie'
-      responses:
-        201:
-          description: Successfully created sortie
-          schema:
-            $ref: '#/definitions/Sortie'
-
-  /user/create:
+  /user:
     post:
       operationId: user.create
       tags:
@@ -126,8 +125,6 @@ paths:
           schema:
             $ref: '#/definitions/User'
 
-
-  /user/get_all:
     get:
       operationId: user.get_all_users
       tags:
