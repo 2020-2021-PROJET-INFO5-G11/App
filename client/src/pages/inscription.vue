@@ -1,117 +1,106 @@
 <template>
-  <q-layout>
-    <q-page-container>
-      <q-page class="flex flex-center" style="font-family: Lato;">
-<!--        <div id="particles-js"></div>-->
-        <q-card :style="$q.platform.is.desktop ? 'width:55%;' : ''"
-         class="row my-card items-center q-pa-none q-ma-none shadow-24">
-          <q-card-section v-if="$q.platform.is.desktop"
-           class="col-md-4 col-lg-4 col-sm-12 sol-xs-12 items-center float-left"
-           style="background-color: #1f509e"
-                          :style="{'height':(win_height-270)+'px'}" horizontal>
-            <div class="text-center full-width">
-              <div><img
-               src="https://i1.rgstatic.net/ii/profile.image/300101550526464-1448561193179_Q512/Bernard_Tourancheau.jpg"
-               style="width: 33%"/></div>
-              <div class="text-weight-bolder text-white text-h6">Osons Sortir</div>
-              <div class="text-caption text-white">
-                Réseau social dédiée aux sorties et aux rencontres</div>
-            </div>
-          </q-card-section>
-          <q-card-section class="col-md-8 col-lg-8 col-sm-12 sol-xs-12 float-left">
-            <q-card-section class="items-center">
-              <div>
-                <div v-if="!$q.platform.is.desktop"
-                 class="text-weight-bolder text-center q-mb-md text-primary text-h6">
-                  Quasar Shopping</div>
-                <q-form :
-                style="$q.platform.is.desktop ? 'width:55%;margin: auto;' : 'margin: auto;'"
-                 class="q-gutter-md">
-                  <span class="text-subtitle1 text-weight-bold text-grey-7">
-                    Inscrivez-vous !</span>
-                  <q-input
-                    dense
-                    outlined
-                    v-model="username"
-                    label="Pseudo"
-                    lazy-rules
-                  />
+<div class>
+  
+  <b-container fluid="xl" class="col d-flex justify-content-center">
+      <b-form @submit="onSubmit" @reset="onReset"  oninput='up2.setCustomValidity(up2.value != up.value ? "Passwords do not match." : "")' >
 
-                  <q-input
-                    dense
-                    type="password"
-                    outlined
-                    v-model="password"
-                    label="Mot de passe"
-                    lazy-rules
-                  />
+        <b-form-group
+          id="input-group-1" label="Adresse email:" label-for="input-1" description="Le mail ne sera pas partagé aux autres utilisateurs">
+          <b-form-input
+            id="input-1"
+            v-model="form.email"
+            type="email"
+            placeholder="Adresse email"
+            required
+            size="xs"
+          ></b-form-input>
+        </b-form-group>
 
-                  <q-input
-                    dense
-                    type="email"
-                    outlined
-                    v-model="email"
-                    label="adresse email"
-                    lazy-rules
-                  />
-                  <div>
-                    <q-btn class="float-right text-blue-9 text-capitalize"
-                     size="sm" style="width:75px;border: 1px solid #36669e;"
-                      dense label="S'inscrire"
-                           type="button"/>
-                  </div>
-                </q-form>
+        <b-form-group id="input-group-2" label="Mot de passe:" label-for="input-2" aria-describedby="password-help-block">
+          <b-form-input
+            id="input-2"
+            type="password"
+            v-model="form.password"
+            placeholder="Entez votre mot de passe"
+            name="up"
+            required
+          ></b-form-input>
+          <b-form-text id="password-help-block">
+            Votre mot de passe doit contenir bla bla bla
+          </b-form-text>
+        </b-form-group>
 
-              </div>
-            </q-card-section>
-          </q-card-section>
+        <b-form-group id="input-group-3" label="Confirmation mot de passe:" label-for="input-3" aria-describedby="password-help-block">
+          <b-form-input
+            id="input-3"
+            type="password"
+            v-model="form.rePassword"
+            placeholder="Répétez votre mot de passe"
+            name="up2"
+            required
+          ></b-form-input>
+        </b-form-group>
+      
+        <b-form-group id="input-group-4" label="Nom:" label-for="input-4" description="Ce nom sera visible par les autres utilisateurs">
+          <b-form-input
+            id="input-4"
+            v-model="form.name"
+            placeholder="Entez votre nom"
+            required
+          ></b-form-input>
+        </b-form-group>
 
-        </q-card>
-      </q-page>
-    </q-page-container>
-  </q-layout>
+        <b-button type="submit" variant="primary">S'inscrire</b-button>
+        <b-button type="reset" variant="danger">Réinitialiser</b-button>
+        
+      </b-form>
+  </b-container>
+  
+   
+
+</div>
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      username: 'mayur',
-      password: 'mayur@qu',
-      remember_me: false,
-    };
-  },
-  mounted() {
-
-  },
-  computed: {
-    win_width() {
-      return this.$q.screen.width - 59;
+  export default {
+    data() {
+      return {
+        form: {
+          email: '',
+          password: '',
+          rePassword: '',
+          name: '',
+        },
+      }
     },
-    win_height() {
-      return this.$q.screen.height - 0;
-    },
-  },
-};
+    methods: {
+      onSubmit(event) {
+        event.preventDefault()
+        alert(JSON.stringify(this.form))
+      },
+      onReset(event) {
+        event.preventDefault()
+        // Reset our form values
+        this.form.email = ''
+        this.form.name = ''
+        this.form.password = ''
+        this.form.rePassword = ''
+        // Trick to reset/clear native browser form validation state
+        this.show = false
+        this.$nextTick(() => {
+          this.show = true
+        })
+      },
+    }
+  }
 </script>
-<style>
-  .my-card {
-    /*width: 55%;*/
-    height: 30%;
-  }
 
-  #particles-js {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    /*background: linear-gradient(145deg, #abbaab 15%, #ffffff 70%);*/
-    /*background: linear-gradient(145deg,#f7f8f8 11%, #627e79 75%);*/
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: 50% 50%;
-  }
+<style scoped>
 
-  .login-form {
-    position: absolute;
-  }
+    @media screen and (max-height: 670px) {
+        .normal-screen{
+            display: none;
+        }
+    }
+  
 </style>
