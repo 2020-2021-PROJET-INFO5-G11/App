@@ -30,7 +30,7 @@ export default {
   },
   methods: {
     getSortie() {
-      const path = `http://localhost:5000/api/sorties/get_one/${this.$route.params.id}`;
+      const path = `http://localhost:5000/api/sortie/${this.$route.params.id}`;
       axios.get(path)
         .then((res) => {
           this.sortie = res.data;

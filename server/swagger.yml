@@ -104,6 +104,24 @@ paths:
         200:
           description: Successfully deleted a sortie
 
+  /search/{nom}:
+    get:
+      operationId: "sortie.get_sorties_by_name"
+      tags:
+        - "Sortie"
+      summary: "The sortie data structure supported by the server application"
+      description: "Read one sortie corresponding to the given id"
+      parameters:
+        - name: nom
+          in: path
+          description: name of the sorties to get
+          type: string
+          required: true
+      responses:
+        200:
+          description: "Successful search sortie list operation"
+          schema:
+            $ref: '#/definitions/Sortie'
 
   /user:
     post:

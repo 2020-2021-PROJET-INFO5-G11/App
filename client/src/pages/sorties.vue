@@ -174,7 +174,7 @@ export default {
       this.key += 1;
     },
     getSorties() {
-      const path = 'http://localhost:5000/api/sorties/get_all';
+      const path = 'http://localhost:5000/api/sortie';
       axios.get(path)
         .then((res) => {
           this.sorties = res.data;
