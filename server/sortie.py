@@ -17,14 +17,14 @@ def read_all_sorties():
     return sortie_schema.dump(sorties)
 
 
-def read_one_sortie_by_id(id):
-    sortie = Sortie.query.get(id)
+def read_one_sortie_by_id(id_sortie):
+    sortie = Sortie.query.get(id_sortie)
 
     if sortie is not None:
         sortie_schema = SortieSchema()
         return sortie_schema.dump(sortie)
     else:
-        abort(404, f'Sortie not found for id: {id}')
+        abort(404, f'Sortie not found for id: {id_sortie}')
 
 def create(sortie):
     """
