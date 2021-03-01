@@ -3,7 +3,7 @@
     <div class="row headBand">
       <div style="text-align: center;" class="col-md-auto">
         <img class="fit-picture" src="../logo_blanc.png"  >
-        <h6 style="padding-left: 5px;"> Nom application</h6>
+        <h5 style="padding-left: 5px;"> Osons sortir </h5>
       </div>
       <div class="col-md-auto">
         <br>
@@ -16,6 +16,7 @@
 export default {
   props: ['title'],
   data() {
+    return{};
   },
 };
 </script>

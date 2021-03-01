@@ -1,7 +1,5 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Sorties from '../pages/sorties.vue';
-
 Vue.use(Router);
 
 export default new Router({
@@ -9,14 +7,19 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
-      name: 'login',
-      path: '/',
+      path: '/connexion',
+      name: 'connexion',
       component: () => import('../pages/login.vue'),
+    },
+    {
+      path: '/inscription',
+      name: 'inscription',
+      component: () => import('../pages/inscription.vue'),
     },
     {
       path: '/sorties',
       name: 'sorties',
-      component: Sorties,
+      component: () => import('../pages/sorties.vue'),
     },
     {
       path: '/accueil',
@@ -28,18 +31,15 @@ export default new Router({
       name: 'groupes',
       component: () => import('../pages/groupes.vue'),
     },
-    {      
+    {
       path: '/creation-sortie',
       name: 'creation de sortie',
       component: () => import('../pages/creation-sortie.vue'),
     },
-    {  
+    {
       path: '/sortie/:nom',
       name: 'sortie',
-      component: () => import('../pages/viewSortie.vue'),
-      meta: {
-        reload: true,
-      },
+      component: () => import('../pages/viewSortie.vue')
     },
   ],
 });

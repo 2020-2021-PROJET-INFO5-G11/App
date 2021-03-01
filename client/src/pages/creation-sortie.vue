@@ -27,22 +27,22 @@
 
             <div>
               <label> Photo </label>
-              <div class="rect" v-b-modal.sortie-modal>
-                <img class="fit-picture" :src="getImgUrl(image)">
+              <div class="rect">
+                <img @click="$bvModal.show('photo-modal')" class="fit-picture" :src="getImgUrl(image)">
               </div>
             </div>
 
-            <b-modal ref="addSortieModal"
-                     id="sortie-modal"
+            <b-modal ref="addPhoto"
+                     id="photo-modal"
                      title="Choisir une photo de couverture pour l'activité"
                      hide-footer>
 
-              <div v-b-modal.sortie-modal>
+              <div v-b-modal.photo-modal>
                 <div class="veritcal" style="text-align: center;" v-for="i in images" v-bind:key="i">
                   {{i}}
                   <br>
-                  <img class="fit-picture" :src="getImgUrl(i)"
-                       @click="setImage(i)" />
+                  <img class="fit-picture" :src="getImgUrl(i)" @click="$bvModal.hide('photo-modal')"
+                       v-on:click="setImage(i)"/>
                   <br><br>
                 </div>
               </div>
@@ -232,8 +232,11 @@ export default {
     },
     setImage(i) {
       this.image = i;
-      this.$refs.addSortieModal.hide();
     },
+    onHide(evt) {
+      evt.preventDefault();
+      this.$refs.addPhoto.hide("photo-modal");
+    }
   },
 };
 </script>

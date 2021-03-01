@@ -170,32 +170,9 @@ export default {
     alert: Alert, Header, NavBar, Footer,
   },
   methods: {
-    forceRerender() {
-      this.key += 1;
-    },
     getSorties() {
-      const path = 'http://localhost:5000/sorties';
-      axios.get(path)
-        .then((res) => {
-          this.sorties = res.data.sorties;
-        })
-        .catch((error) => {
-          console.error(error);
-        });
     },
     addSortie(payload) {
-      const path = 'http://localhost:5000/sorties';
-      axios.post(path, payload)
-        .then(() => {
-          this.getSorties();
-          this.message = 'Sortie added!';
-          this.showMessage = true;
-        })
-        .catch((error) => {
-          // eslint-disable-next-line
-          console.log(error);
-          this.getSorties();
-        });
     },
     initForm() {
       this.addSortieForm.nom = '';
@@ -240,18 +217,6 @@ export default {
       this.updateSortie(payload, this.editForm.id);
     },
     updateSortie(payload, sortieID) {
-      const path = `http://localhost:5000/sorties/${sortieID}`;
-      axios.put(path, payload)
-        .then(() => {
-          this.getSorties();
-          this.message = 'Sortie updated!';
-          this.showMessage = true;
-        })
-        .catch((error) => {
-          // eslint-disable-next-line
-          console.error(error);
-          this.getSorties();
-        });
     },
     onResetUpdate(evt) {
       evt.preventDefault();
@@ -260,18 +225,6 @@ export default {
       this.getSorties(); // why?
     },
     removeSortie(sortieID) {
-      const path = `http://localhost:5000/sorties/${sortieID}`;
-      axios.delete(path)
-        .then(() => {
-          this.getSorties();
-          this.message = 'Sortie removed!';
-          this.showMessage = true;
-        })
-        .catch((error) => {
-          // eslint-disable-next-line
-          console.error(error);
-          this.getSorties();
-        });
     },
     onDeleteSortie(sortie) {
       this.removeSortie(sortie.id);
