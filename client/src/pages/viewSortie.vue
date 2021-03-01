@@ -152,8 +152,10 @@
 
       <br><br><br>
     </body>
+
     <!-- Footer -->
     <Footer />
+
   </div>
 </template>
 
@@ -187,6 +189,7 @@ export default {
     };
   },
   methods: {
+
     getSortie() {
       const path = `http://localhost:5000/api/sorties/get_one/${this.$route.params.id}`;
       axios.get(path)
@@ -197,10 +200,10 @@ export default {
           console.error(error);
         });
     },
-  },
-  created() {
-    this.getSortie();
-  },
+    },
+    created() {
+      this.getSortie();
+    },
 };
 </script>
 
