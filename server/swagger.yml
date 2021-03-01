@@ -104,7 +104,7 @@ paths:
         200:
           description: Successfully deleted a sortie
 
-  /search/{nom}:
+  /search/{nom_sortie}:
     get:
       operationId: "sortie.get_sorties_by_name"
       tags:
@@ -112,7 +112,7 @@ paths:
       summary: "The sortie data structure supported by the server application"
       description: "Read one sortie corresponding to the given id"
       parameters:
-        - name: nom
+        - name: nom_sortie
           in: path
           description: name of the sorties to get
           type: string

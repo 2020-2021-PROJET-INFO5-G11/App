@@ -102,8 +102,8 @@ def delete(id_sortie):
         )
 
 
-def get_sorties_by_name(nom):
-    sorties = Sortie.query.filter_by(nom=nom)
+def get_sorties_by_name(nom_sortie):
+    sorties = Sortie.query.filter(Sortie.nom.contains(nom_sortie))
 
     sortie_schema = SortieSchema(many=True)
     return sortie_schema.dump(sorties)
