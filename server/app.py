@@ -1,82 +1,9 @@
 import uuid
 from flask import Flask, jsonify, request
-from flask_cors import CORS
 
+from config import *
+from models import Sortie, SortieSchema
 
-SORTIES = [
-    {
-        'id': uuid.uuid4().hex,
-        'nom': 'Rando entre copains',
-        'location': 'Monteynard',
-        'date': '',
-        'heure': '',
-        'durée': '',
-        'rdv': 'Polytech',
-        'capacityMin': '',
-        'capacaityMax': '',
-        'privée': True,
-        'groupID': '',
-        'type': 'Sport',
-        'photo': '',
-        'inscrits': '',
-        'nbInscrits': '',
-        'organisateurs': '',
-        'description': '',
-        'dateLimite': '',
-        'commentaires': [
-            {
-                'id': uuid.uuid4().hex,
-                'utilisateur': 'Utilisateur089',
-                'contenu': 'Ceci est un commentaire sur une sortie',
-                'date': '',
-                'réponses': '',
-    },
-        ]
-    },
-    {
-        'id': uuid.uuid4().hex,
-        'nom': 'Harry Potter and the Philosopher\'s Stone',
-        'location': 'Pathé Chavant',
-        'date': '',
-        'heure': '',
-        'durée': '',
-        'rdv': 'Polytech',
-        'capacityMin': '',
-        'capacaityMax': '',
-        'privée': False,
-        'groupID': '',
-        'type': 'Cinéma',
-        'photo': '',
-        'inscrits': '',
-        'nbInscrits': '',
-        'organisateurs': '',
-        'description': '',
-        'dateLimite': '',
-        'commentaires': ''
-
-    },
-    {
-        'id': uuid.uuid4().hex,
-        'nom': 'Balade au PPM',
-        'location': 'Parc Paul Mistral',
-        'date': '',
-        'heure': '',
-        'durée': '',
-        'rdv': 'Polytech',
-        'capacityMin': '',
-        'capacaityMax': '',
-        'privée': True,
-        'groupID': '',
-        'type': 'Autre',
-        'photo': '',
-        'registered': '',
-        'nbRegistered': '',
-        'organisateurs': '',
-        'description': '',
-        'dateLimite': '',
-        'commentaires': ''
-    }
-]
 
 GROUPES = [
     {
@@ -142,16 +69,21 @@ UTILISATEURS = [
     },
 ]
 
+# Read the swagger.yml file to configure the endpoints
+app.add_api('swagger.yml')
 
-# configuration
-DEBUG = True
+# @app.route('/api/sorties/get_all', methods=['GET', 'POST'])
+"""
+# home
+@app.route('/')
+def home():
+    return 'Ceci est la racine'
 
-# instantiate the app
-app = Flask(__name__)
-app.config.from_object(__name__)
+# sanity check route
+@app.route('/ping', methods=['GET'])
+def ping_pong():
+    return jsonify('pong!')
 
-# enable CORS
-CORS(app, resources={r'/*': {'origins': '*'}})
 
 
 def remove_sortie(sortie_id):
@@ -386,7 +318,7 @@ def single_utilisateur(utilisateur_id):
         remove_utilisateur(utilisateur_id)
         response_object['message'] = 'Utilisateur supprimé!'
     return jsonify(response_object)
-
+"""
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='localhost')
