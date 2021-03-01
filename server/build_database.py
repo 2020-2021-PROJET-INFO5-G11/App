@@ -8,7 +8,7 @@ SORTIES = [
     {
         'id_sortie': 1,
         'nom': 'Rando entre copains',
-        'location': 'Monteynard',
+        'lieu': 'Monteynard',
         'date': '',
         'heure': '',
         'duree': '',
@@ -27,7 +27,7 @@ SORTIES = [
     {
         'id_sortie': 2,
         'nom': 'Harry Potter and the Philosopher\'s Stone',
-        'location': 'Pathé Chavant',
+        'lieu': 'Pathé Chavant',
         'date': '',
         'heure': '',
         'duree': '',
@@ -47,7 +47,7 @@ SORTIES = [
     {
         'id_sortie': 3,
         'nom': 'Balade au PPM',
-        'location': 'Parc Paul Mistral',
+        'lieu': 'Parc Paul Mistral',
         'date': '',
         'heure': '',
         'duree': '',
@@ -76,7 +76,7 @@ db.create_all()
 
 # Iterate over the SORTIE structure and populate the database
 for sort in SORTIES:
-    s = Sortie(id_sortie=sort['id_sortie'], nom=sort['nom'], location=sort['location'], date=sort['date'], \
+    s = Sortie(id_sortie=sort['id_sortie'], nom=sort['nom'], lieu=sort['lieu'], date=sort['date'], \
         heure=sort['heure'], duree=sort['duree'], point_rdv=sort['point_rdv'], capaciteMin=sort['capaciteMin'], \
         capaciteMax=sort['capaciteMax'], privee=sort['privee'], id_groupe=sort['id_groupe'], \
         typeSortie=sort['typeSortie'], photo=sort['photo'], nbInscrits=sort['nbInscrits'], \

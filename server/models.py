@@ -31,7 +31,7 @@ class Sortie(db.Model):
     __tablename__ = 'sorties'
     id_sortie = db.Column(db.Integer, primary_key=True)
     nom = db.Column(db.String(32), index=True)
-    location = db.Column(db.String(32))
+    lieu = db.Column(db.String(32))
     date = db.Column(db.String(32))
     heure = db.Column(db.String(32))
     duree = db.Column(db.String(32))
