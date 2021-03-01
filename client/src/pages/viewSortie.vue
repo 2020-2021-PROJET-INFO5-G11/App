@@ -25,7 +25,6 @@ export default {
   components: { Header, NavBar, Footer },
   data() {
     return {
-      sorties: [],
       sortie: {},
     };
   },
