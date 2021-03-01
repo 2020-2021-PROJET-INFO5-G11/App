@@ -26,9 +26,9 @@
           <tbody>
             <tr v-for="(sortie, index) in sorties" :key="index">
               <td>{{ sortie.nom }}</td>
-              <td>{{ sortie.type }}</td>
+              <td>{{ sortie.typeSortie }}</td>
               <td>
-                <span v-if="sortie.privée">Oui</span>
+                <span v-if="sortie.privee">Oui</span>
                 <span v-else>Non</span>
               </td>
               <td>
@@ -37,7 +37,7 @@
                           type="button"
                           class="bouton"
                           v-b-modal.sortie-view-modal
-                          @click="$router.push({name: 'sortie', params: { nom: sortie.nom }})">
+                          @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
                       Voir sortie
                   </button>
                   <button
@@ -80,13 +80,13 @@
                       label-for="form-author-input">
             <b-form-input id="form-author-input"
                           type="text"
-                          v-model="addSortieForm.type"
+                          v-model="addSortieForm.typeSortie"
                           required
                           placeholder="Enter author">
             </b-form-input>
           </b-form-group>
         <b-form-group id="form-read-group">
-          <b-form-checkbox-group v-model="addSortieForm.privée" id="form-checks">
+          <b-form-checkbox-group v-model="addSortieForm.privee" id="form-checks">
             <b-form-checkbox value="true">Privée?</b-form-checkbox>
           </b-form-checkbox-group>
         </b-form-group>
@@ -116,13 +116,13 @@
                       label-for="form-author-edit-input">
             <b-form-input id="form-author-edit-input"
                           type="text"
-                          v-model="editForm.type"
+                          v-model="editForm.typeSortie"
                           required
                           placeholder="Enter author">
             </b-form-input>
           </b-form-group>
         <b-form-group id="form-read-edit-group">
-          <b-form-checkbox-group v-model="editForm.privée" id="form-checks">
+          <b-form-checkbox-group v-model="editForm.privee" id="form-checks">
             <b-form-checkbox value="true">Privée?</b-form-checkbox>
           </b-form-checkbox-group>
         </b-form-group>
@@ -153,16 +153,16 @@ export default {
       sorties: [],
       addSortieForm: {
         nom: '',
-        type: '',
-        privée: [],
+        typeSortie: '',
+        privee: [],
       },
       message: '',
       showMessage: false,
       editForm: {
-        id: '',
+        id_sortie: '',
         nom: '',
-        type: '',
-        privée: [],
+        typeSortie: '',
+        privee: [],
       },
     };
   },
@@ -171,27 +171,46 @@ export default {
   },
   methods: {
     getSorties() {
+      const path = 'http://localhost:5000/api/sorties/get_all';
+      axios.get(path)
+        .then((res) => {
+          this.sorties = res.data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     },
     addSortie(payload) {
+      const path = 'http://localhost:5000/api/sortie/create';
+      axios.post(path, payload)
+        .then(() => {
+          this.getSorties();
+          this.message = 'Sortie added!';
+          this.showMessage = true;
+        })
+        .catch((error) => {
+          console.log(error);
+          this.getSorties();
+        });
     },
     initForm() {
       this.addSortieForm.nom = '';
-      this.addSortieForm.type = '';
-      this.adSortieForm.privée = [];
-      this.editForm.id = '';
+      this.addSortieForm.typeSortie = '';
+      this.adSortieForm.privee = [];
+      this.editForm.id_sortie = '';
       this.editForm.nom = '';
-      this.editForm.type = '';
-      this.editForm.privée = [];
+      this.editForm.typeSortie = '';
+      this.editForm.privee = [];
     },
     onSubmit(evt) {
       evt.preventDefault();
       this.$refs.addSortieModal.hide();
-      let privée = false;
-      if (this.addSortieForm.privée[0]) privée = true;
+      let privee = false;
+      if (this.addSortieForm.privee[0]) privee = true;
       const payload = {
         nom: this.addSortieForm.nom,
-        type: this.addSortieForm.type,
-        privée, // property shorthand
+        typeSortie: this.addSortieForm.typeSortie,
+        privee,
       };
       this.addSortie(payload);
       this.initForm();
@@ -207,27 +226,49 @@ export default {
     onSubmitUpdate(evt) {
       evt.preventDefault();
       this.$refs.editSortieModal.hide();
-      let privée = false;
-      if (this.editForm.privée[0]) privée = true;
+      let privee = false;
+      if (this.editForm.privee[0]) privee = true;
       const payload = {
         nom: this.editForm.nom,
-        type: this.editForm.type,
-        privée,
+        typeSortie: this.editForm.typeSortie,
+        privee,
       };
-      this.updateSortie(payload, this.editForm.id);
+      this.updateSortie(payload, this.editForm.id_sortie);
     },
     updateSortie(payload, sortieID) {
+      const path = `http://localhost:5000/api/sorties/get_one/${sortieID}`;
+      axios.put(path, payload)
+        .then(() => {
+          this.getSorties();
+          this.message = 'Sortie updated!';
+          this.showMessage = true;
+        })
+        .catch((error) => {
+          console.error(error);
+          this.getSorties();
+        });
     },
     onResetUpdate(evt) {
       evt.preventDefault();
       this.$refs.editSortieModal.hide();
       this.initForm();
-      this.getSorties(); // why?
+      this.getSorties();
     },
     removeSortie(sortieID) {
+      const path = `http://localhost:5000/api/sorties/get_one/${sortieID}`;
+      axios.delete(path)
+        .then(() => {
+          this.getSorties();
+          this.message = 'Sortie removed!';
+          this.showMessage = true;
+        })
+        .catch((error) => {
+          console.error(error);
+          this.getSorties();
+        });
     },
     onDeleteSortie(sortie) {
-      this.removeSortie(sortie.id);
+      this.removeSortie(sortie.id_sortie);
     },
   },
   created() {

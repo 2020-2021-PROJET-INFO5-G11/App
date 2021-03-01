@@ -37,9 +37,9 @@ export default new Router({
       component: () => import('../pages/creation-sortie.vue'),
     },
     {
-      path: '/sortie/:nom',
-      name: 'sortie',
-      component: () => import('../pages/viewSortie.vue')
+      path: '/sortie/:id',
+      name: 'viewSortie',
+      component: () => import('../pages/viewSortie.vue'),
     },
   ],
 });

@@ -154,7 +154,6 @@
     </body>
     <!-- Footer -->
     <Footer />
-    <div :key="key"></div>
   </div>
 </template>
 
@@ -188,12 +187,18 @@ export default {
     };
   },
   methods: {
-    getSortie() {},
-    getImgUrl(image) {
-      return require('../'+image+'.jpg');
+    getSortie() {
+      const path = `http://localhost:5000/api/sorties/get_one/${this.$route.params.id}`;
+      axios.get(path)
+        .then((res) => {
+          this.sortie = res.data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     },
   },
-  created: function () {
+  created() {
     this.getSortie();
   },
 };

@@ -1,0 +1,219 @@
+swagger: "2.0"
+info:
+  description: This is the swagger file that goes with the server code
+  version: "1.0.0"
+  title: Swagger REST Article
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+basePath: "/api"
+
+
+# Paths supported by the server application
+paths:
+  /sorties/get_all:
+    get:
+      operationId: "sortie.read_all_sorties"
+      tags:
+        - "Sortie"
+      summary: "The sortie data structure supported by the server application"
+      description: "Read the list of sortie"
+      responses:
+        200:
+          description: "Successful read sortie list operation"
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Sortie'
+
+  /sorties/get_one/{id_sortie}:
+    get:
+      operationId: "sortie.read_one_sortie_by_id"
+      tags:
+        - "Sortie"
+      summary: "The sortie data structure supported by the server application"
+      description: "Read one sortie corresponding to the given id"
+      parameters:
+        - name: id_sortie
+          in: path
+          description: Id of the sortie to get
+          type: integer
+          required: True
+      responses:
+        200:
+          description: "Successful read sortie list operation"
+          schema:
+            $ref: '#/definitions/Sortie'
+    
+    put:
+      operationId: sortie.update
+      tags:
+        - Sortie
+      summary: Update a sortie
+      description: Update a sortie
+      parameters:
+        - name: id_sortie
+          in: path
+          description: Id the sortie to update
+          type: integer
+          required: True
+        - name: sortie
+          in: body
+          schema:
+            $ref: '#/definitions/Sortie'
+      responses:
+        200:
+          description: Successfully updated sortie
+          schema:
+            $ref: '#/definitions/Sortie'
+
+    delete:
+      operationId: sortie.delete
+      tags:
+        - Sortie
+      summary: Delete a sortie from the sortie list
+      description: Delete a sortie
+      parameters:
+        - name: id_sortie
+          in: path
+          type: integer
+          description: Id of the sortie to delete
+          required: true
+      responses:
+        200:
+          description: Successfully deleted a sortie
+
+
+  /sortie/create:
+    post:
+      operationId: sortie.create
+      tags:
+        - Sortie
+      summary: Create a sortie
+      description: Create a new sortie
+      parameters:
+        - name: sortie
+          in: body
+          description: Sortie to create
+          required: True
+          schema:
+            $ref: '#/definitions/Sortie'
+      responses:
+        201:
+          description: Successfully created sortie
+          schema:
+            $ref: '#/definitions/Sortie'
+
+  /user/create:
+    post:
+      operationId: user.create
+      tags:
+        - User
+      summary: Create a user
+      description: Create a new user
+      parameters:
+        - name: user
+          in: body
+          description: User to create
+          required: True
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        201:
+          description: Successfully created user
+          schema:
+            $ref: '#/definitions/User'
+
+
+  /user/get_all:
+    get:
+      operationId: user.get_all_users
+      tags:
+        - User
+      summary: Get all users
+      description: Get all users
+      responses:
+        201:
+          description: Successfully got user list
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+
+
+definitions:
+  Sortie:
+    type: "object"
+    properties:
+      id_sortie:
+        type: "integer"
+      nom:
+        type: "string"
+      location:
+        type: "string"
+      date:
+        type: "string"
+      heure:
+        type: "string"
+      duree:
+        type: "string"
+      point_rdv:
+        type: "string"
+      capaciteMin:
+        type: "integer"
+      capaciteMax:
+        type: "integer"
+      privee:
+        type: "boolean"
+      id_groupe:
+        type: "integer"
+      typeSortie:
+        type: "string"
+      photo:
+        type: "string"
+      nbInscrits:
+        type: "integer"
+      description:
+        type: "string"
+      dateLimite:
+        type: "string"
+      commentaires:
+        type: "string"
+
+  User:
+    type: "object"
+    properties:
+      id_user:
+        type: "integer"
+      pseudo:
+        type: "string"
+      prenom:
+        type: "string"
+      nom:
+        type: "string"
+      email:
+        type: "string"
+      photo:
+        type: "string"
+      dateNaissance:
+        type: "string"
+      ville:
+        type: "string"
+      preferences:
+        type: "string"
+      sexe:
+        type: "string"
+      bio:
+        type: "string"
+      activites_a_venir:
+        type: "string"
+      activites_finies:
+        type: "string"
+      activites_organisees:
+        type: "string"
+      role:
+        type: "string"
+      feedbacks:
+        type: "string"
