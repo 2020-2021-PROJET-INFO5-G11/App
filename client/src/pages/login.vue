@@ -1,5 +1,4 @@
-<template>
-  
+<template>  
     <div class="container" >
       <body>
       <b-form-group
@@ -30,7 +29,6 @@
 
 
   </div>
-  
 </template>
 
 <script>

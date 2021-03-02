@@ -1,9 +1,5 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Sorties from '../pages/sorties.vue';
-import Home from '../pages/home.vue';
-import Inscription from '../pages/inscription.vue';
-import routes from './routes';
 Vue.use(Router);
 
 export default new Router({
@@ -11,19 +7,19 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
-     path: '/connexion',
-     name: 'connexion',
-     component: () => import('../pages/login.vue'),
+      path: '/connexion',
+      name: 'connexion',
+      component: () => import('../pages/login.vue'),
     },
     {
-     path: '/inscription',
-     name: 'inscription',
-    component: Inscription,
+      path: '/inscription',
+      name: 'inscription',
+      component: () => import('../pages/inscription.vue'),
     },
     {
       path: '/sorties',
       name: 'sorties',
-      component: Sorties,
+      component: () => import('../pages/sorties.vue'),
     },
     {
       path: '/accueil',
@@ -36,8 +32,13 @@ export default new Router({
       component: () => import('../pages/groupes.vue'),
     },
     {
+      path: '/creation-sortie',
+      name: 'creation de sortie',
+      component: () => import('../pages/creation-sortie.vue'),
+    },
+    {
       path: '/sortie/:id',
-      name: 'viewSortie',
+      name: 'sortie',
       component: () => import('../pages/viewSortie.vue'),
     },
   ],

@@ -10,9 +10,12 @@
       <br>
 
       <!-- Boutton créer une sortie -->
-      <i class="right fa fa-plus-circle fa-3x"> Créer une sortie</i> <br>
+        <i class="right fa fa-plus-circle fa-3x"
+         @click="$router.push('/creation-sortie')"> Créer une sortie</i> <br>
 
       <!-- Sorties à venir -->
+      <!--  <li v-for="s in sorties" v-bind:key="s">{{ s.name }}</li> -->
+
       <h1> Mes sorties à venir </h1> <br>
       <ul class="scrollmenu">
         <li style="margin-left:0em;">

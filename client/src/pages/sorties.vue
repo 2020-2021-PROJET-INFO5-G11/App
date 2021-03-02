@@ -5,6 +5,12 @@
     <!-- NavBar -->
     <NavBar> </NavBar>
     <!-- Sorties -->
+
+    <!-- Boutton créer une sortie -->
+    <br>
+    <i class="right fa fa-plus-circle fa-3x"
+      @click="$router.push('/creation-sortie')"> Créer une sortie</i> <br>
+
     <div class="row">
       <div class="col-sm-10">
         <h1>Sorties</h1>
@@ -170,9 +176,6 @@ export default {
     alert: Alert, Header, NavBar, Footer,
   },
   methods: {
-    forceRerender() {
-      this.key += 1;
-    },
     getSorties() {
       const path = 'http://localhost:5000/api/sorties/get_all';
       axios.get(path)
@@ -280,8 +283,22 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
   .bouton {
     background-color: rgb(65, 192, 171);
   }
+
+  .right {
+  float: right;
+}
+
+i  {
+    font-size: 35px;
+  color: rgb(65, 192, 171);
+}
+
+i:hover {
+  color: rgb(15, 138, 117);
+  cursor: pointer;
+}
 </style>

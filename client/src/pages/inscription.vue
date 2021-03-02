@@ -1,6 +1,9 @@
 <template>
-<div class>
-  
+  <div class>
+  <!-- Header -->
+  <Header title="Page d'inscription"/>
+  <br><br><br>
+
   <b-container fluid="xl" class="col d-flex justify-content-center">
       <b-form @submit="onSubmit" @reset="onReset"  oninput='up2.setCustomValidity(up2.value != up.value ? "Passwords do not match." : "")' >
 
@@ -55,14 +58,20 @@
         
       </b-form>
   </b-container>
-  
-   
 
-</div>
+  <br><br><br>
+  <!-- Footer -->
+  <Footer/>
+  </div>
 </template>
 
 <script>
+
+import Header from './header.vue';
+import Footer from './footer.vue';
+
   export default {
+    components: { Header, Footer },
     data() {
       return {
         form: {
