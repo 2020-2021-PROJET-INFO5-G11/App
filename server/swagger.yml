@@ -106,7 +106,7 @@ paths:
 
   /search/{search}:
     get:
-      operationId: "sortie.get_sorties_by_search"
+      operationId: "entities.sortie.get_sorties_by_search"
       tags:
         - "Sortie"
       summary: "The sortie data structure supported by the server application"
