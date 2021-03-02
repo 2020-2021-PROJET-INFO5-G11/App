@@ -1,6 +1,6 @@
 <template>
   
-    <div class="container" >
+    <div fluid="xl" class="col d-flex justify-content-center">
       <body>
       <b-form-group
         id="input-group-1" label="Adresse email:">
@@ -21,12 +21,11 @@
       <b-button variant="primary">Connexion</b-button>
 
   <b-button v-b-modal.modal-1 variant="primary">Inscription</b-button>
-  <b-modal id="modal-1">
+  <b-modal id="modal-1" hide-footer>
     <Inscription/>
   </b-modal>
 
       </body>
-<Footer />
 
 
   </div>
@@ -35,17 +34,13 @@
 
 <script>
 
-import Footer from './footer.vue';
 import Inscription from './inscription.vue';
 
 export default {
   
-  components: { Footer, Inscription },
+  components: { Inscription },
   data() {
     return {
-      username: 'mayu',
-      password: 'mayur@qu',
-      remember_me: false,
     };
   },
   mounted() {},
@@ -61,4 +56,15 @@ export default {
 </script>
 
 <style>
+.modal-backdrop
+{
+    opacity:0.5 !important;
+}
+
+    @media screen and (max-height: 670px) {
+        .normal-screen{
+            display: none;
+        }
+    }
+
 </style>

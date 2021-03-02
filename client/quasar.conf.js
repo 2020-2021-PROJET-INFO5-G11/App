@@ -110,9 +110,9 @@ module.exports = function (/* ctx */) {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
       manifest: {
-        name: `cbdshop`,
-        short_name: `cbdshop`,
-        description: `Site ecommerce de produits cbd`,
+        name: `Osons Sortir`,
+        short_name: `Osons Sortir`,
+        description: `Réseau social d'organisation de sorties`,
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
@@ -177,7 +177,7 @@ module.exports = function (/* ctx */) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'cbdshop'
+        appId: 'os'
       },
 
       // More info: https://quasar.dev/quasar-cli/developing-electron-apps/node-integration

@@ -1,5 +1,10 @@
 const routes = [
       {
+        name: 'reception',
+        path: '/',
+        component: () => import('../pages/reception.vue'),
+      },
+      {
         name: 'home',
         path: '/home',
         component: () => import('../pages/home.vue'),
