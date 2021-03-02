@@ -6,10 +6,9 @@ from models import User
 # Data to initialize database with
 SORTIES = [
     {
-        'id_sortie': 1,
         'nom': 'Rando entre copains',
         'lieu': 'Monteynard',
-        'date': '',
+        'date': None,
         'heure': '',
         'duree': '',
         'point_rdv': 'Polytech',
@@ -25,10 +24,9 @@ SORTIES = [
         'commentaires': ''
     },
     {
-        'id_sortie': 2,
         'nom': 'Harry Potter and the Philosopher\'s Stone',
         'lieu': 'Pathé Chavant',
-        'date': '',
+        'date': None,
         'heure': '',
         'duree': '',
         'point_rdv': 'Polytech',
@@ -45,10 +43,9 @@ SORTIES = [
 
     },
     {
-        'id_sortie': 3,
         'nom': 'Balade au PPM',
         'lieu': 'Parc Paul Mistral',
-        'date': '',
+        'date': None,
         'heure': '',
         'duree': '',
         'point_rdv': 'Polytech',
@@ -76,7 +73,7 @@ db.create_all()
 
 # Iterate over the SORTIE structure and populate the database
 for sort in SORTIES:
-    s = Sortie(id_sortie=sort['id_sortie'], nom=sort['nom'], lieu=sort['lieu'], date=sort['date'], \
+    s = Sortie(nom=sort['nom'], lieu=sort['lieu'], date=sort['date'], \
         heure=sort['heure'], duree=sort['duree'], point_rdv=sort['point_rdv'], capaciteMin=sort['capaciteMin'], \
         capaciteMax=sort['capaciteMax'], privee=sort['privee'], id_groupe=sort['id_groupe'], \
         typeSortie=sort['typeSortie'], photo=sort['photo'], nbInscrits=sort['nbInscrits'], \
@@ -84,7 +81,7 @@ for sort in SORTIES:
     db.session.add(s)
 
 for user in USERS:
-    u = User(id_user=user['id_user'], pseudo=user['pseudo'], prenom=user['prenom'], nom=user['nom'], \
+    u = User(pseudo=user['pseudo'], password_hash=user['password_hash'], prenom=user['prenom'], nom=user['nom'], \
         email=user['email'], photo=user['photo'], dateNaissance=user['dateNaissance'], ville=user['ville'], \
         preferences=user['preferences'], sexe=user['sexe'], bio=user['bio'], activites_a_venir=user['activites_a_venir'], \
         activites_finies=user['activites_finies'], activites_organisees=user['activites_organisees'], role=user['role'], \

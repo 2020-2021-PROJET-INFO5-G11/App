@@ -1,11 +1,25 @@
-from datetime import datetime
 from sqlalchemy import true
-from config import db, ma
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
+from datetime import datetime
 
-class User(db.Model):
+from config import db, ma, login
+
+
+class Commentaire(db.Model):
+    __tablename__ = 'commentaire'
+    id_commentaire = db.Column(db.Integer, primary_key=True)
+    id_user = db.Column(db.Integer, db.ForeignKey('users.id'))
+    id_sortie = db.Column(db.Integer, db.ForeignKey('sorties.id_sortie'))
+    contenu = db.Column(db.String, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
+class User(UserMixin, db.Model):
     __tablename__ = 'users'
-    id_user = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     pseudo = db.Column(db.String(32), index=True)
+    password_hash = db.Column(db.String(128))
     prenom = db.Column(db.String(32))
     nom = db.Column(db.String(32))
     email = db.Column(db.String(32))
@@ -21,11 +35,29 @@ class User(db.Model):
     role = db.Column(db.String(32))
     feedbacks = db.Column(db.String(32))
 
+    def __repr__(self):
+        return '<User {}>'.format(self.pseudo)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+    commentaire = db.relationship(
+        'Commentaire',
+        backref='auteur',
+        cascade='all, delete, delete-orphan',
+        single_parent=True,
+        order_by='desc(Commentaire.timestamp)'
+    )
+
 class UserSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = User
         sqla_session = db.session
         load_instance = True
+
 
 class Sortie(db.Model):
     __tablename__ = 'sorties'
@@ -47,14 +79,26 @@ class Sortie(db.Model):
     dateLimite = db.Column(db.String(32))
     commentaires = db.Column(db.String(32))
 
+    commentaire = db.relationship(
+        'Commentaire',
+        backref='sortie',
+        cascade='all, delete, delete-orphan',
+        single_parent=True,
+        order_by='desc(Commentaire.timestamp)'
+    )
 
+    def __repr__(self):
+        return '<Sortie {}>'.format(self.nom)
 
-
-
-    # timestamp = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 class SortieSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Sortie
         sqla_session = db.session
         load_instance = True
+
+
+
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))

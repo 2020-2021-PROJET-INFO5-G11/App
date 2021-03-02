@@ -140,6 +140,49 @@ paths:
               $ref: '#/definitions/User'
 
 
+  /user/login:
+    get:
+      tags:
+        - User
+      summary: "Logs user into the system"
+      description: ""
+      operationId: entities.user.login
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "query"
+        description: "The user name for login"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "query"
+        description: "The password for login in clear text"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+        "400":
+          description: "Invalid username/password supplied"
+
+  /user/logout:
+    get:
+      tags:
+        - User
+      summary: "Logs out current logged in user session"
+      description: ""
+      operationId: entities.user.logout
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters: []
+      responses:
+        default:
+          description: "successful operation"
+
+
 definitions:
   Sortie:
     type: "object"
@@ -182,9 +225,11 @@ definitions:
   User:
     type: "object"
     properties:
-      id_user:
+      id:
         type: "integer"
       pseudo:
+        type: "string"
+      password_hash:
         type: "string"
       prenom:
         type: "string"
