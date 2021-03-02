@@ -15,7 +15,7 @@ basePath: "/api"
 paths:
   /sortie:
     get:
-      operationId: "sortie.read_all_sorties"
+      operationId: "entities.sortie.read_all_sorties"
       tags:
         - "Sortie"
       summary: "The sortie data structure supported by the server application"
@@ -29,7 +29,7 @@ paths:
               $ref: '#/definitions/Sortie'
 
     post:
-      operationId: sortie.create
+      operationId: entities.sortie.create
       tags:
         - Sortie
       summary: Create a sortie
@@ -49,7 +49,7 @@ paths:
 
   /sortie/{id_sortie}:
     get:
-      operationId: "sortie.read_one_sortie_by_id"
+      operationId: "entities.sortie.read_one_sortie_by_id"
       tags:
         - "Sortie"
       summary: "The sortie data structure supported by the server application"
@@ -67,7 +67,7 @@ paths:
             $ref: '#/definitions/Sortie'
 
     put:
-      operationId: sortie.update
+      operationId: entities.sortie.update
       tags:
         - Sortie
       summary: Update a sortie
@@ -89,7 +89,7 @@ paths:
             $ref: '#/definitions/Sortie'
 
     delete:
-      operationId: sortie.delete
+      operationId: entities.sortie.delete
       tags:
         - Sortie
       summary: Delete a sortie from the sortie list
@@ -125,7 +125,7 @@ paths:
 
   /user:
     post:
-      operationId: user.create
+      operationId: entities.user.create
       tags:
         - User
       summary: Create a user
@@ -144,7 +144,7 @@ paths:
             $ref: '#/definitions/User'
 
     get:
-      operationId: user.get_all_users
+      operationId: entities.user.get_all_users
       tags:
         - User
       summary: Get all users
@@ -166,7 +166,7 @@ definitions:
         type: "integer"
       nom:
         type: "string"
-      location:
+      lieu:
         type: "string"
       date:
         type: "string"
