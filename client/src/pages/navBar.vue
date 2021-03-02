@@ -56,13 +56,14 @@
             <div style="padding-left: 10px; font: bold">
               Rechercher une sortie
             </div>
-            <input @keyup.enter="search"
-              v-model="search_expression"
-              type="text"
-              style="width: 650px; height: 50px; padding: 5px"
-              bg-color="white"
-              placeholder="ID sortie, mots clés ..."
-            />
+            <input
+                type="text"
+                v-model="search_expression"
+                style="width: 550px; height: 50px; padding: 5px"
+                bg-color="white"
+                placeholder="ID sortie, mots clés ..."
+                @keyup.enter="searchSortie"
+            >
           </li>
         </ul>
       </li>
@@ -107,6 +108,7 @@
         </ul>
       </li>
     </ul>
+    <div :key="key"></div>
   </div>
 </template>
 
@@ -114,13 +116,19 @@
 export default {
   data() {
     return {
-      search: [],
       search_expression: '',
+      key: 0,
     };
   },
   methods: {
-    search() {
-      $router.push({path: `/search/${this.search_expression}`})
+    forceRerender() {
+      this.key += 1;
+    },
+    searchSortie(e) {
+      if (e.keyCode === 13) {
+        this.$router.push({path: `/recherche/${this.search_expression}`})
+        vm.$forceUpdate();
+      }
     },
   },
 };

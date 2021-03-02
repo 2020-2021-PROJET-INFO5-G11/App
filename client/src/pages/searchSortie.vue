@@ -43,6 +43,7 @@ export default {
   data() {
     return {
       sorties: [],
+      key: 0,
     };
   },
   components: {

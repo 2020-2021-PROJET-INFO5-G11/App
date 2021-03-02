@@ -40,7 +40,7 @@ export default new Router({
       component: () => import('../pages/viewSortie.vue'),
     },
     {
-      path: '/search/:search',
+      path: '/recherche/:search',
       name: 'searchSortie',
       component: () => import('../pages/searchSortie.vue'),
     },
