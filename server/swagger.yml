@@ -17,7 +17,7 @@ paths:
     get:
       operationId: "entities.sortie.read_all_sorties"
       tags:
-        - "Sortie"
+        - Sortie
       summary: "The sortie data structure supported by the server application"
       description: "Read the list of sortie"
       responses:
@@ -51,7 +51,7 @@ paths:
     get:
       operationId: "entities.sortie.read_one_sortie_by_id"
       tags:
-        - "Sortie"
+        - Sortie
       summary: "The sortie data structure supported by the server application"
       description: "Read one sortie corresponding to the given id"
       parameters:
@@ -108,7 +108,7 @@ paths:
     get:
       operationId: "entities.sortie.get_sorties_by_search"
       tags:
-        - "Sortie"
+        - Sortie
       summary: "The sortie data structure supported by the server application"
       description: "Read one sortie corresponding to the given id"
       parameters:
@@ -200,6 +200,21 @@ paths:
         default:
           description: "successful operation"
 
+  /user/current:
+    get:
+      operationId: "entities.user.get_current"
+      tags:
+        - User
+      summary: "Get the current user"
+      description: "Get the user currently logged"
+      responses:
+        200:
+          description: "Current user successfully retreived"
+          schema:
+            $ref: '#/definitions/User'
+
+
+#------------------------------------------------------------------------------------------
 
 definitions:
   Sortie:

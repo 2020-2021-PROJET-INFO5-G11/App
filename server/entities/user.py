@@ -19,6 +19,9 @@ def logout():
     logout_user()
     return
 
+def get_current():
+    user_schema = UserSchema()
+    return user_schema.dump(current_user)
 
 @login_required
 def get_all_users():
