@@ -71,7 +71,7 @@
       <li class="right">
         <ul>
           <!-- Back button -->
-          <li class="back" @click="$router.push('/sorties')">
+          <li class="back" @click="$router.go(-1)">
             <div>
               <i class="fa fa-arrow-left fa-3x"></i>
             </div>

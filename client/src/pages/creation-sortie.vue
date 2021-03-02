@@ -28,7 +28,7 @@
             <div>
               <label> Photo </label>
               <div class="rect">
-                <img @click="$bvModal.show('photo-modal')" class="fit-picture" :src="getImgUrl(image)">
+                <img @click="$bvModal.show('photo-modal')" class="fit-picture" :src="getImgUrl(addSortieForm.photo)">
               </div>
             </div>
 
@@ -37,7 +37,7 @@
                      title="Choisir une photo de couverture pour l'activité"
                      hide-footer>
 
-              <div v-b-modal.photo-modal>
+              <div>
                 <div class="veritcal" style="text-align: center;" v-for="i in images" v-bind:key="i">
                   {{i}}
                   <br>
@@ -52,7 +52,7 @@
             <br><br><br>
             <label> Description </label>
             <div>
-              <textarea cols="40" rows="5" style="width:300px; height:220px;" required/>
+              <textarea v-model="addSortieForm.description" cols="40" rows="5" style="width:300px; height:220px;" required/>
             </div>
           </li>
 
@@ -62,35 +62,47 @@
             <br><br><br><br>
 
             <div>
-              <input v-model="nom" type="text" style="width: 500px;" placeholder="Nom" required/>
+              <span> Préciser le type de la sortie </span>
+              <select v-model="addSortieForm.typeSortie">
+                <option v-for="t in types" :key="t">
+                  {{ t }}
+                </option>
+              </select>
+              <br><br>
+            </div>
+
+            <div>
+              <input v-model="addSortieForm.nom" type="text" style="width: 500px;" placeholder="Nom" required/>
             </div>
             <br><br>
             <div>
-              <input v-model="lieu" type="text" style="width: 500px;" placeholder="Lieu" required/>
+              <input v-model="addSortieForm.lieu" type="text" style="width: 500px;" placeholder="Lieu" required/>
             </div>
             <br><br>
             <div>
-              <input v-model="rdv" type="text" style="width: 500px;"
+              <input v-model="addSortieForm.point_rdv" type="text" style="width: 500px;"
                      placeholder="Point de rendez-vous" required/>
             </div>
             <br><br>
             <div>
               <span> Date et heure </span>
-              <input  v-model="date" type="date" required/>
-              <input  v-model="heure" type="time" required/>
+              <input  v-model="addSortieForm.date" type="date" required/>
+              <input  v-model="addSortieForm.heure" type="time" required/>
+              <span style="margin-left: 10px;"> Durée </span>
+              <input v-model="addSortieForm.duree" type="time" required/> 
             </div>
             <br><br>
             <div>
               <span> Date limite d'inscription </span>
-              <input  v-model="limite" type="date" required/>
+              <input  v-model="addSortieForm.dateLimite" type="date" required/>
             </div>
             <br><br>
             <div>
               <span> Capacité minimum </span>
-              <input  v-model="min" type="number" style="width:70px;" required/>
-              <br><br>
-              <span> Capacité maximum </span>
-              <input  v-model="max" type="number" style="width:70px;" required/>
+              <input  v-model="addSortieForm.capaciteMin" type="number" style="width:70px;" required/>
+              <span style="margin-left: 10px;"> Capacité maximum </span>
+              <input  v-model="addSortieForm.capaciteMax" type="number" style="width:70px;" required/>
+            <br><br>
             </div>
 
           </li>
@@ -143,7 +155,7 @@
 
         <!-- submit button -->
         <div style="padding-left:800px">
-          <input class="submit" type="submit" value="Submit"> &ensp;
+          <input class="submit" @click="submit" type="submit" value="Submit"> &ensp;
           <input class="reset" type="reset" value="Reset">
           <br>
         </div>
@@ -158,6 +170,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import Header from './header.vue';
 import NavBar from './navBar.vue';
 import Footer from './footer.vue';
@@ -168,17 +181,27 @@ export default {
   data() {
     return {
       username: 'Vernet Maxime',
-      nom: null,
-      lieu: null,
-      rdv: null,
-      date: null,
-      heure: null,
-      limite: null,
-      min: null,
-      max: null,
+      addSortieForm: {
+        nom: '',
+        lieu: '',
+        date: '',
+        heure: '',
+        duree: '',
+        point_rdv: '',
+        capaciteMin: 1,
+        capaciteMax: 50,
+        privee: false,
+        id_groupe: 0,
+        typeSortie: 'Autre',
+        photo: 'pas-de-photo',
+        nbInscrits: 0,
+        description: '',
+        dateLimite: '',
+        commentaires: '',
+      },
+      types: ['Autre', 'Cinéma', 'Culture', 'Musée', 'Musique', 'Repas', 'Sport'],
       organisateurs: ['ElJraidi Rim', 'Sajide Idriss', 'Manissadjian Gabriel'],
-      image: 'pas-de-photo',
-      images: ['randonnée', 'cinema', 'musée'],
+      images: ['randonnée', 'cinema', 'musée', 'parc'],
       organisateur: null,
     };
   },
@@ -195,15 +218,24 @@ export default {
       return false;
     },
     reset() {
-      this.nom = null;
-      this.lieu = null;
-      this.rdv = null;
-      this.date = null;
-      this.heure = null;
-      this.limite = null;
-      this.min = null;
-      this.max = null;
-      this.image = 'pas-de-photo';
+      this.addSortieForm = {
+        nom: '',
+        lieu: '',
+        date: '',
+        heure: '',
+        duree: '',
+        point_rdv: '',
+        capaciteMin: 1,
+        capaciteMax: 50,
+        privee: false,
+        id_groupe: 0,
+        typeSortie: 'Autre',
+        photo: 'pas-de-photo',
+        nbInscrits: 0,
+        description: '',
+        dateLimite: '',
+        commentaires: '',
+      }
       this.organisateurs = ['ElJraidi Rim', 'Sajide Idriss', 'Manissadjian Gabriel'];
       this.organisateur = null;
     },
@@ -231,11 +263,48 @@ export default {
       return require('../'+image+'.jpg');
     },
     setImage(i) {
-      this.image = i;
+      this.addSortieForm.photo = i;
     },
     onHide(evt) {
       evt.preventDefault();
       this.$refs.addPhoto.hide("photo-modal");
+    },
+    addSortie(payload) {
+      const path = 'http://localhost:5000/api/sortie/create';
+      axios.post(path, payload)
+        .then(() => {
+          this.getSorties();
+          this.message = 'Sortie added!';
+          this.showMessage = true;
+        })
+        .catch((error) => {
+          console.log(error);
+          this.getSorties();
+        });
+    },
+    submit(evt) {
+      evt.preventDefault();
+      const payload = {
+        nom: this.addSortieForm.nom,
+        lieu: this.addSortieForm.lieu,
+        date: this.addSortieForm.date,
+        heure: this.addSortieForm.heure,
+        duree: this.addSortieForm.duree,
+        point_rdv: this.addSortieForm.point_rdv,
+        nbInscrits: 1,
+        capaciteMin: parseInt(this.addSortieForm.capaciteMin),
+        capaciteMax: parseInt(this.addSortieForm.capaciteMax),
+        privee: this.addSortieForm.privee,
+        id_groupe: this.addSortieForm.id_groupe,
+        typeSortie: this.addSortieForm.typeSortie,
+        photo: this.addSortieForm.photo,
+        nbInscrits: this.addSortieForm.nbInscrits,
+        description: this.addSortieForm.description,
+        dateLimite: this.addSortieForm.dateLimite,
+        commentaires: this.addSortieForm.commentaires,
+      };
+      this.addSortie(payload);
+      this.$router.push({path: `/sorties`});
     }
   },
 };
@@ -335,6 +404,10 @@ h1{
   height: 250px;
   border: 2px inset #EBE9ED;
   text-align: left;
+}
+
+.modal-backdrop {
+    opacity:0.5 !important;
 }
 
 </style>

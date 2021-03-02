@@ -7,7 +7,7 @@
     />
 
     <!-- Header -->
-    <Header :title='name' />
+    <Header :title='sortie.nom' />
     <!-- NavBar -->
     <NavBar />
 
@@ -18,7 +18,7 @@
       <!-- Title + buttons -->
       <div>
         <!-- Title : current activity's name and current activty's ID -->
-        <span class="title"> {{name}} - {{id}} </span>
+        <span class="title"> {{sortie.nom}} - {{sortie.id}} </span>
         <!-- Buttons : show memberd and subscribe/unsuscribe-->
         <div style="float: right">
           <button @click="$bvModal.show('show-members')" class="showMembers">
@@ -36,9 +36,9 @@
       </div>
 
       <!-- view members pannel-->
-      <b-modal ref="showMembers" id="show-members"
+      <b-modal ref="showMembers" id="show-members" hide-footer
         title="Liste des participants">
-        <div v-b-modal.show-members>
+        <div>
           <div style="text-align: center; font-size: 30px;">
             <br>
             <!-- User -->
@@ -75,7 +75,7 @@
       <ul>
         <!-- Activity's photo-->
         <li style="height: 250px;">
-          <img class="fit-picture" :src="getImgUrl(image)">
+          <img class="fit-picture" :src="getImgUrl(sortie.photo)">
         </li>
 
         <!-- Description -->
@@ -85,7 +85,7 @@
           </span>
           <br><br>
           <span class="resumeContent">
-            {{ resume }}
+            {{ sortie.description }}
           </span>
         </li>
       </ul>
@@ -94,13 +94,19 @@
       <ul>
         <li>
           <span class="location">
-            {{ location }}
+            {{ sortie.lieu }}
           </span>
 
           <br>
           
           <span class="date">
-            {{ date }} - {{ hour }}
+            {{ sortie.date }} - {{ sortie.heure }}
+          </span>
+
+          <br>
+          
+          <span class="duree">
+            Durée : {{ sortie.duree }}
           </span>
 
           <br><br><br>
@@ -115,15 +121,15 @@
 
         <li>
           <span class="rdv">
-            Lieu de rendez-vous : {{ rdv }}
+            Lieu de rendez-vous : {{ sortie.point_rdv}}
           </span>
 
-          <br>
+          <br>  
           
           <span class="capacity">
-            Capacité minimum : {{ min }} 
+            Capacité min : {{ sortie.capaciteMin }} 
             <span style="padding: 15px;">-</span>
-            Capacité maximum : {{ max }}
+            Capacité max : {{ sortie.capaciteMax }}
           </span>
 
           <br><br><br>
@@ -184,7 +190,6 @@ export default {
       members: ["ElJraidi Rim", "Sajide Idriss", "Manissadjian Gabriel"],
       comments: ["Trop bien", "C'est sur le parking du haut le rdv ?", "Elle est difficile cette rando pour un débutant ?"],
       is_subscribed: false,
-      sorties: [],
       sortie: {},
     };
   },
@@ -199,6 +204,9 @@ export default {
         .catch((error) => {
           console.error(error);
         });
+    },
+    getImgUrl(image) {
+      return require('../'+image+'.jpg');
     },
     },
     created() {
@@ -303,6 +311,11 @@ li {
   font-size: 20px;
 }
 
+.duree {
+  padding-left: 70px;
+  font-size: 18px;
+}
+
 .capacity, .rdv {
   font-size: 20px;
 }
@@ -338,6 +351,11 @@ li {
 .comment:hover {
   cursor: pointer;
   opacity: 0.7;
+}
+
+.modal-backdrop
+{
+    opacity:0.5 !important;
 }
 
 </style>

@@ -13,9 +13,9 @@ basePath: "/api"
 
 # Paths supported by the server application
 paths:
-  /sorties/get_all:
+  /sortie:
     get:
-      operationId: "sortie.read_all_sorties"
+      operationId: "entities.sortie.read_all_sorties"
       tags:
         - "Sortie"
       summary: "The sortie data structure supported by the server application"
@@ -28,9 +28,28 @@ paths:
             items:
               $ref: '#/definitions/Sortie'
 
-  /sorties/get_one/{id_sortie}:
+    post:
+      operationId: entities.sortie.create
+      tags:
+        - Sortie
+      summary: Create a sortie
+      description: Create a new sortie
+      parameters:
+        - name: sortie
+          in: body
+          description: Sortie to create
+          required: True
+          schema:
+            $ref: '#/definitions/Sortie'
+      responses:
+        201:
+          description: Successfully created sortie
+          schema:
+            $ref: '#/definitions/Sortie'
+
+  /sortie/{id_sortie}:
     get:
-      operationId: "sortie.read_one_sortie_by_id"
+      operationId: "entities.sortie.read_one_sortie_by_id"
       tags:
         - "Sortie"
       summary: "The sortie data structure supported by the server application"
@@ -46,9 +65,9 @@ paths:
           description: "Successful read sortie list operation"
           schema:
             $ref: '#/definitions/Sortie'
-    
+
     put:
-      operationId: sortie.update
+      operationId: entities.sortie.update
       tags:
         - Sortie
       summary: Update a sortie
@@ -70,7 +89,7 @@ paths:
             $ref: '#/definitions/Sortie'
 
     delete:
-      operationId: sortie.delete
+      operationId: entities.sortie.delete
       tags:
         - Sortie
       summary: Delete a sortie from the sortie list
@@ -86,29 +105,9 @@ paths:
           description: Successfully deleted a sortie
 
 
-  /sortie/create:
+  /user:
     post:
-      operationId: sortie.create
-      tags:
-        - Sortie
-      summary: Create a sortie
-      description: Create a new sortie
-      parameters:
-        - name: sortie
-          in: body
-          description: Sortie to create
-          required: True
-          schema:
-            $ref: '#/definitions/Sortie'
-      responses:
-        201:
-          description: Successfully created sortie
-          schema:
-            $ref: '#/definitions/Sortie'
-
-  /user/create:
-    post:
-      operationId: user.create
+      operationId: entities.user.create
       tags:
         - User
       summary: Create a user
@@ -126,10 +125,8 @@ paths:
           schema:
             $ref: '#/definitions/User'
 
-
-  /user/get_all:
     get:
-      operationId: user.get_all_users
+      operationId: entities.user.get_all_users
       tags:
         - User
       summary: Get all users
@@ -151,7 +148,7 @@ definitions:
         type: "integer"
       nom:
         type: "string"
-      location:
+      lieu:
         type: "string"
       date:
         type: "string"

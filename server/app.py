@@ -15,7 +15,7 @@ GROUPES = [
             {
         'id': uuid.uuid4().hex,
         'nom': 'Balade au PPM',
-        'location': 'Parc Paul Mistral',
+        'lieu': 'Parc Paul Mistral',
         'date': '',
         'heure': '',
         'durée': '',
@@ -125,7 +125,7 @@ def all_sorties():
         SORTIES.append({
             'id': uuid.uuid4().hex,
             'nom': post_data.get('nom'),
-            'location': post_data.get('location'),
+            'lieu': post_data.get('lieu'),
             'date': post_data.get('date'),
             'heure': post_data.get('heure'),
             'durée': post_data.get('durée'),
@@ -224,7 +224,7 @@ def single_sortie(sortie_id):
         SORTIES.append({
             'id': uuid.uuid4().hex,
             'nom': post_data.get('nom'),
-            'location': post_data.get('location'),
+            'lieu': post_data.get('lieu'),
             'date': post_data.get('date'),
             'heure': post_data.get('heure'),
             'durée': post_data.get('durée'),
