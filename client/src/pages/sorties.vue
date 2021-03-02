@@ -187,7 +187,7 @@ export default {
         });
     },
     addSortie(payload) {
-      const path = 'http://localhost:5000/api/sortie/create';
+      const path = 'http://localhost:5000/api/sortie';
       axios.post(path, payload)
         .then(() => {
           this.getSorties();
@@ -242,7 +242,7 @@ export default {
       this.updateSortie(payload, this.editForm.id_sortie);
     },
     updateSortie(payload, sortieID) {
-      const path = `http://localhost:5000/api/sorties/get_one/${sortieID}`;
+      const path = `http://localhost:5000/api/sortie/${sortieID}`;
       axios.put(path, payload)
         .then(() => {
           this.getSorties();
@@ -261,7 +261,7 @@ export default {
       this.getSorties();
     },
     removeSortie(sortieID) {
-      const path = `http://localhost:5000/api/sorties/get_one/${sortieID}`;
+      const path = `http://localhost:5000/api/sortie/${sortieID}`;
       axios.delete(path)
         .then(() => {
           this.getSorties();
