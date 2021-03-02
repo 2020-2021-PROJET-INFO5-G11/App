@@ -270,7 +270,7 @@ export default {
       this.$refs.addPhoto.hide("photo-modal");
     },
     addSortie(payload) {
-      const path = 'http://localhost:5000/api/sortie/create';
+      const path = 'http://localhost:5000/api/sortie';
       axios.post(path, payload)
         .then(() => {
           this.getSorties();
