@@ -5,6 +5,12 @@
     <!-- NavBar -->
     <NavBar> </NavBar>
     <!-- Sorties -->
+
+    <!-- Boutton créer une sortie -->
+    <br>
+    <i class="right fa fa-plus-circle fa-3x"
+      @click="$router.push('/creation-sortie')"> Créer une sortie</i> <br>
+
     <div class="row">
       <div class="col-sm-10">
         <h1>Sorties</h1>
@@ -170,11 +176,8 @@ export default {
     alert: Alert, Header, NavBar, Footer,
   },
   methods: {
-    forceRerender() {
-      this.key += 1;
-    },
     getSorties() {
-      const path = 'http://localhost:5000/api/sorties/get_all';
+      const path = 'http://localhost:5000/api/sortie';
       axios.get(path)
         .then((res) => {
           this.sorties = res.data;
@@ -184,7 +187,7 @@ export default {
         });
     },
     addSortie(payload) {
-      const path = 'http://localhost:5000/api/sortie/create';
+      const path = 'http://localhost:5000/api/sortie';
       axios.post(path, payload)
         .then(() => {
           this.getSorties();
@@ -239,7 +242,7 @@ export default {
       this.updateSortie(payload, this.editForm.id_sortie);
     },
     updateSortie(payload, sortieID) {
-      const path = `http://localhost:5000/api/sorties/get_one/${sortieID}`;
+      const path = `http://localhost:5000/api/sortie/${sortieID}`;
       axios.put(path, payload)
         .then(() => {
           this.getSorties();
@@ -258,7 +261,7 @@ export default {
       this.getSorties();
     },
     removeSortie(sortieID) {
-      const path = `http://localhost:5000/api/sorties/get_one/${sortieID}`;
+      const path = `http://localhost:5000/api/sortie/${sortieID}`;
       axios.delete(path)
         .then(() => {
           this.getSorties();
@@ -280,8 +283,22 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
   .bouton {
     background-color: rgb(65, 192, 171);
   }
+
+  .right {
+  float: right;
+}
+
+i  {
+    font-size: 35px;
+  color: rgb(65, 192, 171);
+}
+
+i:hover {
+  color: rgb(15, 138, 117);
+  cursor: pointer;
+}
 </style>

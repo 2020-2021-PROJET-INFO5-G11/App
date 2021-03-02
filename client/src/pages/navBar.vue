@@ -14,7 +14,7 @@
         <ul>
           <!-- Home -->
           <li class="home">
-            <div click="$router.push('/accueil')">
+            <div @click="$router.push('/accueil')">
               <div>
                 <i class="fa fa-home fa-3x"></i>
               </div>
@@ -33,7 +33,7 @@
           </li>
 
           <!-- Group -->
-          <li class="group" click="$router.push('/sorties')">
+          <li class="group" @click="$router.push('/sorties')">
             <div>
               <i class="fa fa-group fa-3x"></i>
             </div>
@@ -57,11 +57,13 @@
               Rechercher une sortie
             </div>
             <input
-              type="text"
-              style="width: 650px; height: 50px; padding: 5px"
-              bg-color="white"
-              placeholder="ID sortie, mots clés ..."
-            />
+                type="text"
+                v-model="search_expression"
+                style="width: 550px; height: 50px; padding: 5px"
+                bg-color="white"
+                placeholder="ID sortie, mots clés ..."
+                @keyup.enter="searchSortie"
+            >
           </li>
         </ul>
       </li>
@@ -71,7 +73,7 @@
       <li class="right">
         <ul>
           <!-- Back button -->
-          <li class="back" click="$router.push('/sorties')">
+          <li class="back" @click="$router.go(-1)">
             <div>
               <i class="fa fa-arrow-left fa-3x"></i>
             </div>
@@ -79,7 +81,7 @@
           </li>
 
           <!-- Notifications -->
-          <li class="activity" click="$router.push('/sorties')">
+          <li class="activity" @click="$router.push('/sorties')">
             <div @click="$router.push('/sorties')">
               <div>
                 <i class="fa fa-bell-o fa-3x"></i>
@@ -89,7 +91,7 @@
           </li>
 
           <!-- Profil button -->
-          <li class="profil" click="$router.push('/sorties')">
+          <li class="profil" @click="$router.push('/sorties')">
             <div>
               <i class="fa fa-user fa-3x"></i>
             </div>
@@ -97,7 +99,7 @@
           </li>
 
           <!-- log out button -->
-          <li class="logout" click="$router.push('/sorties')">
+          <li class="logout" @click="$router.push('/sorties')">
             <div>
               <i class="fa fa-sign-out fa-3x"></i>
             </div>
@@ -106,13 +108,27 @@
         </ul>
       </li>
     </ul>
+    <div :key="key"></div>
   </div>
 </template>
 
 <script>
 export default {
   data() {
-    return {};
+    return {
+      search_expression: '',
+      key: 0,
+    };
+  },
+  methods: {
+    forceRerender() {
+      this.key += 1;
+    },
+    searchSortie(e) {
+      if (e.keyCode === 13) {
+        this.$router.push(`/recherche/${this.search_expression}`)
+      }
+    },
   },
 };
 </script>

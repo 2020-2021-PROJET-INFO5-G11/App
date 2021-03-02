@@ -101,3 +101,9 @@ def delete(id_sortie):
             "Sortie not found for Id: {id_sortie}".format(id_sortie=id_sortie),
         )
 
+
+def get_sorties_by_search(search):
+    sorties = Sortie.query.filter(Sortie.nom.contains(search) | Sortie.typeSortie.contains(search) | Sortie.id_sortie.contains(search))
+
+    sortie_schema = SortieSchema(many=True)
+    return sortie_schema.dump(sorties)

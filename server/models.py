@@ -62,12 +62,12 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
 class Sortie(db.Model):
     __tablename__ = 'sorties'
     id_sortie = db.Column(db.Integer, primary_key=True)
-    nom = db.Column(db.String(32), index=True)
-    lieu = db.Column(db.String(32))
+    nom = db.Column(db.String(128), index=True)
+    lieu = db.Column(db.String(64))
     date = db.Column(db.String(32))
     heure = db.Column(db.String(32))
     duree = db.Column(db.String(32))
-    point_rdv = db.Column(db.String(32))
+    point_rdv = db.Column(db.String(128))
     capaciteMin = db.Column(db.Integer)
     capaciteMax = db.Column(db.Integer)
     privee = db.Column(db.Boolean)
@@ -77,7 +77,7 @@ class Sortie(db.Model):
     nbInscrits = db.Column(db.Integer)
     description = db.Column(db.String(1024))
     dateLimite = db.Column(db.String(32))
-    commentaires = db.Column(db.String(32))
+    commentaires = db.Column(db.String(128))
 
     commentaire = db.relationship(
         'Commentaire',
