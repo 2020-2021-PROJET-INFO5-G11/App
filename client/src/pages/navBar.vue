@@ -126,8 +126,8 @@ export default {
     },
     searchSortie(e) {
       if (e.keyCode === 13) {
-        this.$router.push({path: `/recherche/${this.search_expression}`})
-        vm.$forceUpdate();
+        this.$router.push(`/recherche/${this.search_expression}`)
+        this.$router.go()
       }
     },
   },
