@@ -8,6 +8,7 @@
     python app.py
 
 //CLIENT
+    
     cd client
     npm install
     npm run serve
