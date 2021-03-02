@@ -1,147 +1,83 @@
 <template>
   <div>
+
     <!-- Header -->
     <Header title="Page temporaire"/>
+
     <!-- NavBar -->
     <NavBar> </NavBar>
-    <!-- Sorties -->
 
     <!-- Boutton créer une sortie -->
     <br>
     <i class="right fa fa-plus-circle fa-3x"
       @click="$router.push('/creation-sortie')"> Créer une sortie</i> <br>
 
-    <div class="row">
-      <div class="col-sm-10">
-        <h1>Sorties</h1>
-        <hr><br><br>
-        <alert :message=message v-if="showMessage"></alert>
-        <button type="button" class="btn btn-success btn-sm" v-b-modal.sortie-modal>
-          Créer une nouvelle Sortie
-        </button>
-        <br><br>
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th scope="col">Nom</th>
-              <th scope="col">Type</th>
-              <th scope="col">Privée ?</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(sortie, index) in sorties" :key="index">
-              <td>{{ sortie.nom }}</td>
-              <td>{{ sortie.typeSortie }}</td>
-              <td>
-                <span v-if="sortie.privee">Oui</span>
-                <span v-else>Non</span>
-              </td>
-              <td>
-                <div class="btn-group" role="group">
-                  <button
-                          type="button"
-                          class="bouton"
-                          v-b-modal.sortie-view-modal
-                          @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
-                      Voir sortie
-                  </button>
-                  <button
-                          type="button"
-                          class="btn btn-warning btn-sm"
-                          v-b-modal.sortie-update-modal
-                          @click="editSortie(sortie)">
-                      Modifier
-                  </button>
-                  <button
-                          type="button"
-                          class="btn btn-danger btn-sm"
-                          @click="onDeleteSortie(sortie)">
-                      Supprimer
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <!-- Title -->
+    <h1 class="title"> Toutes les sorties </h1>
+    <hr>
+
+    <!-- Alert message -->
+    <alert :message=message v-if="showMessage"></alert><br>
+
+    <!-- Filter -->
+
+    <div class="filter">
+      <select style="width: 300px;">
+        <option value="" disabled hidden selected>Filtrer par type de sortie</option>
+        <option v-for="t in types" :key="t" @click="filter(t)">
+          {{ t }}
+        </option>
+      </select>
+      <br><br>
     </div>
-    <b-modal ref="addSortieModal"
-            id="sortie-modal"
-            title="Créer une nouvelle sortie"
-            hide-footer>
-      <b-form @submit="onSubmit" @reset="onReset" class="w-100">
-      <b-form-group id="form-title-group"
-                    label="Nom:"
-                    label-for="form-title-input">
-          <b-form-input id="form-title-input"
-                        type="text"
-                        v-model="addSortieForm.nom"
-                        required
-                        placeholder="Enter title">
-          </b-form-input>
-        </b-form-group>
-        <b-form-group id="form-author-group"
-                      label="Type:"
-                      label-for="form-author-input">
-            <b-form-input id="form-author-input"
-                          type="text"
-                          v-model="addSortieForm.typeSortie"
-                          required
-                          placeholder="Enter author">
-            </b-form-input>
-          </b-form-group>
-        <b-form-group id="form-read-group">
-          <b-form-checkbox-group v-model="addSortieForm.privee" id="form-checks">
-            <b-form-checkbox value="true">Privée?</b-form-checkbox>
-          </b-form-checkbox-group>
-        </b-form-group>
-        <b-button-group>
-          <b-button type="submit" variant="primary">Submit</b-button>
-          <b-button type="reset" variant="danger">Reset</b-button>
-        </b-button-group>
-      </b-form>
-    </b-modal>
-    <b-modal ref="editSortieModal"
-            id="sortie-update-modal"
-            title="Update"
-            hide-footer>
-      <b-form @submit="onSubmitUpdate" @reset="onResetUpdate" class="w-100">
-      <b-form-group id="form-title-edit-group"
-                    label="Title:"
-                    label-for="form-title-edit-input">
-          <b-form-input id="form-title-edit-input"
-                        type="text"
-                        v-model="editForm.nom"
-                        required
-                        placeholder="Enter title">
-          </b-form-input>
-        </b-form-group>
-        <b-form-group id="form-author-edit-group"
-                      label="Author:"
-                      label-for="form-author-edit-input">
-            <b-form-input id="form-author-edit-input"
-                          type="text"
-                          v-model="editForm.typeSortie"
-                          required
-                          placeholder="Enter author">
-            </b-form-input>
-          </b-form-group>
-        <b-form-group id="form-read-edit-group">
-          <b-form-checkbox-group v-model="editForm.privee" id="form-checks">
-            <b-form-checkbox value="true">Privée?</b-form-checkbox>
-          </b-form-checkbox-group>
-        </b-form-group>
-        <b-button-group>
-          <b-button type="submit" variant="primary">Update</b-button>
-          <b-button type="reset" variant="danger">Cancel</b-button>
-        </b-button-group>
-      </b-form>
-    </b-modal>
+
+    <!-- Activities -->
+    <ul class="scrollmenu">
+      <!-- -->
+      <li v-for="(sortie, index) in sorties" :key="index">
+
+        <!-- Image -->
+        <div class="rect" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
+          <img class="fit-picture" :src="getImgUrl(sortie.photo)"  >
+        </div> <br>
+
+        <!-- Name -->
+        <div class="data">
+          <span @click="$router.push({path: `/sortie/${sortie.id_sortie}`})" class="date"> {{sortie.date}} </span>
+          <span @click="$router.push({path: `/sortie/${sortie.id_sortie}`})" class="nom"> {{sortie.nom}} </span><br> 
+        </div>
+
+        <!-- Buttons -->
+        <div style="text-align: center;">
+          <!-- View activity-->
+          <button type="button"
+                  class="bouton btn-sm"
+                  v-b-modal.sortie-view-modal
+                  @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
+              Voir sortie
+          </button>&ensp;
+          <!-- Edit activity -->
+          <button type="button"
+                  class="btn btn-warning btn-sm"
+                  v-b-modal.sortie-update-modal
+                  @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
+              Modifier
+          </button>&ensp;
+          <!-- Delete activity -->
+          <button type="button"
+                  class="btn btn-danger btn-sm"
+                  @click="onDeleteSortie(sortie)">
+              Supprimer
+          </button>
+        </div>
+      </li>
+
+    </ul>
 
     <!-- Footer -->
+    <br><br>
     <Footer />
-    <div :key="key"></div>
+
   </div>
 </template>
 
@@ -170,12 +106,16 @@ export default {
         typeSortie: '',
         privee: [],
       },
+      types: ['Pas de filtre', 'Autre', 'Cinéma', 'Culture', 'Musée', 'Musique', 'Repas', 'Sport'],
     };
   },
   components: {
     alert: Alert, Header, NavBar, Footer,
   },
   methods: {
+    getImgUrl(image) {
+      return require('../'+image+'.jpg');
+    },
     getSorties() {
       const path = 'http://localhost:5000/api/sortie';
       axios.get(path)
@@ -186,12 +126,27 @@ export default {
           console.error(error);
         });
     },
+    filter(type) {
+      if(type == 'Pas de filtre'){
+        this.getSorties();
+      }
+      else{
+        const path = "http://localhost:5000/api/search/" + type;
+        axios.get(path)
+          .then((res) => {
+            this.sorties = res.data;
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+    },
     addSortie(payload) {
       const path = 'http://localhost:5000/api/sortie';
       axios.post(path, payload)
         .then(() => {
           this.getSorties();
-          this.message = 'Sortie added!';
+          this.message = 'Sortie créee!';
           this.showMessage = true;
         })
         .catch((error) => {
@@ -246,7 +201,7 @@ export default {
       axios.put(path, payload)
         .then(() => {
           this.getSorties();
-          this.message = 'Sortie updated!';
+          this.message = 'Sortie mise à jour!';
           this.showMessage = true;
         })
         .catch((error) => {
@@ -265,7 +220,7 @@ export default {
       axios.delete(path)
         .then(() => {
           this.getSorties();
-          this.message = 'Sortie removed!';
+          this.message = 'Sortie supprimée!';
           this.showMessage = true;
         })
         .catch((error) => {
@@ -284,16 +239,17 @@ export default {
 </script>
 
 <style scoped>
-  .bouton {
-    background-color: rgb(65, 192, 171);
-  }
 
-  .right {
+.bouton {
+  background-color: rgb(65, 192, 171);
+}
+
+.right {
   float: right;
 }
 
 i  {
-    font-size: 35px;
+  font-size: 35px;
   color: rgb(65, 192, 171);
 }
 
@@ -301,4 +257,66 @@ i:hover {
   color: rgb(15, 138, 117);
   cursor: pointer;
 }
+
+li {
+  display: inline-block;
+  padding: 4em;
+}
+
+.scrollmenu {
+}
+
+.fit-picture {
+  width: 320px;
+  height: 210px;
+}
+
+.rect {
+  border: solid;
+  border-width: 5px;
+  border-color: black;
+  width: 328px;
+  height: 219px;
+}
+
+.nom {
+  height: 26px;
+  word-break:break-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1; /* number of lines to show */
+  -webkit-box-orient: vertical;
+
+}
+
+.data {
+  width: 328px;
+  font-size: 20px;
+  text-align: center;
+}
+
+.nom:hover, .date:hover{
+  cursor: pointer;
+}
+
+img:hover {
+  opacity: 0.7;
+}
+
+.rect:hover {
+  border-color: rgb(15, 138, 117);
+  cursor: pointer;
+}
+
+.title {
+  padding-left: 20px;
+}
+
+.filter {
+  padding-left: 4em;
+  font-size: 20px;
+  text-align: center;
+}
+
 </style>
