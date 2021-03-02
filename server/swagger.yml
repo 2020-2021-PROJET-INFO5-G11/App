@@ -151,7 +151,7 @@ definitions:
         type: "integer"
       nom:
         type: "string"
-      location:
+      lieu:
         type: "string"
       date:
         type: "string"
