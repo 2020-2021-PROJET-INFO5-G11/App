@@ -123,6 +123,25 @@ paths:
           schema:
             $ref: '#/definitions/Sortie'
 
+  /sortie/{type_sortie}:
+    get:
+      operationId: "entities.sortie.get_sorties_by_type"
+      tags:
+        - Sortie
+      summary: "The sortie data structure supported by the server application"
+      description: "Filter sorties corresponding to the given type of sortie"
+      parameters:
+        - name: type_sortie
+          in: path
+          description: type of the sorties to get
+          type: string
+          required: true
+      responses:
+        200:
+          description: "Successful filter sortie list operation"
+          schema:
+            $ref: '#/definitions/Sortie'
+
   /user:
     post:
       operationId: entities.user.create

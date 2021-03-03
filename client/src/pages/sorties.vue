@@ -22,9 +22,9 @@
     <!-- Filter -->
 
     <div class="filter">
-      <select style="width: 300px;">
-        <option value="" disabled hidden selected>Filtrer par type de sortie</option>
-        <option v-for="t in types" :key="t" @click="filter(t)">
+      <select style="width: 300px;" v-model="selected" v-on:change="filter($event)">
+        <option value=""</option>
+        <option v-for="t in types" :key="t">
           {{ t }}
         </option>
       </select>
@@ -106,7 +106,8 @@ export default {
         typeSortie: '',
         privee: [],
       },
-      types: ['Pas de filtre', 'Autre', 'Cinéma', 'Culture', 'Musée', 'Musique', 'Repas', 'Sport'],
+      types: ['Toutes les sorties', 'Autre', 'Cinéma', 'Culture', 'Musée', 'Musique', 'Repas', 'Sport'],
+      selected: 'Toutes les sorties',
     };
   },
   components: {
@@ -121,17 +122,18 @@ export default {
       axios.get(path)
         .then((res) => {
           this.sorties = res.data;
+          console.log(this.sorties)
         })
         .catch((error) => {
           console.error(error);
         });
     },
-    filter(type) {
-      if(type == 'Pas de filtre'){
+    filter(evt) {
+      if(evt.target.value === 'Toutes les sorties'){
         this.getSorties();
       }
       else{
-        const path = "http://localhost:5000/api/search/" + type;
+        const path = `http://localhost:5000/api/sortie/${evt.target.value}`;
         axios.get(path)
           .then((res) => {
             this.sorties = res.data;
