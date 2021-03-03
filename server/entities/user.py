@@ -23,7 +23,7 @@ def get_current():
     user_schema = UserSchema()
     return user_schema.dump(current_user)
 
-@login_required
+# @login_required
 def get_all_users():
     users = User.query.all()
 
