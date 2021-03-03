@@ -111,6 +111,9 @@ export default {
     alert: Alert, Header, NavBar, Footer,
   },
   methods: {
+    forceRerender() {
+      this.key += 1;
+    },
     getImgUrl(image) {
       return require('../'+image+'.jpg');
     },
