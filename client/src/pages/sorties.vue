@@ -22,7 +22,7 @@
     <!-- Filter -->
 
     <div class="filter">
-      <select style="width: 300px;">
+      <select style="width: 300px;" v-on:change="filter($event)">
         <option value="" disabled hidden selected>Filtrer par type de sortie</option>
         <option v-for="t in types" :key="t" @click="filter(t)">
           {{ t }}
@@ -131,7 +131,7 @@ export default {
         this.getSorties();
       }
       else{
-        const path = "http://localhost:5000/api/search/" + type;
+        const path = `http://localhost:5000/api/sortie/${type.target.value}`;
         axios.get(path)
           .then((res) => {
             this.sorties = res.data;
