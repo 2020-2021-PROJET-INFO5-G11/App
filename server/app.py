@@ -4,7 +4,7 @@ from flask import Flask, jsonify, request
 from config import *
 from models import Sortie, SortieSchema
 
-
+"""
 GROUPES = [
     {
         'id': uuid.uuid4().hex,
@@ -68,11 +68,8 @@ UTILISATEURS = [
         'feedbacks': '',
     },
 ]
+"""
 
-# Read the swagger.yml file to configure the endpoints
-app.add_api('swagger.yml')
-
-# @app.route('/api/sorties/get_all', methods=['GET', 'POST'])
 """
 # home
 @app.route('/')
