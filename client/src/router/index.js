@@ -47,5 +47,15 @@ export default new Router({
       name: 'searchSortie',
       component: () => import('../pages/searchSortie.vue'),
     },
+    {
+      path: '/profil/:id',
+      name: 'profil',
+      component: () => import('../pages/myProfile.vue')
+    },
+    {
+      path: '/modifier_profil/:id',
+      name: 'modifier_profil',
+      component: () => import('../pages/modifier_profil.vue')
+    },
   ],
 });
