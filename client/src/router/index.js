@@ -1,7 +1,5 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Sorties from '../pages/sorties.vue';
-import Inscription from '../pages/inscription.vue';
 
 Vue.use(Router);
 
