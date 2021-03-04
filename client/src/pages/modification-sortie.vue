@@ -2,7 +2,7 @@
   <div>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Header -->
-    <Header title="Page de création de sortie"/>
+    <Header title="Page de modification de sortie"/>
     <!-- NavBar -->
     <NavBar> </NavBar>
     <!-- Body -->
@@ -10,12 +10,10 @@
 
       <!-- Formulaire -->
       <form id="app"
-            @submit="checkForm"
-            @reset="reset"
             action="https://vuejs.org/"
             method="post">
 
-        <br> <h1> Créer une sortie </h1> <br>
+        <br> <h1> ID sortie : {{ id }}  </h1> <br>
 
         <!-- columns -->
         <ul>
@@ -28,8 +26,8 @@
             <div>
               <label> Photo </label>
               <div class="rect">
-                <img @click="$bvModal.show('photo-modal')" class="fit-picture" :src="getImgUrl(addSortieForm.photo)">
-              </div>
+                <img @click="$bvModal.show('photo-modal')" class="fit-picture" :src="getImgUrl(photo)">
+              </div>  
             </div>
 
             <b-modal ref="addPhoto"
@@ -52,7 +50,7 @@
             <br><br><br>
             <label> Description </label>
             <div>
-              <textarea v-model="addSortieForm.description" cols="40" rows="5" style="width:300px; height:220px;" required/>
+              <textarea v-model="description" @input="onChange()" cols="40" rows="5" style="width:300px; height:220px;" required/>
             </div>
           </li>
 
@@ -63,7 +61,7 @@
 
             <div>
               <span> Préciser le type de la sortie </span>
-              <select v-model="addSortieForm.typeSortie">
+              <select v-model="typeSortie" @change="onChange()">
                 <option v-for="t in types" :key="t">
                   {{ t }}
                 </option>
@@ -72,37 +70,36 @@
             </div>
 
             <div>
-              <input v-model="addSortieForm.nom" type="text" style="width: 500px;" placeholder="Nom" required/>
-              {{ addSortieForm.nom }}
+              <input v-model="nom" @input="onChange()" type="text" style="width: 500px;" placeholder="Nom" required/>
             </div>
             <br><br>
             <div>
-              <input v-model="addSortieForm.lieu" type="text" style="width: 500px;" placeholder="Lieu" required/>
+              <input v-model="lieu" @input="onChange()" type="text" style="width: 500px;" placeholder="Lieu" required/>
             </div>
             <br><br>
             <div>
-              <input v-model="addSortieForm.point_rdv" type="text" style="width: 500px;"
+              <input v-model="point_rdv" @input="onChange()" type="text" style="width: 500px;"
                      placeholder="Point de rendez-vous" required/>
             </div>
             <br><br>
             <div>
               <span> Date et heure </span>
-              <input  v-model="addSortieForm.date" type="date" required/>
-              <input  v-model="addSortieForm.heure" type="time" required/>
+              <input  v-model="date" @input="onChange()" type="date" required/>
+              <input  v-model="heure" @input="onChange()" type="time" required/>
               <span style="margin-left: 10px;"> Durée </span>
-              <input v-model="addSortieForm.duree" type="time" required/> 
+              <input v-model="duree" @input="onChange()" type="time" required/> 
             </div>
             <br><br>
             <div>
               <span> Date limite d'inscription </span>
-              <input  v-model="addSortieForm.dateLimite" type="date" required/>
+              <input  v-model="dateLimite" @input="onChange()" type="date" required/>
             </div>
             <br><br>
             <div>
               <span> Capacité minimum </span>
-              <input  v-model="addSortieForm.capaciteMin" type="number" style="width:70px;" required/>
+              <input  v-model="capaciteMin" @input="onChange()" type="number" style="width:70px;" required/>
               <span style="margin-left: 10px;"> Capacité maximum </span>
-              <input  v-model="addSortieForm.capaciteMax" type="number" style="width:70px;" required/>
+              <input  v-model="capaciteMax" @input="onChange()" type="number" style="width:70px;" required/>
             <br><br>
             </div>
 
@@ -156,8 +153,7 @@
 
         <!-- submit button -->
         <div style="padding-left:800px">
-          <input class="submit" @click="submit" type="submit" value="Submit"> &ensp;
-          <input class="reset" type="reset" value="Reset">
+          <input class="submit" @click="edit" type="submit" value="Edit"> &ensp;
           <br>
         </div>
         <br><br>
@@ -181,25 +177,26 @@ export default {
   components: { Header, NavBar, Footer },
   data() {
     return {
+      nom: '',
+      lieu: '',
+      date: '',
+      heure: '',
+      duree: '',
+      point_rdv: '',
+      capaciteMin: 1,
+      capaciteMax: 50,
+      privee: false,
+      id_groupe: 0,
+      typeSortie: 'Autre',
+      photo: 'pas-de-photo',
+      nbInscrits: 0,
+      description: '',
+      dateLimite: '',
+      commentaires: '',
+      //sortie: this.getSortie(),
+      sortie: {},
+      editForm: {}, 
       username: 'Vernet Maxime',
-      addSortieForm: {
-        nom: '',
-        lieu: '',
-        date: '',
-        heure: '',
-        duree: '',
-        point_rdv: '',
-        capaciteMin: 1,
-        capaciteMax: 50,
-        privee: false,
-        id_groupe: 0,
-        typeSortie: 'Autre',
-        photo: 'pas-de-photo',
-        nbInscrits: 0,
-        description: '',
-        dateLimite: '',
-        commentaires: '',
-      },
       types: ['Autre', 'Cinéma', 'Culture', 'Musée', 'Musique', 'Repas', 'Sport'],
       organisateurs: ['ElJraidi Rim', 'Sajide Idriss', 'Manissadjian Gabriel'],
       images: ['randonnée', 'cinema', 'musée', 'parc'],
@@ -207,38 +204,48 @@ export default {
     };
   },
   methods: {
-    checkForm(e) {
-      if (this.nom && this.lieu && this.rdv && this.date
-      && this.heure && this.limite && this.min && this.max) {
-        return true;
-      }
-
-      this.submit = true;
-
-      e.preventDefault();
-      return false;
+    changeNom() {
+      this.editForm.nom = this.nom;
     },
-    reset() {
-      this.addSortieForm = {
-        nom: '',
-        lieu: '',
-        date: '',
-        heure: '',
-        duree: '',
-        point_rdv: '',
-        capaciteMin: 1,
-        capaciteMax: 50,
-        privee: false,
-        id_groupe: 0,
-        typeSortie: 'Autre',
-        photo: 'pas-de-photo',
-        nbInscrits: 0,
-        description: '',
-        dateLimite: '',
-        commentaires: '',
-      }
-      this.organisateurs = ['ElJraidi Rim', 'Sajide Idriss', 'Manissadjian Gabriel'];
-      this.organisateur = null;
+    getSortie() {
+      const path = `http://localhost:5000/api/sortie/${this.$route.params.id}`;
+      axios.get(path)
+        .then((res) => {
+          this.id = this.$route.params.id;
+          this.nom = res.data.nom,
+          this.editForm.nom = res.data.nom,
+          this.lieu = res.data.lieu,
+          this.editForm.lieu = res.data.lieu,
+          this.date = res.data.date,
+          this.editForm.date = res.data.date,
+          this.heure = res.data.heure,
+          this.editForm.heure = res.data.heure,
+          this.duree = res.data.duree,
+          this.editForm.duree = res.data.duree,
+          this.point_rdv = res.data.point_rdv,
+          this.editForm.point_rdv = res.data.point_rdv,
+          this.capaciteMin = res.data.capaciteMin,
+          this.editForm.capaciteMin = res.data.capaciteMin,
+          this.capaciteMax = res.data.capaciteMax,
+          this.editForm.capaciteMax = res.data.capaciteMax,
+          this.editForm.privee = res.data.privee,
+          this.editForm.id_groupe = res.data.id_groupe,
+          this.typeSortie = res.data.typeSortie,
+          this.editForm.typeSortie = res.data.typeSortie,
+          this.photo = res.data.photo,
+          this.editForm.photo = res.data.photo,
+          this.nbInscrits = res.data.nbInscrits,
+          this.editForm.nbInscrits = res.data.nbInscrits,
+          this.description = res.data.description,
+          this.editForm.description = res.data.description,
+          this.dateLimite = res.data.dateLimite,
+          this.editForm.dateLimite = res.data.dateLimite,
+          this.editForm.commentaires = res.data.commentaires,
+          this.sortie = res.data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     },
     ajouterOrganisateur() {
       let exist = false;
@@ -264,50 +271,66 @@ export default {
       return require('../'+image+'.jpg');
     },
     setImage(i) {
-      this.addSortieForm.photo = i;
+      this.editForm.photo = i;
+      this.photo = i;
     },
     onHide(evt) {
       evt.preventDefault();
       this.$refs.addPhoto.hide("photo-modal");
     },
-    addSortie(payload) {
-      const path = 'http://localhost:5000/api/sortie';
-      axios.post(path, payload)
+    onChange() {
+      this.editForm.nom = this.nom;
+      this.editForm.lieu = this.lieu;
+      this.editForm.date = this.date;
+      this.editForm.heure = this.heure;
+      this.editForm.duree = this.duree;
+      this.editForm.point_rdv = this.point_rdv;
+      this.editForm.nbInscrits = this.nbInscrits;
+      this.editForm.capaciteMin = this.capaciteMin;
+      this.editForm.capaciteMax = this.capaciteMax;
+      this.editForm.typeSortie = this.typeSortie;
+      this.editForm.photo = this.photo;
+      this.editForm.description = this.description;
+      this.editForm.dateLimite = this.dateLimite;      
+    },
+    updateSortie(payload, sortieID) {
+      const path = `http://localhost:5000/api/sortie/${sortieID}`;
+      axios.put(path, payload)
         .then(() => {
-          this.getSorties();
-          this.message = 'Sortie added!';
-          this.showMessage = true;
+          this.$router.push({path: `/sorties`});
         })
         .catch((error) => {
-          console.log(error);
-          this.getSorties();
+          console.error(error);
         });
     },
-    submit(evt) {
+    edit(evt) {
       evt.preventDefault();
       const payload = {
-        nom: this.addSortieForm.nom,
-        lieu: this.addSortieForm.lieu,
-        date: this.addSortieForm.date,
-        heure: this.addSortieForm.heure,
-        duree: this.addSortieForm.duree,
-        point_rdv: this.addSortieForm.point_rdv,
-        nbInscrits: 1,
-        capaciteMin: parseInt(this.addSortieForm.capaciteMin),
-        capaciteMax: parseInt(this.addSortieForm.capaciteMax),
-        privee: this.addSortieForm.privee,
-        id_groupe: this.addSortieForm.id_groupe,
-        typeSortie: this.addSortieForm.typeSortie,
-        photo: this.addSortieForm.photo,
-        nbInscrits: this.addSortieForm.nbInscrits,
-        description: this.addSortieForm.description,
-        dateLimite: this.addSortieForm.dateLimite,
-        commentaires: this.addSortieForm.commentaires,
+        nom: this.editForm.nom,
+        lieu: this.editForm.lieu,
+        date: this.editForm.date,
+        heure: this.editForm.heure,
+        duree: this.editForm.duree,
+        point_rdv: this.editForm.point_rdv,
+        nbInscrits: this.editForm.nbInscrits,
+        capaciteMin: parseInt(this.editForm.capaciteMin),
+        capaciteMax: parseInt(this.editForm.capaciteMax),
+        privee: this.editForm.privee,
+        // id_groupe: this.editForm.id_groupe,
+        typeSortie: this.editForm.typeSortie,
+        photo: this.editForm.photo,
+        nbInscrits: this.editForm.nbInscrits,
+        description: this.editForm.description,
+        dateLimite: this.editForm.dateLimite,
+        commentaires: this.editForm.commentaires,
       };
-      this.addSortie(payload);
-      this.$router.push({path: `/sorties`});
+      this.updateSortie(payload, this.id);
     }
   },
+  created() {
+      this.getSortie();
+      console.log("done");
+    },
 };
 </script>
 
