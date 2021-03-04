@@ -67,7 +67,7 @@ def update(id_sortie, sortie):
     if update_sortie is None:
         abort(
             404,
-            "Sortie not found for Id: {sortie_id}".format(sortie_id=sortie_id),
+            "Sortie not found for Id: {id_sortie}".format(id_sortie=id_sortie),
         )
 
     else:
@@ -104,6 +104,12 @@ def delete(id_sortie):
 
 def get_sorties_by_search(search):
     sorties = Sortie.query.filter(Sortie.nom.contains(search) | Sortie.typeSortie.contains(search) | Sortie.id_sortie.contains(search))
+
+    sortie_schema = SortieSchema(many=True)
+    return sortie_schema.dump(sorties)
+
+def get_sorties_by_type(type_sortie):
+    sorties = Sortie.query.filter(Sortie.typeSortie.contains(type_sortie))
 
     sortie_schema = SortieSchema(many=True)
     return sortie_schema.dump(sorties)

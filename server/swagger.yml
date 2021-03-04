@@ -17,7 +17,7 @@ paths:
     get:
       operationId: "entities.sortie.read_all_sorties"
       tags:
-        - "Sortie"
+        - Sortie
       summary: "The sortie data structure supported by the server application"
       description: "Read the list of sortie"
       responses:
@@ -51,7 +51,7 @@ paths:
     get:
       operationId: "entities.sortie.read_one_sortie_by_id"
       tags:
-        - "Sortie"
+        - Sortie
       summary: "The sortie data structure supported by the server application"
       description: "Read one sortie corresponding to the given id"
       parameters:
@@ -108,7 +108,7 @@ paths:
     get:
       operationId: "entities.sortie.get_sorties_by_search"
       tags:
-        - "Sortie"
+        - Sortie
       summary: "The sortie data structure supported by the server application"
       description: "Read one sortie corresponding to the given id"
       parameters:
@@ -120,6 +120,25 @@ paths:
       responses:
         200:
           description: "Successful search sortie list operation"
+          schema:
+            $ref: '#/definitions/Sortie'
+
+  /filter/{type_sortie}:
+    get:
+      operationId: "entities.sortie.get_sorties_by_type"
+      tags:
+        - Sortie
+      summary: "The sortie data structure supported by the server application"
+      description: "Filter sorties corresponding to the given type of sortie"
+      parameters:
+        - name: type_sortie
+          in: path
+          description: type of the sorties to get
+          type: string
+          required: true
+      responses:
+        200:
+          description: "Successful filter sortie list operation"
           schema:
             $ref: '#/definitions/Sortie'
 
@@ -157,6 +176,120 @@ paths:
             items:
               $ref: '#/definitions/User'
 
+  /user/{id}:
+    get:
+      operationId: "entities.user.read_one_user_by_id"
+      tags:
+        - User
+      summary: "The user data structure supported by the server application"
+      description: "Read one user corresponding to the given id"
+      parameters:
+        - name: id
+          in: path
+          description: Id of the user to get
+          type: integer
+          required: True
+      responses:
+        200:
+          description: "Successful read user list operation"
+          schema:
+            $ref: '#/definitions/User'
+
+    put:
+      operationId: entities.user.update
+      tags:
+        - User
+      summary: Update a user
+      description: Update a sortie
+      parameters:
+        - name: id
+          in: path
+          description: Id the user to update
+          type: integer
+          required: True
+        - name: user
+          in: body
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        200:
+          description: Successfully updated user
+          schema:
+            $ref: '#/definitions/User'
+
+    delete:
+      operationId: entities.user.delete
+      tags:
+        - User
+      summary: Delete a user from the user list
+      description: Delete a user
+      parameters:
+        - name: id
+          in: path
+          type: integer
+          description: Id of the user to delete
+          required: true
+      responses:
+        200:
+          description: Successfully deleted a user
+
+  /user/login:
+    get:
+      tags:
+        - User
+      summary: "Logs user into the system"
+      description: ""
+      operationId: entities.user.login
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "query"
+        description: "The user name for login"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "query"
+        description: "The password for login in clear text"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+        "400":
+          description: "Invalid username/password supplied"
+
+  /user/logout:
+    get:
+      tags:
+        - User
+      summary: "Logs out current logged in user session"
+      description: ""
+      operationId: entities.user.logout
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters: []
+      responses:
+        default:
+          description: "successful operation"
+
+  /user/current:
+    get:
+      operationId: "entities.user.get_current"
+      tags:
+        - User
+      summary: "Get the current user"
+      description: "Get the user currently logged"
+      responses:
+        200:
+          description: "Current user successfully retreived"
+          schema:
+            $ref: '#/definitions/User'
+
+
+#------------------------------------------------------------------------------------------
 
 definitions:
   Sortie:
@@ -200,9 +333,11 @@ definitions:
   User:
     type: "object"
     properties:
-      id_user:
+      id:
         type: "integer"
       pseudo:
+        type: "string"
+      password_hash:
         type: "string"
       prenom:
         type: "string"

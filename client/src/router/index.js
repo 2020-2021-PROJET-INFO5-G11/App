@@ -1,7 +1,5 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Sorties from '../pages/sorties.vue';
-import Inscription from '../pages/inscription.vue';
 
 Vue.use(Router);
 
@@ -53,6 +51,16 @@ export default new Router({
       path: '/recherche/:search',
       name: 'searchSortie',
       component: () => import('../pages/searchSortie.vue'),
+    },
+    {
+      path: '/profil/:id',
+      name: 'profil',
+      component: () => import('../pages/myProfile.vue')
+    },
+    {
+      path: '/modifier_profil/:id',
+      name: 'modifier_profil',
+      component: () => import('../pages/modifier_profil.vue')
     },
   ],
 });
