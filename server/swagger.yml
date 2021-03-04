@@ -18,7 +18,7 @@ paths:
       operationId: "entities.sortie.read_all_sorties"
       tags:
         - Sortie
-      summary: "The sortie data structure supported by the server application"
+      summary: Get all the sortie
       description: "Read the list of sortie"
       responses:
         200:
@@ -49,11 +49,11 @@ paths:
 
   /sortie/{id_sortie}:
     get:
-      operationId: "entities.sortie.read_one_sortie_by_id"
+      operationId: entities.sortie.read_one_sortie_by_id
       tags:
         - Sortie
-      summary: "The sortie data structure supported by the server application"
-      description: "Read one sortie corresponding to the given id"
+      summary: Get one sortie by id
+      description: Read one sortie corresponding to the given id
       parameters:
         - name: id_sortie
           in: path
@@ -62,7 +62,7 @@ paths:
           required: True
       responses:
         200:
-          description: "Successful read sortie list operation"
+          description: Successful read sortie list operation
           schema:
             $ref: '#/definitions/Sortie'
 
@@ -109,8 +109,8 @@ paths:
       operationId: "entities.sortie.get_sorties_by_search"
       tags:
         - Sortie
-      summary: "The sortie data structure supported by the server application"
-      description: "Read one sortie corresponding to the given id"
+      summary: Get one sortie by name
+      description: Read one sortie corresponding to the given name
       parameters:
         - name: search
           in: path
@@ -202,7 +202,7 @@ paths:
 
   /user/current:
     get:
-      operationId: "entities.user.get_current"
+      operationId: entities.user.get_current
       tags:
         - User
       summary: "Get the current user"
@@ -213,6 +213,20 @@ paths:
           schema:
             $ref: '#/definitions/User'
 
+  /com:
+    get:
+      operationId: entities.commentaire.get_all
+      tags:
+        - Commentaire
+      summary: Get all commentaires
+      description: Get all commentaires
+      responses:
+        201:
+          description: Successfully got commentaires list
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Commentaire'
 
 #------------------------------------------------------------------------------------------
 
@@ -253,7 +267,9 @@ definitions:
       dateLimite:
         type: "string"
       commentaires:
-        type: "string"
+        type: "array"
+        items:
+          $ref: "#/definitions/Commentaire"
 
   User:
     type: "object"
@@ -291,4 +307,19 @@ definitions:
       role:
         type: "string"
       feedbacks:
+        type: "string"
+
+
+  Commentaire:
+    type: "object"
+    properties:
+      id_commentaire:
+        type: "integer"
+      id_user:
+        type: "integer"
+      id_sortie:
+        type: "integer"
+      contenu:
+        type: "string"
+      timestamp:
         type: "string"

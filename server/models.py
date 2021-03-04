@@ -2,17 +2,9 @@ from sqlalchemy import true
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from datetime import datetime
+from marshmallow_sqlalchemy import fields
 
 from config import db, ma, login
-
-
-class Commentaire(db.Model):
-    __tablename__ = 'commentaire'
-    id_commentaire = db.Column(db.Integer, primary_key=True)
-    id_user = db.Column(db.Integer, db.ForeignKey('users.id'))
-    id_sortie = db.Column(db.Integer, db.ForeignKey('sorties.id_sortie'))
-    contenu = db.Column(db.String, nullable=False)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 
 class User(UserMixin, db.Model):
@@ -34,6 +26,13 @@ class User(UserMixin, db.Model):
     activites_organisees = db.Column(db.String(32))
     role = db.Column(db.String(32))
     feedbacks = db.Column(db.String(32))
+    commentaires = db.relationship(
+        'Commentaire',
+        backref='auteur',
+        cascade='all, delete, delete-orphan',
+        single_parent=True,
+        order_by='desc(Commentaire.timestamp)'
+    )
 
     def __repr__(self):
         return '<User {}>'.format(self.pseudo)
@@ -43,20 +42,6 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
-
-    commentaire = db.relationship(
-        'Commentaire',
-        backref='auteur',
-        cascade='all, delete, delete-orphan',
-        single_parent=True,
-        order_by='desc(Commentaire.timestamp)'
-    )
-
-class UserSchema(ma.SQLAlchemyAutoSchema):
-    class Meta:
-        model = User
-        sqla_session = db.session
-        load_instance = True
 
 
 class Sortie(db.Model):
@@ -77,9 +62,7 @@ class Sortie(db.Model):
     nbInscrits = db.Column(db.Integer)
     description = db.Column(db.String(1024))
     dateLimite = db.Column(db.String(32))
-    commentaires = db.Column(db.String(128))
-
-    commentaire = db.relationship(
+    commentaires = db.relationship(
         'Commentaire',
         backref='sortie',
         cascade='all, delete, delete-orphan',
@@ -91,13 +74,69 @@ class Sortie(db.Model):
         return '<Sortie {}>'.format(self.nom)
 
 
+userSortie = db.Table('userSortie',
+    db.Column('id_user', db.Integer, db.ForeignKey('users.id'), primary_key=True),
+    db.Column('id_sortie', db.Integer, db.ForeignKey('sorties.id_sortie'), primary_key=True)
+)
+
+class Commentaire(db.Model):
+    __tablename__ = 'commentaire'
+    id_commentaire = db.Column(db.Integer, primary_key=True)
+    id_user = db.Column(db.Integer, db.ForeignKey('users.id'))
+    id_sortie = db.Column(db.Integer, db.ForeignKey('sorties.id_sortie'))
+    contenu = db.Column(db.String, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
+#--------------------------------------------------------------------------------
+
+class UserSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = User
+        sqla_session = db.session
+        load_instance = True
+    commentaires = fields.Nested('UserComSchema', default=[], many=True)
+
+class UserComSchema(ma.SQLAlchemyAutoSchema):
+    #This class exists to get around a recursion issue
+    #model = Commentaire
+    id_commentaire = fields.fields.Int()
+    id_user = fields.fields.Int()
+    id_sortie = fields.fields.Int()
+    contenu = fields.fields.Str()
+    timestamp = fields.fields.Str()
+
+class ComUserSchema(ma.SQLAlchemyAutoSchema):
+    #This class exists to get around a recursion issue
+    model = User
+
+class ComSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Commentaire
+        sqla_session = db.session
+    user = fields.Nested('ComUserSchema', default=None)
+    sortie = fields.Nested('ComSortieSchema', default=None)
+
+
 class SortieSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Sortie
         sqla_session = db.session
         load_instance = True
+    commentaires = fields.Nested('SortieComSchema', default=[], many=True)
 
+class SortieComSchema(ma.SQLAlchemyAutoSchema):
+    #This class exists to get around a recursion issue
+    #model = Commentaire
+    id_commentaire = fields.fields.Int()
+    id_user = fields.fields.Int()
+    id_sortie = fields.fields.Int()
+    contenu = fields.fields.Str()
+    timestamp = fields.fields.Str()
 
+class ComSortieSchema(ma.SQLAlchemyAutoSchema):
+    #This class exists to get around a recursion issue
+    model = Sortie
 
 @login.user_loader
 def load_user(id):

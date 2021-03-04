@@ -2,8 +2,7 @@ from flask import make_response, abort
 from flask_login import current_user, login_user, logout_user, login_required
 
 from config import db
-from models import User
-from models import UserSchema
+from models import User, UserSchema, Sortie
 
 
 def login(username, password):
@@ -23,7 +22,6 @@ def get_current():
     user_schema = UserSchema()
     return user_schema.dump(current_user)
 
-@login_required
 def get_all_users():
     users = User.query.all()
 
@@ -32,14 +30,6 @@ def get_all_users():
 
 
 def create(user):
-    """
-    This function creates a new user
-    based on the passed-in user data
-
-    :param user:    user to create
-    :return:        201 on success, 406 on user exists
-    """
-
     id = user.get('id')
     if User.query.get(id) is not None:
         abort(409, f'id {id} is already used')
