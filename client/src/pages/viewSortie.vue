@@ -18,20 +18,31 @@
       <!-- Title + buttons -->
       <div>
         <!-- Title : current activity's name and current activty's ID -->
-        <span class="title"> {{sortie.nom}} - {{sortie.id}} </span>
+        <span class="nom"> {{sortie.nom}} &ensp;-&ensp; </span>
+        <span class="id">ID: {{id}} </span>
+
         <!-- Buttons : show memberd and subscribe/unsuscribe-->
         <div style="float: right">
           <button @click="$bvModal.show('show-members')" class="showMembers">
             Voir les participants
           </button>
           <button v-if="!is_subscribed" v-on:click="is_subscribed = true"
-            class="subscribe">
+            :disabled="sortie.capaciteMax - members.length + is_subscribed == 0" class="subscribe">
             S'inscrire
           </button>
           <button v-if="is_subscribed" v-on:click="is_subscribed = false"
             class="subscribe">
             Se désinscrire
           </button>
+          <br>
+          <div class="row">
+            <div class="membersCount">
+              <span> {{members.length + is_subscribed}} y participent déjà</span>
+            </div>
+            <div class="remainingPlaces ">
+              <span> {{sortie.capaciteMax - members.length - is_subscribed}} places restantes</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -57,7 +68,7 @@
 
             <!-- Suscribe/Unsuscribe-->
             <button v-if="!is_subscribed" v-on:click="is_subscribed = true"
-                    class="subscribe2">
+                    :disabled="sortie.capaciteMax - members.length == 0" class="subscribe2">
               S'inscrire
             </button>
             <button v-if="is_subscribed" v-on:click="is_subscribed = false"
@@ -71,15 +82,21 @@
 
       <br><br>
 
-      <!-- Photo + description -->
+      <!-- Photo + type + description -->
       <ul>
         <!-- Activity's photo-->
         <li style="height: 250px;">
           <img class="fit-picture" :src="getImgUrl(sortie.photo)">
         </li>
 
-        <!-- Description -->
+        <!-- Type + Description -->
         <li style="height: 250px;" class="resume">
+          <span class="resumeTitle">
+            Type : 
+          </span>
+          <span class="resumeContent">
+            {{sortie.typeSortie}}
+          </span><br><br>
           <span class="resumeTitle">
             Description :
           </span>
@@ -135,7 +152,14 @@
           <br><br><br>
         </li>
       </ul>
+      
+      <!-- Edit button -->
+      <div @click="$router.push({path: `/modification-sortie/${id}`})"
+           style="float: right; padding-right: 20px;">
+        <img class="edit" src="../edit.png" width="100">
+      </div>
 
+      <br><br>
       <!-- Separator -->
       <br><br><br>
       <div class="horizontalSeparator">
@@ -176,16 +200,7 @@ export default {
   components: { Header, NavBar, Footer },
   data() {
     return {
-      name: 'Randonnée entre copains',
-      location: 'Mont Jalla',
-      date: '26/02/2021',
-      hour: '15h30',
-      min: 3,
-      max: 12,
-      rdv: 'Hubert Dubedout, Musée de l\'Eveché',
-      id: '112',
-      image: 'randonnée',
-      resume: "Etiam placerat non dui et tristique. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam placerat non dui et tristique. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam placerat non dui et tristique.",
+      id: '0',
       userName: "Vernet Maxime",
       members: ["ElJraidi Rim", "Sajide Idriss", "Manissadjian Gabriel"],
       comments: ["Trop bien", "C'est sur le parking du haut le rdv ?", "Elle est difficile cette rando pour un débutant ?"],
@@ -199,6 +214,7 @@ export default {
       const path = `http://localhost:5000/api/sortie/${this.$route.params.id}`;
       axios.get(path)
         .then((res) => {
+          this.id = this.$route.params.id;
           this.sortie = res.data;
         })
         .catch((error) => {
@@ -217,12 +233,32 @@ export default {
 
 <style scoped>
 
-.title {
+.nom {
   margin-left: 20px;
   font-size: 40px;
 }
 
+.id {
+  font-size: 45px;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.id:hover {
+  font-size: 50px;
+  cursor: copy;
+}
+
+.edit {
+  cursor: pointer;
+}
+
+.edit:hover {
+  width: 105px;
+}
+
 .showMembers {
+  width: 350px;
+  height: 60px;
   font-size: 30px;
   text-decoration: bold;
   background-color: rgb(61, 150, 135);
@@ -239,7 +275,25 @@ export default {
   text-decoration: underline;
 }
 
+.membersCount {
+  padding-left: 50px;
+  text-align: center;
+  width: 350px;
+  height: 60px;
+  font-size: 20px;
+}
+
+.remainingPlaces {
+  padding-left: 50px;
+  text-align: center;
+  width: 250px;
+  height: 60px;
+  font-size: 20px;
+}
+
 .subscribe {
+  width: 250px;
+  height: 60px;
   font-size: 30px;
   margin-left: 10px;
   margin-right: 20px;
@@ -249,6 +303,7 @@ export default {
 }
 
 .subscribe2 {
+  padding: 10px;
   font-size: 25px;
   background-color: rgb(61, 150, 135);
   border-color: white;
@@ -289,7 +344,7 @@ li {
 
 .resume {
   max-height: 210px;
-  width: 1200px;
+  width: 1000px;
   overflow-x: scroll;
 }
 
