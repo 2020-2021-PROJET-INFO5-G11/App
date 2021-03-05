@@ -1,7 +1,10 @@
 import os
+from datetime import datetime
+
 from config import db
 from models import Sortie
 from models import User
+from models import Commentaire
 
 # Data to initialize database with
 SORTIES = [
@@ -21,7 +24,11 @@ SORTIES = [
         'nbInscrits': 3,
         'description': 'Ça vous dit de monter les voir la passerelle himalayenne du lac de Monteynard ?',
         'dateLimite': '2021-03-11',
-        'commentaires': ''
+        'commentaires': [
+            ("C ou Montenar??!", "2019-01-07 22:47:54"),
+            ("Chepa gro", "2019-01-08 20:17:31"),
+            ("Wsh vs etes cons c marqué que c en hymalaya dans la description", "2019-01-08 22:02:54"),
+        ],
     },
     {
         'nom': 'Harry Potter and the Philosopher\'s Stone',
@@ -39,7 +46,9 @@ SORTIES = [
         'nbInscrits': 2,
         'description': 'J\'ai un tarif de groupe pour aller voir ce filme au cinéma.',
         'dateLimite': '2021-03-03',
-        'commentaires': ''
+        'commentaires': [
+            ("coucou", "2019-01-07 22:47:54")
+        ],
     },
     {
         'nom': 'Balade au PPM',
@@ -57,7 +66,9 @@ SORTIES = [
         'nbInscrits': 1,
         'description': 'La balade du Frémont',
         'dateLimite': '2021-03-14',
-        'commentaires': ''
+        'commentaires': [
+            ("Richard le S mets nous 20 stp", "2021-03-04 23:24:45")
+        ],
     }
 ]
 
@@ -76,14 +87,24 @@ for sort in SORTIES:
         heure=sort['heure'], duree=sort['duree'], point_rdv=sort['point_rdv'], capaciteMin=sort['capaciteMin'], \
         capaciteMax=sort['capaciteMax'], privee=sort['privee'], id_groupe=sort['id_groupe'], \
         typeSortie=sort['typeSortie'], photo=sort['photo'], nbInscrits=sort['nbInscrits'], \
-        description=sort['description'], dateLimite=sort['dateLimite'], commentaires=sort['commentaires'])
+        description=sort['description'], dateLimite=sort['dateLimite'])
+
+    for com in sort.get("commentaires"):
+        contenu, timestamp = com
+        s.commentaires.append(
+            Commentaire(
+                contenu=contenu,
+                timestamp=datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S"),
+            )
+        )
+
     db.session.add(s)
 
 for user in USERS:
     u = User(pseudo=user['pseudo'], password_hash=user['password_hash'], prenom=user['prenom'], nom=user['nom'], \
         email=user['email'], photo=user['photo'], dateNaissance=user['dateNaissance'], ville=user['ville'], \
-        preferences=user['preferences'], sexe=user['sexe'], bio=user['bio'], activites_a_venir=user['activites_a_venir'], \
-        activites_finies=user['activites_finies'], activites_organisees=user['activites_organisees'], role=user['role'], \
+        preferences=user['preferences'], sexe=user['sexe'], bio=user['bio'], sorties_a_venir=user['sorties_a_venir'], \
+        sorties_finies=user['sorties_finies'], sorties_organisees=user['sorties_organisees'], role=user['role'], \
         feedbacks=user['feedbacks'])
     db.session.add(u)
 

@@ -2,8 +2,7 @@ from flask import make_response, abort
 from datetime import datetime
 
 from config import db
-from models import Sortie
-from models import SortieSchema
+from models import Sortie, SortieSchema, User, Commentaire
 
 """
 def get_timestamp():
@@ -11,14 +10,18 @@ def get_timestamp():
 """
 
 def read_all_sorties():
-    sorties = Sortie.query.all()
+    sorties = Sortie.query.outerjoin(Commentaire).all()
 
     sortie_schema = SortieSchema(many=True)
     return sortie_schema.dump(sorties)
 
 
 def read_one_sortie_by_id(id_sortie):
-    sortie = Sortie.query.get(id_sortie)
+    sortie = (
+        Sortie.query.filter(Sortie.id_sortie == id_sortie)
+        .outerjoin(Commentaire)
+        .one_or_none()
+    )
 
     if sortie is not None:
         sortie_schema = SortieSchema()
@@ -26,15 +29,8 @@ def read_one_sortie_by_id(id_sortie):
     else:
         abort(404, f'Sortie not found for id: {id_sortie}')
 
+
 def create(sortie):
-    """
-    This function creates a new sortie
-    based on the passed-in sortie data
-
-    :param sortie:    sortie to create
-    :return:        201 on success, 406 on sortie exists
-    """
-
     id = sortie.get('id_sortie')
     if Sortie.query.get(id) is not None:
         abort(409, f'id {id} is already used')
@@ -48,6 +44,9 @@ def create(sortie):
         .one_or_none()
 
     if existing_sortie is None:
+
+        sortie['commentaires'] = []
+
         schema = SortieSchema()
         new_sortie = schema.load(sortie, session=db.session)
 
@@ -57,7 +56,8 @@ def create(sortie):
         return schema.dump(new_sortie), 201
 
     else:
-        abort(409, f'Sortie {nom} {typeSortie} exists already')
+        abort(409, f'Sortie {nom} ({typeSortie}) exists already')
+
 
 def update(id_sortie, sortie):
     update_sortie = Sortie.query.filter(
@@ -67,11 +67,12 @@ def update(id_sortie, sortie):
     if update_sortie is None:
         abort(
             404,
-            "Sortie not found for Id: {id_sortie}".format(id_sortie=id_sortie),
+            f'Sortie not found for Id: {id_sortie}',
         )
 
     else:
 
+       # sortie['commentaires'] = []
         schema = SortieSchema()
         update = schema.load(sortie, session=db.session)
 
