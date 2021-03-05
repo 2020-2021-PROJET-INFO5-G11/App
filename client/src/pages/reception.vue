@@ -11,9 +11,9 @@
           <h1> Bienvenue !</h1>
         </div>
 
-        <div class="connexion-1" >
+        <div class="connexion-1">
           <b-button variant=primary>
-            Connexion
+            Se connecter
           </b-button>
         </div>
       </div>
@@ -57,10 +57,9 @@ export default {
      text-align: center;
   }
 
-  .titre {
-  }
   .connexion-1 {
-    float : right;
      text-align: center;
+     width: 50%;
+     height : 100%
   }
 </style>
