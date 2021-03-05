@@ -108,3 +108,9 @@ def get_sorties_by_search(search):
 
     sortie_schema = SortieSchema(many=True)
     return sortie_schema.dump(sorties)
+
+def get_sorties_by_type(type_sortie):
+    sorties = Sortie.query.filter(Sortie.typeSortie.contains(type_sortie))
+
+    sortie_schema = SortieSchema(many=True)
+    return sortie_schema.dump(sorties)

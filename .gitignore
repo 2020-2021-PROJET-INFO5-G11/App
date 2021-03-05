@@ -1,1 +1,3 @@
 ./server/env
+./server/entities.db
+*/__pycache__/*

@@ -22,6 +22,7 @@ def get_current():
     user_schema = UserSchema()
     return user_schema.dump(current_user)
 
+# @login_required
 def get_all_users():
     users = User.query.all()
 
@@ -55,6 +56,56 @@ def create(user):
         abort(409, f'User {pseudo} exists already')
 
 
+def update(id, user):
+    update_user = User.query.filter(
+        User.id == id
+    ).one_or_none()
+
+    if update_user is None:
+        abort(
+            404,
+            "User not found for Id: {id}".format(id=id),
+        )
+
+    else:
+
+        schema = UserSchema()
+        update = schema.load(user, session=db.session)
+
+        update.id = update_user.id
+
+        db.session.merge(update)
+        db.session.commit()
+
+        data = schema.dump(update_user)
+
+        return data, 200
+
+
+def delete(id):
+    user = User.query.filter(User.id == id).one_or_none()
+
+    if user is not None:
+        db.session.delete(user)
+        db.session.commit()
+        return make_response(
+            "User {id} deleted".format(id=id), 200
+        )
+
+    else:
+        abort(
+            404,
+            "User not found for Id: {id}".format(id=id),
+        )
+
+def read_one_user_by_id(id):
+    user = User.query.get(id)
+
+    if user is not None:
+        user_schema = UserSchema()
+        return user_schema.dump(user)
+    else:
+        abort(404, f'User not found for id: {id}')
 
 def get_previous_activities(user):
     return User.query.get('activites_finies')
