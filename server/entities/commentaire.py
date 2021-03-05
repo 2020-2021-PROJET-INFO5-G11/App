@@ -19,8 +19,14 @@ def get_activity_comments(id_sortie):
     com_schema = ComSchema(many=True)
     return com_schema.dump(coms)
 
+def get_activity_single_comment(id_sortie, id_commentaire):
+    coms = Commentaire.query.filter(Commentaire.id_sortie == id_sortie, Commentaire.id_commentaire == id_commentaire).order_by(db.desc(Commentaire.timestamp)).all()
 
-def create(com):
+    com_schema = ComSchema(many=True)
+    return com_schema.dump(coms)
+
+
+def comment(id_sortie, com):
     id = com.get('id_commentaire')
     if Commentaire.query.get(id) is not None:
         abort(409, f'id {id} is already used')
@@ -34,9 +40,9 @@ def create(com):
     return schema.dump(new_com), 201
 
 
-def update(id_commentaire, commentaire):
+def update(id_sortie, id_commentaire, commentaire):
     update_commentaire = Commentaire.query.filter(
-        Commentaire.id_commentaire == id_commentaire
+        Commentaire.id_sortie == id_sortie, Commentaire.id_commentaire == id_commentaire
     ).one_or_none()
 
     if update_commentaire is None:
@@ -60,8 +66,8 @@ def update(id_commentaire, commentaire):
         return data, 200
 
 
-def delete(id_commentaire):
-    commentaire = Commentaire.query.filter(Commentaire.id_commentaire == id_commentaire).one_or_none()
+def delete(id_sortie, id_commentaire):
+    commentaire = Commentaire.query.filter(Commentaire.id_sortie == id_sortie, Commentaire.id_commentaire == id_commentaire).one_or_none()
 
     if commentaire is not None:
         db.session.delete(commentaire)

@@ -108,7 +108,7 @@ paths:
     get:
       operationId: entities.commentaire.get_activity_comments
       tags:
-        - Sortie
+        - Commentaire
       summary: Get list of comments of an activity
       description: Get list of comments of an activity
       parameters:
@@ -121,12 +121,12 @@ paths:
         200:
           description: Successful read commenaires list operation
           schema:
-            $ref: '#/definitions/Sortie'
+            $ref: '#/definitions/Commentaire'
 
     post:
-      operationId: entities.commentaire.create
+      operationId: entities.commentaire.comment
       tags:
-        - Sortie
+        - Commentaire
       summary: Comment an acitivity
       description: Comment an acitivity
       parameters:
@@ -138,12 +138,84 @@ paths:
         - name: com
           in: body
           schema:
-            $ref: '#/definitions/Sortie'
+            $ref: '#/definitions/Commentaire'
       responses:
         201:
           description: Successfully created sortie
           schema:
-            $ref: '#/definitions/Sortie'
+            $ref: '#/definitions/Commentaire'
+
+  /sortie/{id_sortie}/commentaires/{id_commentaire}:
+    get:
+      operationId: entities.commentaire.get_activity_single_comment
+      tags:
+        - Commentaire
+      summary: Get one comment of one activity by id
+      description: Get one comment of one activity by id
+      parameters:
+        - name: id_sortie
+          in: path
+          description: Id of the sortie to get
+          type: integer
+          required: True
+        - name: id_commentaire
+          in: path
+          description: Id of the comment to get
+          type: integer
+          required: True
+      responses:
+        200:
+          description: Successful read commentaire from sortie operation
+          schema:
+            $ref: '#/definitions/Commentaire'
+
+    put:
+      operationId: entities.commentaire.update
+      tags:
+        - Commentaire
+      summary: Update a comment
+      description: Update a comment
+      parameters:
+        - name: id_sortie
+          in: path
+          description: Id the sortie to update
+          type: integer
+          required: True
+        - name: id_commentaire
+          in: path
+          description: Id the comment to update
+          type: integer
+          required: True
+        - name: commentaire
+          in: body
+          schema:
+            $ref: '#/definitions/Commentaire'
+      responses:
+        200:
+          description: Successfully updated commentaire
+          schema:
+            $ref: '#/definitions/Commentaire'
+
+    delete:
+      operationId: entities.commentaire.delete
+      tags:
+        - Commentaire
+      summary: Delete a comment from the sortie
+      description: Delete a comment
+      parameters:
+        - name: id_sortie
+          in: path
+          type: integer
+          description: Id of the sortie
+          required: true
+        - name: id_commentaire
+          in: path
+          type: integer
+          description: Id of the comment to delete
+          required: true
+      responses:
+        200:
+          description: Successfully deleted a comment
 
   /search/{search}:
     get:
