@@ -38,6 +38,11 @@ export default new Router({
       component: () => import('../pages/creation-sortie.vue'),
     },
     {
+      path: '/modification-sortie/:id',
+      name: 'modification de sortie',
+      component: () => import('../pages/modification-sortie.vue'),
+    },
+    {
       path: '/sortie/:id',
       name: 'sortie',
       component: () => import('../pages/viewSortie.vue'),

@@ -59,7 +59,7 @@
           <button type="button"
                   class="btn btn-warning btn-sm"
                   v-b-modal.sortie-update-modal
-                  @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
+                  @click="$router.push({path: `/modification-sortie/${sortie.id_sortie}`})">
               Modifier
           </button>&ensp;
           <!-- Delete activity -->
@@ -104,7 +104,7 @@ export default {
         typeSortie: '',
         privee: [],
       },
-      types: ['Pas de filtre', 'Autre', 'Cinéma', 'Culture', 'Musée', 'Musique', 'Repas', 'Sport'],
+      types: ['Autre', 'Cinéma', 'Culture', 'Musée', 'Musique', 'Repas', 'Sport', 'Toutes'],
     };
   },
   components: {
@@ -127,8 +127,8 @@ export default {
           console.error(error);
         });
     },
-    filter(evt) {
-      if(evt.target.value == 'Pas de filtre'){
+    filter(type) { //evt
+      if(type == 'Toutes') { // if(evt.target.value == 'Toutes')
         this.getSorties();
       }
       else{
@@ -257,8 +257,6 @@ i:hover {
 li {
   display: inline-block;
   padding: 4em;
-}
-.scrollmenu {
 }
 .fit-picture {
   width: 320px;
