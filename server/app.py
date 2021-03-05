@@ -1,7 +1,7 @@
 import uuid
 from flask import Flask, jsonify, request
 
-from config import *
+from config import app
 from models import Sortie, SortieSchema
 
 """
@@ -40,7 +40,6 @@ GROUPES = [
 
 COMMENTAIRES = [
     {
-        'id': uuid.uuid4().hex,
         'utilisateur': 'Rim',
         'contenu': 'Ceci est un commentaire',
         'date': '',
