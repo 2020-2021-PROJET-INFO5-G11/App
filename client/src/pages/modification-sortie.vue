@@ -153,7 +153,7 @@
 
         <!-- submit button -->
         <div style="padding-left:800px">
-          <input class="submit" @click="edit" type="submit" value="Edit"> &ensp;
+          <input class="submit" @click="edit" type="submit" value="Modifier la sortie"> &ensp;
           <br>
         </div>
         <br><br>
@@ -297,7 +297,7 @@ export default {
       const path = `http://localhost:5000/api/sortie/${sortieID}`;
       axios.put(path, payload)
         .then(() => {
-          this.$router.push({path: `/sorties`});
+          this.$router.go(-1);
         })
         .catch((error) => {
           console.error(error);
@@ -381,7 +381,8 @@ img:hover {
 }
 
 .submit, .reset {
-  font-size: 25px;
+  width: 300px;
+  font-size: 35px;
   color: whitesmoke;
   border-color: rgb(15, 138, 117);
   background-color: rgb(65, 192, 171);
