@@ -44,9 +44,6 @@ def create(sortie):
         .one_or_none()
 
     if existing_sortie is None:
-
-        sortie['commentaires'] = []
-
         schema = SortieSchema()
         new_sortie = schema.load(sortie, session=db.session)
 
