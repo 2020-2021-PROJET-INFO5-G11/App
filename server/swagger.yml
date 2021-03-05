@@ -104,6 +104,25 @@ paths:
         200:
           description: Successfully deleted a sortie
 
+  /sortie/{id_sortie}/commentaires:
+    get:
+      operationId: entities.commentaire.get_activity_comments
+      tags:
+        - Sortie
+      summary: Get list of comments of an activity
+      description: Get list of comments of an activity
+      parameters:
+        - name: id_sortie
+          in: path
+          description: Id of the sortie to get
+          type: integer
+          required: True
+      responses:
+        200:
+          description: Successful read commenaires list operation
+          schema:
+            $ref: '#/definitions/Sortie'
+
   /search/{search}:
     get:
       operationId: "entities.sortie.get_sorties_by_search"
