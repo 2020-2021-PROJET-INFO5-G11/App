@@ -73,7 +73,6 @@
 
             <div>
               <input v-model="addSortieForm.nom" type="text" style="width: 500px;" placeholder="Nom" required/>
-              {{ addSortieForm.nom }}
             </div>
             <br><br>
             <div>
