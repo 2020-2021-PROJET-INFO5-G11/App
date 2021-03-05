@@ -123,6 +123,28 @@ paths:
           schema:
             $ref: '#/definitions/Sortie'
 
+    post:
+      operationId: entities.commentaire.create
+      tags:
+        - Sortie
+      summary: Comment an acitivity
+      description: Comment an acitivity
+      parameters:
+        - name: id_sortie
+          in: path
+          description: Sortie to comment
+          type: integer
+          required: True
+        - name: com
+          in: body
+          schema:
+            $ref: '#/definitions/Sortie'
+      responses:
+        201:
+          description: Successfully created sortie
+          schema:
+            $ref: '#/definitions/Sortie'
+
   /search/{search}:
     get:
       operationId: "entities.sortie.get_sorties_by_search"
