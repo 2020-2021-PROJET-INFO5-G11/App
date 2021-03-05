@@ -127,8 +127,8 @@ export default {
           console.error(error);
         });
     },
-    filter(type) { //evt
-      if(type == 'Toutes') { // if(evt.target.value == 'Toutes')
+    filter(evt) { //evt
+      if(evt.target.value == 'Toutes') { // if(evt.target.value == 'Toutes')
         this.getSorties();
       }
       else{
