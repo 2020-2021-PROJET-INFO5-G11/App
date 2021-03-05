@@ -103,8 +103,8 @@ for sort in SORTIES:
 for user in USERS:
     u = User(pseudo=user['pseudo'], password_hash=user['password_hash'], prenom=user['prenom'], nom=user['nom'], \
         email=user['email'], photo=user['photo'], dateNaissance=user['dateNaissance'], ville=user['ville'], \
-        preferences=user['preferences'], sexe=user['sexe'], bio=user['bio'], activites_a_venir=user['activites_a_venir'], \
-        activites_finies=user['activites_finies'], activites_organisees=user['activites_organisees'], role=user['role'], \
+        preferences=user['preferences'], sexe=user['sexe'], bio=user['bio'], sorties_a_venir=user['sorties_a_venir'], \
+        sorties_finies=user['sorties_finies'], sorties_organisees=user['sorties_organisees'], role=user['role'], \
         feedbacks=user['feedbacks'])
     db.session.add(u)
 

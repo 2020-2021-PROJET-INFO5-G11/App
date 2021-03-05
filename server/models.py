@@ -21,9 +21,9 @@ class User(UserMixin, db.Model):
     preferences = db.Column(db.String(32))
     sexe = db.Column(db.String(32))
     bio = db.Column(db.String(1024))
-    activites_a_venir = db.Column(db.String(32))
-    activites_finies = db.Column(db.String(32))
-    activites_organisees = db.Column(db.String(32))
+    sorties_a_venir = db.Column(db.String(32))
+    sorties_finies = db.Column(db.String(32))
+    sorties_organisees = db.Column(db.String(32))
     role = db.Column(db.String(32))
     feedbacks = db.Column(db.String(32))
     commentaires = db.relationship(
@@ -67,7 +67,7 @@ class Sortie(db.Model):
         backref='sortie',
         cascade='all, delete, delete-orphan',
         single_parent=True,
-        order_by='desc(Commentaire.timestamp)'
+        order_by='asc(Commentaire.timestamp)'
     )
 
     def __repr__(self):
@@ -99,16 +99,13 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
 
 class UserComSchema(ma.SQLAlchemyAutoSchema):
     #This class exists to get around a recursion issue
-    #model = Commentaire
-    id_commentaire = fields.fields.Int()
-    id_user = fields.fields.Int()
-    id_sortie = fields.fields.Int()
-    contenu = fields.fields.Str()
-    timestamp = fields.fields.Str()
+    class Meta:
+        model = Commentaire
 
 class ComUserSchema(ma.SQLAlchemyAutoSchema):
     #This class exists to get around a recursion issue
-    model = User
+    class Meta:
+        odel = User
 
 class ComSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
@@ -127,16 +124,18 @@ class SortieSchema(ma.SQLAlchemyAutoSchema):
 
 class SortieComSchema(ma.SQLAlchemyAutoSchema):
     #This class exists to get around a recursion issue
-    #model = Commentaire
-    id_commentaire = fields.fields.Int()
+    class Meta:
+        model = Commentaire
+    """id_commentaire = fields.fields.Int()
     id_user = fields.fields.Int()
     id_sortie = fields.fields.Int()
     contenu = fields.fields.Str()
-    timestamp = fields.fields.Str()
+    timestamp = fields.fields.Str()"""
 
 class ComSortieSchema(ma.SQLAlchemyAutoSchema):
     #This class exists to get around a recursion issue
-    model = Sortie
+    class Meta:
+        model = Sortie
 
 @login.user_loader
 def load_user(id):

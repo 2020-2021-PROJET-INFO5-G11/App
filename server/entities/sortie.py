@@ -44,6 +44,9 @@ def create(sortie):
         .one_or_none()
 
     if existing_sortie is None:
+
+        sortie['commentaires'] = []
+
         schema = SortieSchema()
         new_sortie = schema.load(sortie, session=db.session)
 
@@ -64,11 +67,12 @@ def update(id_sortie, sortie):
     if update_sortie is None:
         abort(
             404,
-            "Sortie not found for Id: {sortie_id}".format(sortie_id=sortie_id),
+            f'Sortie not found for Id: {id_sortie}',
         )
 
     else:
 
+       # sortie['commentaires'] = []
         schema = SortieSchema()
         update = schema.load(sortie, session=db.session)
 

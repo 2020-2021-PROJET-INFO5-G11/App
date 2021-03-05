@@ -298,11 +298,11 @@ definitions:
         type: "string"
       bio:
         type: "string"
-      activites_a_venir:
+      sorties_a_venir:
         type: "string"
-      activites_finies:
+      sorties_finies:
         type: "string"
-      activites_organisees:
+      sorties_organisees:
         type: "string"
       role:
         type: "string"
