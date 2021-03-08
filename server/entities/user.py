@@ -2,7 +2,7 @@ from flask import make_response, abort
 from flask_login import current_user, login_user, logout_user, login_required
 
 from config import db
-from models import User, UserSchema, Sortie
+from models import User, UserSchema, Sortie, SortieSchema
 
 
 def login(username, password):
@@ -107,8 +107,50 @@ def read_one_user_by_id(id):
     else:
         abort(404, f'User not found for id: {id}')
 
-def get_previous_activities(user):
-    return User.query.get('activites_finies')
+def get_previous_activities(id):
+    user = User.query.get(id)
+    
+    if user is not None:
+        sorties = user.sorties_finies
+        sortie_schema = SortieSchema(many=True)
+        return sortie_schema.dump(sorties)
+    else:
+        abort(404, f'User not found for id: {id}')
+
+def get_incoming_activities(id):
+    user = User.query.get(id)
+    
+    if user is not None:
+        sorties = user.sorties_a_venir
+        sortie_schema = SortieSchema(many=True)
+        return sortie_schema.dump(sorties)
+    else:
+        abort(404, f'User not found for id: {id}')
+
+def switch_to_previous(id_sortie, id):
+    sortie_a_venir = Sortie.query.filter(
+        Sortie.id_sortie == id_sortie).one_or_none()
+
+    user = User.query.filter(User.id == id).one_or_none()
+    if sortie_a_venir is None:
+        abort(
+            404,
+            f'Sortie not found for Id: {id_sortie}',
+        )
+    if user is None:
+        abort(
+            404,
+            f'User not found for Id: {id}',
+        )
+    
+    else: 
+        user.sorties_a_venir.remove(sortie_a_venir)
+        user.sorties_finies.append(sortie_a_venir)
+
+        db.session.add(user)
+        db.session.commit()
+
+        return 200
 
 def register(id_sortie, id):
     sortie_a_venir = Sortie.query.filter(
