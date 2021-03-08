@@ -7,6 +7,16 @@ from marshmallow_sqlalchemy import fields
 from config import db, ma, login
 
 
+userSortie_a_venir = db.Table('userSortie_a_venir',
+    db.Column('id_user', db.Integer, db.ForeignKey('users.id'), primary_key=True),
+    db.Column('id_sortie', db.Integer, db.ForeignKey('sorties.id_sortie'), primary_key=True)
+)
+
+userSortie_finies = db.Table('userSortie_finies',
+    db.Column('id_user', db.Integer, db.ForeignKey('users.id'), primary_key=True),
+    db.Column('id_sortie', db.Integer, db.ForeignKey('sorties.id_sortie'), primary_key=True)
+)
+
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -21,9 +31,6 @@ class User(UserMixin, db.Model):
     preferences = db.Column(db.String(32))
     sexe = db.Column(db.String(32))
     bio = db.Column(db.String(1024))
-    sorties_a_venir = db.Column(db.String(32))
-    sorties_finies = db.Column(db.String(32))
-    sorties_organisees = db.Column(db.String(32))
     role = db.Column(db.String(32))
     feedbacks = db.Column(db.String(32))
     commentaires = db.relationship(
@@ -33,6 +40,9 @@ class User(UserMixin, db.Model):
         single_parent=True,
         order_by='desc(Commentaire.timestamp)'
     )
+    sorties_a_venir = db.relationship('Sortie', secondary=userSortie_a_venir, lazy='subquery',
+        backref=db.backref('participants', lazy=False))
+
 
     def __repr__(self):
         return '<User {}>'.format(self.pseudo)
@@ -74,11 +84,6 @@ class Sortie(db.Model):
         return '<Sortie {}>'.format(self.nom)
 
 
-userSortie = db.Table('userSortie',
-    db.Column('id_user', db.Integer, db.ForeignKey('users.id'), primary_key=True),
-    db.Column('id_sortie', db.Integer, db.ForeignKey('sorties.id_sortie'), primary_key=True)
-)
-
 class Commentaire(db.Model):
     __tablename__ = 'commentaire'
     id_commentaire = db.Column(db.Integer, primary_key=True)
@@ -96,16 +101,18 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
         sqla_session = db.session
         load_instance = True
     commentaires = fields.Nested('UserComSchema', default=[], many=True)
+    sorties_a_venir = fields.Nested('UserSortieSchema', default=[], many=True)
 
 class UserComSchema(ma.SQLAlchemyAutoSchema):
     #This class exists to get around a recursion issue
     class Meta:
         model = Commentaire
 
-class ComUserSchema(ma.SQLAlchemyAutoSchema):
+class UserSortieSchema(ma.SQLAlchemyAutoSchema):
     #This class exists to get around a recursion issue
     class Meta:
-        odel = User
+        model = Sortie
+
 
 class ComSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
@@ -114,12 +121,29 @@ class ComSchema(ma.SQLAlchemyAutoSchema):
     user = fields.Nested('ComUserSchema', default=None)
     sortie = fields.Nested('ComSortieSchema', default=None)
 
+class ComUserSchema(ma.SQLAlchemyAutoSchema):
+    #This class exists to get around a recursion issue
+    class Meta:
+        odel = User
+
+class ComSortieSchema(ma.SQLAlchemyAutoSchema):
+    #This class exists to get around a recursion issue
+    class Meta:
+        model = Sortie
+
 
 class SortieSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Sortie
         sqla_session = db.session
         load_instance = True
+    commentaires = fields.Nested('SortieComSchema', default=[], many=True)
+    participants = fields.Nested('SortieUserSchema', default=[], many=True)
+
+class SortieUserSchema(ma.SQLAlchemyAutoSchema):
+    #This class exists to get around a recursion issue
+    class Meta:
+        model = User
     commentaires = fields.Nested('SortieComSchema', default=[], many=True)
 
 class SortieComSchema(ma.SQLAlchemyAutoSchema):
@@ -132,10 +156,6 @@ class SortieComSchema(ma.SQLAlchemyAutoSchema):
     contenu = fields.fields.Str()
     timestamp = fields.fields.Str()"""
 
-class ComSortieSchema(ma.SQLAlchemyAutoSchema):
-    #This class exists to get around a recursion issue
-    class Meta:
-        model = Sortie
 
 @login.user_loader
 def load_user(id):

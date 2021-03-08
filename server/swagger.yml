@@ -341,10 +341,6 @@ definitions:
         type: "string"
       dateLimite:
         type: "string"
-      commentaires:
-        type: "array"
-        items:
-          $ref: "#/definitions/Commentaire"
 
   User:
     type: "object"
@@ -372,12 +368,6 @@ definitions:
       sexe:
         type: "string"
       bio:
-        type: "string"
-      sorties_a_venir:
-        type: "string"
-      sorties_finies:
-        type: "string"
-      sorties_organisees:
         type: "string"
       role:
         type: "string"
