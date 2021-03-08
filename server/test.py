@@ -4,7 +4,7 @@ from models import Sortie
 from models import Commentaire
 
 #sort = Sortie.query.outerjoin(Commentaire).first()
-sort = User.query.first()
+sort = Commentaire.query.first()
 
 
 print('\n\n\n\n\n')

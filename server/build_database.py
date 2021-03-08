@@ -21,7 +21,7 @@ SORTIES = [
         'id_groupe': None,
         'typeSortie': 'Sport',
         'photo': 'randonnée',
-        'nbInscrits': 3,
+        'nbInscrits': 1,
         'description': 'Ça vous dit de monter les voir la passerelle himalayenne du lac de Monteynard ?',
         'dateLimite': '2021-03-11',
         'commentaires': [
@@ -43,7 +43,7 @@ SORTIES = [
         'id_groupe': None,
         'typeSortie': 'Cinéma',
         'photo': 'cinema',
-        'nbInscrits': 2,
+        'nbInscrits': 1,
         'description': 'J\'ai un tarif de groupe pour aller voir ce filme au cinéma.',
         'dateLimite': '2021-03-03',
         'commentaires': [

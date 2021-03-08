@@ -124,7 +124,7 @@ class ComSchema(ma.SQLAlchemyAutoSchema):
 class ComUserSchema(ma.SQLAlchemyAutoSchema):
     #This class exists to get around a recursion issue
     class Meta:
-        odel = User
+        model = User
 
 class ComSortieSchema(ma.SQLAlchemyAutoSchema):
     #This class exists to get around a recursion issue

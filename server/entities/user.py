@@ -62,13 +62,8 @@ def update(id, user):
     ).one_or_none()
 
     if update_user is None:
-        abort(
-            404,
-            "User not found for Id: {id}".format(id=id),
-        )
-
+        abort(404, f'User not found for id: {id}')
     else:
-
         schema = UserSchema()
         update = schema.load(user, session=db.session)
 
@@ -78,7 +73,6 @@ def update(id, user):
         db.session.commit()
 
         data = schema.dump(update_user)
-
         return data, 200
 
 
@@ -91,12 +85,8 @@ def delete(id):
         return make_response(
             "User {id} deleted".format(id=id), 200
         )
-
     else:
-        abort(
-            404,
-            "User not found for Id: {id}".format(id=id),
-        )
+        abort(404, f'User not found for id: {id}')
 
 def read_one_user_by_id(id):
     user = User.query.get(id)
@@ -106,6 +96,20 @@ def read_one_user_by_id(id):
         return user_schema.dump(user)
     else:
         abort(404, f'User not found for id: {id}')
+
+@login_required
+def join_sortie(id_sortie):
+    sort = Sortie.query.filter(Sortie.id_sortie == id_sortie).one_or_none()
+    if sort is not None:
+        
+        #if(Sortie.query.filter(User.id == current_user.id).one_or_none() is None)
+        current_user.sorties_a_venir.append(sort)
+        sort.nbInscrits = sort.nbInscrits+1
+        return 200
+        #else:
+        #    abort(404, f'User {current_user.pseudo} already joined this sortie')
+    else:
+        abort(404, f'Sortie not found for id: {id_sortie}')
 
 def get_previous_activities(user):
     return User.query.get('activites_finies')

@@ -14,16 +14,35 @@ def get_all():
     return com_schema.dump(coms)
 
 
-def create(com):
-    id = com.get('id_commentaire')
-    if Commentaire.query.get(id) is not None:
-        abort(409, f'id {id} is already used')
+def create(id_sortie, contenu):
 
+    sortie = Sortie.query.filter(Sortie.id_sortie == id_sortie).one_or_none()
+
+    if sortie is None:
+        abort(404, f'Sortie not found for id: {id_sortie}')
+
+    """com = Commentaire(
+        contenu = contenu, 
+        timestamp = datetime.now().strftime(("%Y-%m-%d %H:%M:%S")),
+    )
+"""
+
+    sortie.commentaires.append(
+        Commentaire(
+            contenu=contenu,
+            #timestamp="2021-03-04 23:24:45"#datetime.now().strftime(("%Y-%m-%d %H:%M:%S")),
+        )
+    )
+
+
+    """
     schema = ComSchema()
     new_com = schema.load(com, session=db.session)
-
-    db.session.add(new_com)
+    """
+    #db.session.add(new_com)
     db.session.commit()
 
-    return schema.dump(new_com), 201
+    #return schema.dump(new_com), 201
+    
+    return 201
     

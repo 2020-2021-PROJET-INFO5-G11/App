@@ -104,6 +104,32 @@ paths:
         200:
           description: Successfully deleted a sortie
 
+
+  /sortie/{id_sortie}/com:
+    post:
+      operationId: entities.commentaire.create
+      tags:
+        - Commentaire
+      summary: Add a commentaire to a sortie
+      description: Add a commentaire to a sortie
+      parameters:
+        - name: id_sortie
+          in: path
+          description: Id the sortie to add a commentaire to
+          type: integer
+          required: True
+        - name: contenu
+          in: body
+          description: Content of the commentaire to add
+          schema:
+            type: string
+      responses:
+        201:
+          description: Successfully added a commentaire
+          schema:
+            $ref: '#/definitions/Commentaire'
+
+
   /search/{search}:
     get:
       operationId: "entities.sortie.get_sorties_by_search"
@@ -287,6 +313,25 @@ paths:
           description: "Current user successfully retreived"
           schema:
             $ref: '#/definitions/User'
+      
+  /user/join/{id_sortie}:
+    put:
+      operationId: entities.user.join_sortie
+      tags:
+        - User
+      summary: Add a user
+      description: Add a user
+      parameters:
+        - name: id_sortie
+          in: path
+          type: integer
+          description: Id of the sortie to join
+          required: true
+      responses:
+        200:
+          description: Successfully updated user
+          schema:
+            $ref: '#/definitions/User'
 
   /com:
     get:
@@ -379,10 +424,6 @@ definitions:
     type: "object"
     properties:
       id_commentaire:
-        type: "integer"
-      id_user:
-        type: "integer"
-      id_sortie:
         type: "integer"
       contenu:
         type: "string"

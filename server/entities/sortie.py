@@ -10,8 +10,12 @@ def get_timestamp():
 """
 
 def read_all_sorties():
-    sorties = Sortie.query.outerjoin(Commentaire).all()
-
+    sorties = (
+        Sortie.query
+        .outerjoin(Commentaire).outerjoin(User)
+        .all()
+    )
+    
     sortie_schema = SortieSchema(many=True)
     return sortie_schema.dump(sorties)
 
@@ -19,7 +23,7 @@ def read_all_sorties():
 def read_one_sortie_by_id(id_sortie):
     sortie = (
         Sortie.query.filter(Sortie.id_sortie == id_sortie)
-        .outerjoin(Commentaire)
+        .outerjoin(Commentaire).outerjoin(User)
         .one_or_none()
     )
 
