@@ -51,17 +51,16 @@ def update(id_sortie, id_com, com):
 
     else:
 
-        schema = ComSchema()
-        update = schema.load(com, session=db.session)
+        c = Commentaire(
+        contenu=com,
+        id_commentaire=id_com,
+        id_sortie=id_sortie
+        )   
 
-        update.id_commentaire = update_commentaire.id_commentaire
-
-        db.session.merge(update)
+        db.session.merge(c)
         db.session.commit()
 
-        data = schema.dump(update_commentaire)
-
-        return data, 200
+        return 200
 
 
 def delete(id_sortie, id_com):

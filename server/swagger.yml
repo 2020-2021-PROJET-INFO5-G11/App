@@ -178,18 +178,17 @@ paths:
       parameters:
         - name: id_sortie
           in: path
-          description: Id the sortie to update
+          description: Id of the sortie to get
           type: integer
           required: True
         - name: id_com
           in: path
-          description: Id the comment to update
+          description: Id of the com to update
           type: integer
           required: True
         - name: com
-          in: body
-          schema:
-            $ref: '#/definitions/Commentaire'
+          in: query
+          type: string
       responses:
         200:
           description: Successfully updated commentaire
