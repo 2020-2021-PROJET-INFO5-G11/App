@@ -87,6 +87,8 @@ class Commentaire(db.Model):
     contenu = db.Column(db.String, nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+    def __repr__(self):
+        return '<Commentaire {}>'.format(self.contenu)
 
 #--------------------------------------------------------------------------------
 
@@ -105,7 +107,7 @@ class UserComSchema(ma.SQLAlchemyAutoSchema):
 class ComUserSchema(ma.SQLAlchemyAutoSchema):
     #This class exists to get around a recursion issue
     class Meta:
-        odel = User
+        model = User
 
 class ComSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
