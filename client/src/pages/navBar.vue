@@ -18,7 +18,7 @@
               <div>
                 <i class="fa fa-home fa-3x"></i>
               </div>
-              <span> Acceuil </span>
+              <span> Accueil </span>
             </div>
           </li>
 

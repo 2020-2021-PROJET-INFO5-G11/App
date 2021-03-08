@@ -36,12 +36,11 @@ class User(UserMixin, db.Model):
     commentaires = db.relationship(
         'Commentaire',
         backref='auteur',
-        #cascade='all, delete, delete-orphan',
-        #single_parent=True,
         order_by='desc(Commentaire.timestamp)'
     )
     sorties_a_venir = db.relationship('Sortie', secondary=userSortie_a_venir, lazy='subquery',
         backref=db.backref('participants', lazy=False))
+    sorties_finies = db.relationship('Sortie', secondary=userSortie_finies, lazy='subquery')
 
 
     def __repr__(self):
@@ -100,8 +99,8 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
         model = User
         sqla_session = db.session
         load_instance = True
-    #commentaires = fields.Nested('ComSchema', default=[], many=True, exclude=("auteur",))
-    #sorties_a_venir = fields.Nested('SortieSchema', default=[], many=True, exclude=("participants",))
+    commentaires = fields.Nested('ComSchema', default=[], many=True, exclude=("auteur",))
+    sorties_a_venir = fields.Nested('SortieSchema', default=[], many=True, exclude=("participants",))
 
 
 class ComSchema(ma.SQLAlchemyAutoSchema):
@@ -109,7 +108,7 @@ class ComSchema(ma.SQLAlchemyAutoSchema):
         model = Commentaire
         sqla_session = db.session
         load_instance = True
-    user = fields.Nested('UserSchema', default=None, many=False, exclude=("pseudo",))
+    auteur = fields.Nested('UserSchema', default=None, many=False, exclude=("pseudo",))
     sortie = fields.Nested('SortieSchema', default=None, exclude=("commentaires",))
 
 
@@ -119,7 +118,7 @@ class SortieSchema(ma.SQLAlchemyAutoSchema):
         sqla_session = db.session
         load_instance = True
     commentaires = fields.Nested('ComSchema', default=[], many=True, exclude=("sortie",))
-    #participants = fields.Nested('UserSchema', default=[], many=True, exclude=("sortie",))
+    participants = fields.Nested('UserSchema', default=[], many=True, exclude=("sorties_a_venir",))
 
 
 

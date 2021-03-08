@@ -20,9 +20,8 @@ def get_activity_comments(id_sortie):
     com_schema = ComSchema(many=True)
     return com_schema.dump(coms)
 
-
 def get_activity_single_comment(id_sortie, id_com):
-    coms = Commentaire.query.filter(Commentaire.id_sortie == id_sortie, Commentaire.id_commentaire == id_commentaire).order_by(db.desc(Commentaire.timestamp)).all()
+    coms = Commentaire.query.filter(Commentaire.id_sortie == id_sortie, Commentaire.id_commentaire == id_com).order_by(db.desc(Commentaire.timestamp)).all()
 
     com_schema = ComSchema(many=True)
     return com_schema.dump(coms)
@@ -62,20 +61,17 @@ def update(id_sortie, id_com, commentaire):
             404,
             f'Commentaire not found for Id: {id_com}',
         )
-
     else:
+        c = Commentaire(
+            contenu=com,
+            id_commentaire=id_com,
+            id_sortie=id_sortie
+        )   
 
-        schema = ComSchema()
-        update = schema.load(commentaire, session=db.session)
-
-        update.id_commentaire = update_commentaire.id_commentaire
-
-        db.session.merge(update)
+        db.session.merge(c)
         db.session.commit()
 
-        data = schema.dump(update_commentaire)
-
-        return data, 200
+        return 200
 
 
 def delete(id_sortie, id_com):
@@ -87,9 +83,5 @@ def delete(id_sortie, id_com):
         return make_response(
             f'Commentaire {id_com} deleted', 200
         )
-
     else:
-        abort(
-            404,
-            'Commentaire not found for Id: {id_com}',
-        )
+        abort(404, 'Commentaire not found for Id: {id_com}',)

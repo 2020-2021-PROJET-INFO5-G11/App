@@ -178,18 +178,17 @@ paths:
       parameters:
         - name: id_sortie
           in: path
-          description: Id the sortie to update
+          description: Id of the sortie to get
           type: integer
           required: True
         - name: id_com
           in: path
-          description: Id the comment to update
+          description: Id of the com to update
           type: integer
           required: True
-        - name: commentaire
-          in: body
-          schema:
-            $ref: '#/definitions/Commentaire'
+        - name: com
+          in: query
+          type: string
       responses:
         200:
           description: Successfully updated commentaire
@@ -330,6 +329,29 @@ paths:
           schema:
             $ref: '#/definitions/User'
 
+    put:
+      operationId: entities.user.switch_to_previous
+      tags:
+        - User
+      summary: Switch sortie from incoming to previous
+      description: Switch sortie from incoming to previous
+      parameters:
+        - name: id
+          in: path
+          description: Id the user to update
+          type: integer
+          required: True
+        - name: id_sortie
+          in: query
+          type: integer
+          description: Id of the sortie to register to
+          required: true
+      responses:
+        200:
+          description: Successfully updated user
+          schema:
+            $ref: '#/definitions/User'
+
     delete:
       operationId: entities.user.delete
       tags:
@@ -345,6 +367,66 @@ paths:
       responses:
         200:
           description: Successfully deleted a user
+
+  /user/{id}/a_venir:
+    get:
+      operationId: "entities.user.get_incoming_activities"
+      tags:
+        - User
+      summary: "get incoming activities"
+      description: "get incoming activities"
+      parameters:
+        - name: id
+          in: path
+          description: Id of the user to get
+          type: integer
+          required: True
+      responses:
+        200:
+          description: "Successful read user list incoming activities operation"
+          schema:
+            $ref: '#/definitions/Sortie'
+    post:
+      operationId: entities.user.register
+      tags:
+        - User
+      summary: Register a user to a sortie
+      description: Register a user to a sortie
+      parameters:
+        - name: id_sortie
+          in: query
+          type: integer
+          description: Id of the sortie to register to
+          required: true
+        - name: id
+          in: path
+          type: integer
+          description: Id of the user to register
+          required: true
+      responses:
+        201:
+          description: Successfully registred user
+
+    delete:
+      operationId: entities.user.cancel_registration
+      tags:
+        - User
+      summary: Cancel registration a user to a sortie
+      description: Cancel registration a user to a sortie
+      parameters:
+        - name: id_sortie
+          in: query
+          type: integer
+          description: Id of the sortie to register to
+          required: true
+        - name: id
+          in: path
+          type: integer
+          description: Id of the user to cancel registration for
+          required: true
+      responses:
+        201:
+          description: Successfully cancel registration user
 
   /user/login:
     get:
@@ -400,25 +482,7 @@ paths:
           description: "Current user successfully retreived"
           schema:
             $ref: '#/definitions/User'
-      
-  /user/join/{id_sortie}:
-    put:
-      operationId: entities.user.join_sortie
-      tags:
-        - User
-      summary: Add a user
-      description: Add a user
-      parameters:
-        - name: id_sortie
-          in: path
-          type: integer
-          description: Id of the sortie to join
-          required: true
-      responses:
-        200:
-          description: Successfully updated user
-          schema:
-            $ref: '#/definitions/User'
+            
 
   /com:
     get:

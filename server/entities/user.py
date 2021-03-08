@@ -2,7 +2,7 @@ from flask import make_response, abort
 from flask_login import current_user, login_user, logout_user, login_required
 
 from config import db
-from models import User, UserSchema, Sortie
+from models import User, UserSchema, Sortie, SortieSchema, Commentaire, ComSchema
 
 
 def login(username, password):
@@ -22,9 +22,13 @@ def get_current():
     user_schema = UserSchema()
     return user_schema.dump(current_user)
 
-# @login_required
+
 def get_all_users():
-    users = User.query.all()
+    users = (
+        User.query
+        .outerjoin(Commentaire)#.outerjoin(Sortie).select_from('sorties_a_venir')
+        .all()
+    )
 
     user_schema = UserSchema(many=True)
     return user_schema.dump(users)
@@ -89,7 +93,11 @@ def delete(id):
         abort(404, f'User not found for id: {id}')
 
 def read_one_user_by_id(id):
-    user = User.query.get(id)
+    user = (
+        User.query
+        .outerjoin(Sortie).outerjoin(Commentaire)
+        .get(id)
+    )
 
     if user is not None:
         user_schema = UserSchema()
@@ -97,19 +105,95 @@ def read_one_user_by_id(id):
     else:
         abort(404, f'User not found for id: {id}')
 
-@login_required
-def join_sortie(id_sortie):
-    sort = Sortie.query.filter(Sortie.id_sortie == id_sortie).one_or_none()
-    if sort is not None:
-        
-        #if(Sortie.query.filter(User.id == current_user.id).one_or_none() is None)
-        current_user.sorties_a_venir.append(sort)
-        sort.nbInscrits = sort.nbInscrits+1
-        return 200
-        #else:
-        #    abort(404, f'User {current_user.pseudo} already joined this sortie')
+def get_previous_activities(id):
+    user = User.query.get(id)
+    
+    if user is not None:
+        sorties = user.sorties_finies
+        sortie_schema = SortieSchema(many=True)
+        return sortie_schema.dump(sorties)
     else:
-        abort(404, f'Sortie not found for id: {id_sortie}')
+        abort(404, f'User not found for id: {id}')
 
-def get_previous_activities(user):
-    return User.query.all_sorties
+def get_incoming_activities(id):
+    user = User.query.get(id)
+    
+    if user is not None:
+        sorties = user.sorties_a_venir
+        sortie_schema = SortieSchema(many=True)
+        return sortie_schema.dump(sorties)
+    else:
+        abort(404, f'User not found for id: {id}')
+
+def switch_to_previous(id_sortie, id):
+    sortie_a_venir = Sortie.query.filter(
+        Sortie.id_sortie == id_sortie).one_or_none()
+
+    user = User.query.filter(User.id == id).one_or_none()
+    if sortie_a_venir is None:
+        abort(
+            404,
+            f'Sortie not found for Id: {id_sortie}',
+        )
+    if user is None:
+        abort(
+            404,
+            f'User not found for Id: {id}',
+        )
+    
+    else: 
+        user.sorties_a_venir.remove(sortie_a_venir)
+        user.sorties_finies.append(sortie_a_venir)
+
+        db.session.add(user)
+        db.session.commit()
+
+        return 200
+
+def register(id_sortie, id):
+    sortie_a_venir = Sortie.query.filter(
+        Sortie.id_sortie == id_sortie).one_or_none()
+
+    user = User.query.filter(User.id == id).one_or_none()
+
+    if sortie_a_venir is None:
+        abort(
+            404,
+            f'Sortie not found for Id: {id_sortie}',
+        )
+    if user is None:
+        abort(
+            404,
+            f'User not found for Id: {id}',
+        )
+    
+    else: 
+        user.sorties_a_venir.append(sortie_a_venir)
+        db.session.add(user)
+        db.session.commit()
+
+        return 201
+
+def cancel_registration(id_sortie, id):
+    sortie_a_venir = Sortie.query.filter(
+        Sortie.id_sortie == id_sortie).one_or_none()
+
+    user = User.query.filter(User.id == id).one_or_none()
+
+    if sortie_a_venir is None:
+        abort(
+            404,
+            f'Sortie not found for Id: {id_sortie}',
+        )
+    if user is None:
+        abort(
+            404,
+            f'User not found for Id: {id}',
+        )
+    
+    else: 
+        user.sorties_a_venir.remove(sortie_a_venir)
+        db.session.add(user)
+        db.session.commit()
+
+        return 201
