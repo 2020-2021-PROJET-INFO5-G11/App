@@ -1,134 +1,82 @@
 <template>
   <div>
+
     <!-- Header -->
     <Header title="Page temporaire"/>
+
     <!-- NavBar -->
     <NavBar> </NavBar>
-    <!-- Sorties -->
-    <div class="row">
-      <div class="col-sm-10">
-        <h1>Sorties</h1>
-        <hr><br><br>
-        <alert :message=message v-if="showMessage"></alert>
-        <button type="button" class="btn btn-success btn-sm" v-b-modal.sortie-modal>
-          Créer une nouvelle Sortie
-        </button>
-        <br><br>
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th scope="col">Nom</th>
-              <th scope="col">Type</th>
-              <th scope="col">Privée ?</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(sortie, index) in sorties" :key="index">
-              <td>{{ sortie.nom }}</td>
-              <td>{{ sortie.type }}</td>
-              <td>
-                <span v-if="sortie.privée">Oui</span>
-                <span v-else>Non</span>
-              </td>
-              <td>
-                <div class="btn-group" role="group">
-                  <button
-                          type="button"
-                          class="btn btn-warning btn-sm"
-                          v-b-modal.sortie-update-modal
-                          @click="editSortie(sortie)">
-                      Modifier
-                  </button>
-                  <button
-                          type="button"
-                          class="btn btn-danger btn-sm"
-                          @click="onDeleteSortie(sortie)">
-                      Supprimer
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+
+    <!-- Boutton créer une sortie -->
+    <br>
+    <i class="right fa fa-plus-circle fa-3x"
+      @click="$router.push('/creation-sortie')"> Créer une sortie</i> <br>
+
+    <!-- Title -->
+    <h1 class="title"> Toutes les sorties </h1>
+    <hr>
+
+    <!-- Alert message -->
+    <alert :message=message v-if="showMessage"></alert><br>
+    
+    <!-- Filter -->
+
+    <div class="filter">
+      <select style="width: 300px;" v-on:change="filter($event)">
+        <option value="" disabled hidden selected>Filtrer par type de sortie</option>
+        <option v-for="t in types" :key="t">
+          {{ t }}
+        </option>
+      </select>
+      <br><br>
     </div>
-    <b-modal ref="addSortieModal"
-            id="sortie-modal"
-            title="Créer une nouvelle sortie"
-            hide-footer>
-      <b-form @submit="onSubmit" @reset="onReset" class="w-100">
-      <b-form-group id="form-title-group"
-                    label="Nom:"
-                    label-for="form-title-input">
-          <b-form-input id="form-title-input"
-                        type="text"
-                        v-model="addSortieForm.nom"
-                        required
-                        placeholder="Enter title">
-          </b-form-input>
-        </b-form-group>
-        <b-form-group id="form-author-group"
-                      label="Type:"
-                      label-for="form-author-input">
-            <b-form-input id="form-author-input"
-                          type="text"
-                          v-model="addSortieForm.type"
-                          required
-                          placeholder="Enter author">
-            </b-form-input>
-          </b-form-group>
-        <b-form-group id="form-read-group">
-          <b-form-checkbox-group v-model="addSortieForm.privée" id="form-checks">
-            <b-form-checkbox value="true">Privée?</b-form-checkbox>
-          </b-form-checkbox-group>
-        </b-form-group>
-        <b-button-group>
-          <b-button type="submit" variant="primary">Submit</b-button>
-          <b-button type="reset" variant="danger">Reset</b-button>
-        </b-button-group>
-      </b-form>
-    </b-modal>
-    <b-modal ref="editSortieModal"
-            id="sortie-update-modal"
-            title="Update"
-            hide-footer>
-      <b-form @submit="onSubmitUpdate" @reset="onResetUpdate" class="w-100">
-      <b-form-group id="form-title-edit-group"
-                    label="Title:"
-                    label-for="form-title-edit-input">
-          <b-form-input id="form-title-edit-input"
-                        type="text"
-                        v-model="editForm.nom"
-                        required
-                        placeholder="Enter title">
-          </b-form-input>
-        </b-form-group>
-        <b-form-group id="form-author-edit-group"
-                      label="Author:"
-                      label-for="form-author-edit-input">
-            <b-form-input id="form-author-edit-input"
-                          type="text"
-                          v-model="editForm.type"
-                          required
-                          placeholder="Enter author">
-            </b-form-input>
-          </b-form-group>
-        <b-form-group id="form-read-edit-group">
-          <b-form-checkbox-group v-model="editForm.privée" id="form-checks">
-            <b-form-checkbox value="true">Privée?</b-form-checkbox>
-          </b-form-checkbox-group>
-        </b-form-group>
-        <b-button-group>
-          <b-button type="submit" variant="primary">Update</b-button>
-          <b-button type="reset" variant="danger">Cancel</b-button>
-        </b-button-group>
-      </b-form>
-    </b-modal>
+    
+    <!-- Activities -->
+    <ul class="scrollmenu">
+      <!-- -->
+      <li v-for="(sortie, index) in sorties" :key="index">
+        <!-- Image -->
+        <div class="rect" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
+          <img class="fit-picture" :src="getImgUrl(sortie.photo)"  >
+        </div> <br>
+
+        <!-- Name -->
+        <div class="data">
+          <span @click="$router.push({path: `/sortie/${sortie.id_sortie}`})" class="date"> {{sortie.date}} </span>
+          <span @click="$router.push({path: `/sortie/${sortie.id_sortie}`})" class="nom"> {{sortie.nom}} </span><br> 
+        </div>
+
+        <!-- Buttons -->
+        <div style="text-align: center;">
+          <!-- View activity-->
+          <button type="button"
+                  class="bouton btn-sm"
+                  v-b-modal.sortie-view-modal
+                  @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
+              Voir sortie
+          </button>&ensp;
+          <!-- Edit activity -->
+          <button type="button"
+                  class="btn btn-warning btn-sm"
+                  v-b-modal.sortie-update-modal
+                  @click="$router.push({path: `/modification-sortie/${sortie.id_sortie}`})">
+              Modifier
+          </button>&ensp;
+          <!-- Delete activity -->
+          <button type="button"
+                  class="btn btn-danger btn-sm"
+                  @click="onDeleteSortie(sortie)">
+              Supprimer
+          </button>
+        </div>
+      </li>
+
+    </ul>
 
     <!-- Footer -->
+    <br><br>
     <Footer />
-    <div :key="key"></div>
+
   </div>
 </template>
 
@@ -138,7 +86,6 @@ import Alert from './Alert.vue';
 import Header from './header.vue';
 import NavBar from './navBar.vue';
 import Footer from './footer.vue';
-
 export default {
   data() {
     return {
@@ -146,17 +93,18 @@ export default {
       sorties: [],
       addSortieForm: {
         nom: '',
-        type: '',
-        privée: [],
+        typeSortie: '',
+        privee: [],
       },
       message: '',
       showMessage: false,
       editForm: {
-        id: '',
+        id_sortie: '',
         nom: '',
-        type: '',
-        privée: [],
+        typeSortie: '',
+        privee: [],
       },
+      types: ['Autre', 'Cinéma', 'Culture', 'Musée', 'Musique', 'Repas', 'Sport', 'Toutes'],
     };
   },
   components: {
@@ -166,48 +114,65 @@ export default {
     forceRerender() {
       this.key += 1;
     },
+    getImgUrl(image) {
+      return require('../'+image+'.jpg');
+    },
     getSorties() {
-      const path = 'http://localhost:5000/sorties';
+      const path = 'http://localhost:5000/api/sortie';
       axios.get(path)
         .then((res) => {
-          this.sorties = res.data.sorties;
+          this.sorties = res.data;
         })
         .catch((error) => {
           console.error(error);
         });
     },
+    filter(evt) {
+      if(evt.target.value == 'Toutes') {
+        this.getSorties();
+      }
+      else{
+        const path = `http://localhost:5000/api/filter/${evt.target.value}`;
+        axios.get(path)
+          .then((res) => {
+            this.sorties = res.data;
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+    },
     addSortie(payload) {
-      const path = 'http://localhost:5000/sorties';
+      const path = 'http://localhost:5000/api/sortie';
       axios.post(path, payload)
         .then(() => {
           this.getSorties();
-          this.message = 'Sortie added!';
+          this.message = 'Sortie créee!';
           this.showMessage = true;
         })
         .catch((error) => {
-          // eslint-disable-next-line
           console.log(error);
           this.getSorties();
         });
     },
     initForm() {
       this.addSortieForm.nom = '';
-      this.addSortieForm.type = '';
-      this.adSortieForm.privée = [];
-      this.editForm.id = '';
+      this.addSortieForm.typeSortie = '';
+      this.adSortieForm.privee = [];
+      this.editForm.id_sortie = '';
       this.editForm.nom = '';
-      this.editForm.typr = '';
-      this.editForm.privée = [];
+      this.editForm.typeSortie = '';
+      this.editForm.privee = [];
     },
     onSubmit(evt) {
       evt.preventDefault();
       this.$refs.addSortieModal.hide();
-      let privée = false;
-      if (this.addSortieForm.privée[0]) privée = true;
+      let privee = false;
+      if (this.addSortieForm.privee[0]) privee = true;
       const payload = {
         nom: this.addSortieForm.nom,
-        type: this.addSortieForm.type,
-        privée, // property shorthand
+        typeSortie: this.addSortieForm.typeSortie,
+        privee,
       };
       this.addSortie(payload);
       this.initForm();
@@ -223,25 +188,24 @@ export default {
     onSubmitUpdate(evt) {
       evt.preventDefault();
       this.$refs.editSortieModal.hide();
-      let privée = false;
-      if (this.editForm.privée[0]) privée = true;
+      let privee = false;
+      if (this.editForm.privee[0]) privee = true;
       const payload = {
         nom: this.editForm.nom,
-        type: this.editForm.type,
-        privée,
+        typeSortie: this.editForm.typeSortie,
+        privee,
       };
-      this.updateSortie(payload, this.editForm.id);
+      this.updateSortie(payload, this.editForm.id_sortie);
     },
     updateSortie(payload, sortieID) {
-      const path = `http://localhost:5000/sorties/${sortieID}`;
+      const path = `http://localhost:5000/api/sortie/${sortieID}`;
       axios.put(path, payload)
         .then(() => {
           this.getSorties();
-          this.message = 'Sortie updated!';
+          this.message = 'Sortie mise à jour!';
           this.showMessage = true;
         })
         .catch((error) => {
-          // eslint-disable-next-line
           console.error(error);
           this.getSorties();
         });
@@ -250,24 +214,23 @@ export default {
       evt.preventDefault();
       this.$refs.editSortieModal.hide();
       this.initForm();
-      this.getSorties(); // why?
+      this.getSorties();
     },
     removeSortie(sortieID) {
-      const path = `http://localhost:5000/sorties/${sortieID}`;
+      const path = `http://localhost:5000/api/sortie/${sortieID}`;
       axios.delete(path)
         .then(() => {
           this.getSorties();
-          this.message = 'Sortie removed!';
+          this.message = 'Sortie supprimée!';
           this.showMessage = true;
         })
         .catch((error) => {
-          // eslint-disable-next-line
           console.error(error);
           this.getSorties();
         });
     },
     onDeleteSortie(sortie) {
-      this.removeSortie(sortie.id);
+      this.removeSortie(sortie.id_sortie);
     },
   },
   created() {
@@ -275,3 +238,67 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.bouton {
+  background-color: rgb(65, 192, 171);
+}
+.right {
+  float: right;
+}
+i  {
+  font-size: 35px;
+  color: rgb(65, 192, 171);
+}
+i:hover {
+  color: rgb(15, 138, 117);
+  cursor: pointer;
+}
+li {
+  display: inline-block;
+  padding: 4em;
+}
+.fit-picture {
+  width: 320px;
+  height: 210px;
+}
+.rect {
+  border: solid;
+  border-width: 5px;
+  border-color: black;
+  width: 328px;
+  height: 219px;
+}
+.nom {
+  height: 26px;
+  word-break:break-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1; /* number of lines to show */
+  -webkit-box-orient: vertical;
+}
+.data {
+  width: 328px;
+  font-size: 20px;
+  text-align: center;
+}
+.nom:hover, .date:hover{
+  cursor: pointer;
+}
+img:hover {
+  opacity: 0.7;
+}
+.rect:hover {
+  border-color: rgb(15, 138, 117);
+  cursor: pointer;
+}
+.title {
+  padding-left: 20px;
+}
+.filter {
+  padding-left: 4em;
+  font-size: 20px;
+  text-align: center;
+}
+</style>

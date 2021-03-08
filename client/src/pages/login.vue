@@ -1,6 +1,5 @@
-<template>
-  
-    <div fluid="xl" class="col d-flex justify-content-center">
+<template>  
+    <div class="container" >
       <body>
       <b-form-group
         id="input-group-1" label="Adresse email:">
@@ -29,7 +28,6 @@
 
 
   </div>
-  
 </template>
 
 <script>

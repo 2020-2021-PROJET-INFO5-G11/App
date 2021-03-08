@@ -1,83 +1,10 @@
 import uuid
 from flask import Flask, jsonify, request
-from flask_cors import CORS
 
+from config import app
+from models import Sortie, SortieSchema
 
-SORTIES = [
-    {
-        'id': uuid.uuid4().hex,
-        'nom': 'Rando entre copains',
-        'location': 'Monteynard',
-        'date': '',
-        'heure': '',
-        'durée': '',
-        'rdv': 'Polytech',
-        'capacityMin': '',
-        'capacaityMax': '',
-        'privée': True,
-        'groupID': '',
-        'type': 'Sport',
-        'photo': '',
-        'inscrits': '',
-        'nbInscrits': '',
-        'organisateurs': '',
-        'description': '',
-        'dateLimite': '',
-        'commentaires': [
-            {
-                'id': uuid.uuid4().hex,
-                'utilisateur': 'Utilisateur089',
-                'contenu': 'Ceci est un commentaire sur une sortie',
-                'date': '',
-                'réponses': '',
-    },
-        ]
-    },
-    {
-        'id': uuid.uuid4().hex,
-        'nom': 'Harry Potter and the Philosopher\'s Stone',
-        'location': 'Pathé Chavant',
-        'date': '',
-        'heure': '',
-        'durée': '',
-        'rdv': 'Polytech',
-        'capacityMin': '',
-        'capacaityMax': '',
-        'privée': False,
-        'groupID': '',
-        'type': 'Cinéma',
-        'photo': '',
-        'inscrits': '',
-        'nbInscrits': '',
-        'organisateurs': '',
-        'description': '',
-        'dateLimite': '',
-        'commentaires': ''
-
-    },
-    {
-        'id': uuid.uuid4().hex,
-        'nom': 'Balade au PPM',
-        'location': 'Parc Paul Mistral',
-        'date': '',
-        'heure': '',
-        'durée': '',
-        'rdv': 'Polytech',
-        'capacityMin': '',
-        'capacaityMax': '',
-        'privée': True,
-        'groupID': '',
-        'type': 'Autre',
-        'photo': '',
-        'registered': '',
-        'nbRegistered': '',
-        'organisateurs': '',
-        'description': '',
-        'dateLimite': '',
-        'commentaires': ''
-    }
-]
-
+"""
 GROUPES = [
     {
         'id': uuid.uuid4().hex,
@@ -88,7 +15,7 @@ GROUPES = [
             {
         'id': uuid.uuid4().hex,
         'nom': 'Balade au PPM',
-        'location': 'Parc Paul Mistral',
+        'lieu': 'Parc Paul Mistral',
         'date': '',
         'heure': '',
         'durée': '',
@@ -113,7 +40,6 @@ GROUPES = [
 
 COMMENTAIRES = [
     {
-        'id': uuid.uuid4().hex,
         'utilisateur': 'Rim',
         'contenu': 'Ceci est un commentaire',
         'date': '',
@@ -141,17 +67,19 @@ UTILISATEURS = [
         'feedbacks': '',
     },
 ]
+"""
 
+"""
+# home
+@app.route('/')
+def home():
+    return 'Ceci est la racine'
 
-# configuration
-DEBUG = True
+# sanity check route
+@app.route('/ping', methods=['GET'])
+def ping_pong():
+    return jsonify('pong!')
 
-# instantiate the app
-app = Flask(__name__)
-app.config.from_object(__name__)
-
-# enable CORS
-CORS(app, resources={r'/*': {'origins': '*'}})
 
 
 def remove_sortie(sortie_id):
@@ -193,7 +121,7 @@ def all_sorties():
         SORTIES.append({
             'id': uuid.uuid4().hex,
             'nom': post_data.get('nom'),
-            'location': post_data.get('location'),
+            'lieu': post_data.get('lieu'),
             'date': post_data.get('date'),
             'heure': post_data.get('heure'),
             'durée': post_data.get('durée'),
@@ -292,7 +220,7 @@ def single_sortie(sortie_id):
         SORTIES.append({
             'id': uuid.uuid4().hex,
             'nom': post_data.get('nom'),
-            'location': post_data.get('location'),
+            'lieu': post_data.get('lieu'),
             'date': post_data.get('date'),
             'heure': post_data.get('heure'),
             'durée': post_data.get('durée'),
@@ -386,7 +314,7 @@ def single_utilisateur(utilisateur_id):
         remove_utilisateur(utilisateur_id)
         response_object['message'] = 'Utilisateur supprimé!'
     return jsonify(response_object)
-
+"""
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='localhost')

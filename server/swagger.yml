@@ -1,0 +1,400 @@
+swagger: "2.0"
+info:
+  description: This is the swagger file that goes with the server code
+  version: "1.0.0"
+  title: Swagger REST Article
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+basePath: "/api"
+
+
+# Paths supported by the server application
+paths:
+  /sortie:
+    get:
+      operationId: "entities.sortie.read_all_sorties"
+      tags:
+        - Sortie
+      summary: Get all the sortie
+      description: "Read the list of sortie"
+      responses:
+        200:
+          description: "Successful read sortie list operation"
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Sortie'
+
+    post:
+      operationId: entities.sortie.create
+      tags:
+        - Sortie
+      summary: Create a sortie
+      description: Create a new sortie
+      parameters:
+        - name: sortie
+          in: body
+          description: Sortie to create
+          required: True
+          schema:
+            $ref: '#/definitions/Sortie'
+      responses:
+        201:
+          description: Successfully created sortie
+          schema:
+            $ref: '#/definitions/Sortie'
+
+  /sortie/{id_sortie}:
+    get:
+      operationId: entities.sortie.read_one_sortie_by_id
+      tags:
+        - Sortie
+      summary: Get one sortie by id
+      description: Read one sortie corresponding to the given id
+      parameters:
+        - name: id_sortie
+          in: path
+          description: Id of the sortie to get
+          type: integer
+          required: True
+      responses:
+        200:
+          description: Successful read sortie list operation
+          schema:
+            $ref: '#/definitions/Sortie'
+
+    put:
+      operationId: entities.sortie.update
+      tags:
+        - Sortie
+      summary: Update a sortie
+      description: Update a sortie
+      parameters:
+        - name: id_sortie
+          in: path
+          description: Id the sortie to update
+          type: integer
+          required: True
+        - name: sortie
+          in: body
+          schema:
+            $ref: '#/definitions/Sortie'
+      responses:
+        200:
+          description: Successfully updated sortie
+          schema:
+            $ref: '#/definitions/Sortie'
+
+    delete:
+      operationId: entities.sortie.delete
+      tags:
+        - Sortie
+      summary: Delete a sortie from the sortie list
+      description: Delete a sortie
+      parameters:
+        - name: id_sortie
+          in: path
+          type: integer
+          description: Id of the sortie to delete
+          required: true
+      responses:
+        200:
+          description: Successfully deleted a sortie
+
+  /search/{search}:
+    get:
+      operationId: "entities.sortie.get_sorties_by_search"
+      tags:
+        - Sortie
+      summary: Get one sortie by name
+      description: Read one sortie corresponding to the given name
+      parameters:
+        - name: search
+          in: path
+          description: name of the sorties to get
+          type: string
+          required: true
+      responses:
+        200:
+          description: "Successful search sortie list operation"
+          schema:
+            $ref: '#/definitions/Sortie'
+
+  /filter/{type_sortie}:
+    get:
+      operationId: "entities.sortie.get_sorties_by_type"
+      tags:
+        - Sortie
+      summary: "The sortie data structure supported by the server application"
+      description: "Filter sorties corresponding to the given type of sortie"
+      parameters:
+        - name: type_sortie
+          in: path
+          description: type of the sorties to get
+          type: string
+          required: true
+      responses:
+        200:
+          description: "Successful filter sortie list operation"
+          schema:
+            $ref: '#/definitions/Sortie'
+
+  /user:
+    post:
+      operationId: entities.user.create
+      tags:
+        - User
+      summary: Create a user
+      description: Create a new user
+      parameters:
+        - name: user
+          in: body
+          description: User to create
+          required: True
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        201:
+          description: Successfully created user
+          schema:
+            $ref: '#/definitions/User'
+
+    get:
+      operationId: entities.user.get_all_users
+      tags:
+        - User
+      summary: Get all users
+      description: Get all users
+      responses:
+        201:
+          description: Successfully got user list
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+
+  /user/{id}:
+    get:
+      operationId: "entities.user.read_one_user_by_id"
+      tags:
+        - User
+      summary: "The user data structure supported by the server application"
+      description: "Read one user corresponding to the given id"
+      parameters:
+        - name: id
+          in: path
+          description: Id of the user to get
+          type: integer
+          required: True
+      responses:
+        200:
+          description: "Successful read user list operation"
+          schema:
+            $ref: '#/definitions/User'
+
+    put:
+      operationId: entities.user.update
+      tags:
+        - User
+      summary: Update a user
+      description: Update a sortie
+      parameters:
+        - name: id
+          in: path
+          description: Id the user to update
+          type: integer
+          required: True
+        - name: user
+          in: body
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        200:
+          description: Successfully updated user
+          schema:
+            $ref: '#/definitions/User'
+
+    delete:
+      operationId: entities.user.delete
+      tags:
+        - User
+      summary: Delete a user from the user list
+      description: Delete a user
+      parameters:
+        - name: id
+          in: path
+          type: integer
+          description: Id of the user to delete
+          required: true
+      responses:
+        200:
+          description: Successfully deleted a user
+
+  /user/login:
+    get:
+      tags:
+        - User
+      summary: "Logs user into the system"
+      description: ""
+      operationId: entities.user.login
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "query"
+        description: "The user name for login"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "query"
+        description: "The password for login in clear text"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+        "400":
+          description: "Invalid username/password supplied"
+
+  /user/logout:
+    get:
+      tags:
+        - User
+      summary: "Logs out current logged in user session"
+      description: ""
+      operationId: entities.user.logout
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters: []
+      responses:
+        default:
+          description: "successful operation"
+
+  /user/current:
+    get:
+      operationId: entities.user.get_current
+      tags:
+        - User
+      summary: "Get the current user"
+      description: "Get the user currently logged"
+      responses:
+        200:
+          description: "Current user successfully retreived"
+          schema:
+            $ref: '#/definitions/User'
+
+  /com:
+    get:
+      operationId: entities.commentaire.get_all
+      tags:
+        - Commentaire
+      summary: Get all commentaires
+      description: Get all commentaires
+      responses:
+        201:
+          description: Successfully got commentaires list
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Commentaire'
+
+#------------------------------------------------------------------------------------------
+
+definitions:
+  Sortie:
+    type: "object"
+    properties:
+      id_sortie:
+        type: "integer"
+      nom:
+        type: "string"
+      lieu:
+        type: "string"
+      date:
+        type: "string"
+      heure:
+        type: "string"
+      duree:
+        type: "string"
+      point_rdv:
+        type: "string"
+      capaciteMin:
+        type: "integer"
+      capaciteMax:
+        type: "integer"
+      privee:
+        type: "boolean"
+      id_groupe:
+        type: "integer"
+      typeSortie:
+        type: "string"
+      photo:
+        type: "string"
+      nbInscrits:
+        type: "integer"
+      description:
+        type: "string"
+      dateLimite:
+        type: "string"
+      commentaires:
+        type: "array"
+        items:
+          $ref: "#/definitions/Commentaire"
+
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      pseudo:
+        type: "string"
+      password_hash:
+        type: "string"
+      prenom:
+        type: "string"
+      nom:
+        type: "string"
+      email:
+        type: "string"
+      photo:
+        type: "string"
+      dateNaissance:
+        type: "string"
+      ville:
+        type: "string"
+      preferences:
+        type: "string"
+      sexe:
+        type: "string"
+      bio:
+        type: "string"
+      sorties_a_venir:
+        type: "string"
+      sorties_finies:
+        type: "string"
+      sorties_organisees:
+        type: "string"
+      role:
+        type: "string"
+      feedbacks:
+        type: "string"
+
+
+  Commentaire:
+    type: "object"
+    properties:
+      id_commentaire:
+        type: "integer"
+      id_user:
+        type: "integer"
+      id_sortie:
+        type: "integer"
+      contenu:
+        type: "string"
+      timestamp:
+        type: "string"
