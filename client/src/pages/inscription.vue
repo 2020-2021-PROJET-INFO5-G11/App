@@ -50,12 +50,14 @@
           ></b-form-input>
         </b-form-group>
 
+
+
         <b-form-group id="input-group-5" label="Sexe:" label-for="input-5">
           <b-form-select
             id="inline-form-custom-select-pref"
             v-model="form.sexe"
             class="mb-2 mr-sm-2 mb-sm-0"
-            :options="[{ text: 'Désignez votre sexe' , value: null},'Homme', 'Femme', 'Autre']"
+            :options="[{ text: 'Désignez votre sexe' },'Homme', 'Femme', 'Autre']"
             :value="null">
           </b-form-select>
         </b-form-group>
