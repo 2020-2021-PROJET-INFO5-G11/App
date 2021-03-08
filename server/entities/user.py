@@ -133,3 +133,27 @@ def register(id_sortie, id):
         db.session.commit()
 
         return 201
+
+def cancel_registration(id_sortie, id):
+    sortie_a_venir = Sortie.query.filter(
+        Sortie.id_sortie == id_sortie).one_or_none()
+
+    user = User.query.filter(User.id == id).one_or_none()
+
+    if sortie_a_venir is None:
+        abort(
+            404,
+            f'Sortie not found for Id: {id_sortie}',
+        )
+    if user is None:
+        abort(
+            404,
+            f'User not found for Id: {id}',
+        )
+    
+    else: 
+        user.sorties_a_venir.remove(sortie_a_venir)
+        db.session.add(user)
+        db.session.commit()
+
+        return 201
