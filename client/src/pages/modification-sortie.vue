@@ -240,7 +240,7 @@ export default {
           this.editForm.description = res.data.description,
           this.dateLimite = res.data.dateLimite,
           this.editForm.dateLimite = res.data.dateLimite,
-          this.editForm.commentaires = res.data.commentaires,
+          //this.editForm.commentaires = res.data.commentaires,
           this.sortie = res.data;
         })
         .catch((error) => {
