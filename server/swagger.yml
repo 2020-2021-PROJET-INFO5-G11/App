@@ -536,10 +536,6 @@ definitions:
         type: "string"
       dateLimite:
         type: "string"
-      commentaires:
-        type: "array"
-        items:
-          $ref: "#/definitions/Commentaire"
 
   User:
     type: "object"

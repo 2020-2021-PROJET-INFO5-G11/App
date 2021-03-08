@@ -2,7 +2,7 @@
   <div>
 
     <!-- Header -->
-    <Header title="Page temporaire"/>
+    <Header title="Toutes les sorties encore disponibles"/>
 
     <!-- NavBar -->
     <NavBar> </NavBar>

@@ -234,7 +234,7 @@ export default {
         nbInscrits: 0,
         description: '',
         dateLimite: '',
-        commentaires: '',
+        commentaires: [],
       }
       this.organisateurs = ['ElJraidi Rim', 'Sajide Idriss', 'Manissadjian Gabriel'];
       this.organisateur = null;
@@ -301,7 +301,7 @@ export default {
         nbInscrits: this.addSortieForm.nbInscrits,
         description: this.addSortieForm.description,
         dateLimite: this.addSortieForm.dateLimite,
-        commentaires: this.addSortieForm.commentaires,
+        //commentaires: this.addSortieForm.commentaires,
       };
       this.addSortie(payload);
       this.$router.push({path: `/sorties`});

@@ -44,13 +44,25 @@
           ></b-form-input>
         </b-form-group>
       
-        <b-form-group id="input-group-4" label="Nom:" label-for="input-4" description="Ce nom sera visible par les autres utilisateurs">
+        <b-form-group id="input-group-4" label="Nom d'utilisateur:" label-for="input-4" description="Ce nom sera visible par les autres utilisateurs">
           <b-form-input
             id="input-4"
-            v-model="form.name"
+            v-model="form.userName"
             placeholder="Entez votre nom"
             required
           ></b-form-input>
+        </b-form-group>
+
+
+
+        <b-form-group id="input-group-5" label="Sexe:" label-for="input-5">
+          <b-form-select
+            id="inline-form-custom-select-pref"
+            v-model="form.sexe"
+            class="mb-2 mr-sm-2 mb-sm-0"
+            :options="[{ text: 'Désignez votre sexe' },'Homme', 'Femme', 'Autre']"
+            :value="null">
+          </b-form-select>
         </b-form-group>
 
         <b-button type="submit" variant="primary">S'inscrire</b-button>
@@ -78,7 +90,8 @@ import Footer from './footer.vue';
           email: '',
           password: '',
           rePassword: '',
-          name: '',
+          userName: '',
+          sexe: this.sexe,
         },
       }
     },
@@ -94,6 +107,7 @@ import Footer from './footer.vue';
         this.form.name = ''
         this.form.password = ''
         this.form.rePassword = ''
+        this.form.sexe = null
         // Trick to reset/clear native browser form validation state
         this.show = false
         this.$nextTick(() => {
