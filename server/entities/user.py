@@ -112,4 +112,4 @@ def join_sortie(id_sortie):
         abort(404, f'Sortie not found for id: {id_sortie}')
 
 def get_previous_activities(user):
-    return User.query.get('activites_finies')
+    return User.query.all_sorties

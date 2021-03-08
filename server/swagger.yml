@@ -104,7 +104,7 @@ paths:
         200:
           description: Successfully deleted a sortie
 
-  /sortie/{id_sortie}/commentaires:
+  /sortie/{id_sortie}/com:
     get:
       operationId: entities.commentaire.get_activity_comments
       tags:
@@ -136,9 +136,8 @@ paths:
           type: integer
           required: True
         - name: com
-          in: body
-          schema:
-            $ref: '#/definitions/Commentaire'
+          in: query
+          type: string
       responses:
         201:
           description: Successfully created sortie
@@ -146,7 +145,7 @@ paths:
             $ref: '#/definitions/Commentaire'
 
 
-  /sortie/{id_sortie}/commentaires/{id_commentaire}:
+  /sortie/{id_sortie}/com/{id_com}:
     get:
       operationId: entities.commentaire.get_activity_single_comment
       tags:
@@ -159,7 +158,7 @@ paths:
           description: Id of the sortie to get
           type: integer
           required: True
-        - name: id_commentaire
+        - name: id_com
           in: path
           description: Id of the comment to get
           type: integer
@@ -182,7 +181,7 @@ paths:
           description: Id the sortie to update
           type: integer
           required: True
-        - name: id_commentaire
+        - name: id_com
           in: path
           description: Id the comment to update
           type: integer
@@ -209,7 +208,7 @@ paths:
           type: integer
           description: Id of the sortie
           required: true
-        - name: id_commentaire
+        - name: id_com
           in: path
           type: integer
           description: Id of the comment to delete

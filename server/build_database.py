@@ -72,7 +72,26 @@ SORTIES = [
     }
 ]
 
-USERS = []
+USERS = [
+    {
+        'pseudo': 'DD',
+        'password_hash': 'string',
+        'prenom': 'Didier',
+        'nom': 'Donsez',
+        'email': 'dd@uga.fr',
+        'photo': 'string',
+        'dateNaissance': '6942-06-66',
+        'ville': 'Grenoble',
+        'preferences': '',
+        'sexe': 'M',
+        'bio': 'j\'aime jhipster, et vous ?',
+        'photo': '',
+        'sorties_a_venir': [],
+        'sorties_finies': [],
+        'role': '',
+        'feedbacks': '',
+    },
+]
 
 # Delete database file if it exists currently
 if os.path.exists('entities.db'):

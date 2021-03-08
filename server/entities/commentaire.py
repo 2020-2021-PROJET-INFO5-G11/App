@@ -13,13 +13,15 @@ def get_all():
     com_schema = ComSchema(many=True)
     return com_schema.dump(coms)
 
+
 def get_activity_comments(id_sortie):
     coms = Commentaire.query.filter(Commentaire.id_sortie == id_sortie).order_by(db.desc(Commentaire.timestamp)).all()
 
     com_schema = ComSchema(many=True)
     return com_schema.dump(coms)
 
-def get_activity_single_comment(id_sortie, id_commentaire):
+
+def get_activity_single_comment(id_sortie, id_com):
     coms = Commentaire.query.filter(Commentaire.id_sortie == id_sortie, Commentaire.id_commentaire == id_commentaire).order_by(db.desc(Commentaire.timestamp)).all()
 
     com_schema = ComSchema(many=True)
@@ -27,48 +29,38 @@ def get_activity_single_comment(id_sortie, id_commentaire):
 
 
 def comment(id_sortie, com):
-    id = com.get('id_commentaire')
-    if Commentaire.query.get(id) is not None:
-        abort(409, f'id {id} is already used')
 
     sortie = Sortie.query.filter(Sortie.id_sortie == id_sortie).one_or_none()
 
     if sortie is None:
         abort(404, f'Sortie not found for id: {id_sortie}')
 
-    """com = Commentaire(
-        contenu = contenu, 
-        timestamp = datetime.now().strftime(("%Y-%m-%d %H:%M:%S")),
-    )
-"""
-
-    sortie.commentaires.append(
-        Commentaire(
-            contenu=contenu,
-            #timestamp="2021-03-04 23:24:45"#datetime.now().strftime(("%Y-%m-%d %H:%M:%S")),
-        )
+    c = Commentaire(
+        contenu=com,
+        id_sortie=id_sortie
     )
 
-
-    """
+    db.session.add(c)
+    
     schema = ComSchema()
-    new_com = schema.load(com, session=db.session)
-    """
+    new_com = schema.load(c, session=db.session)
+    
     #db.session.add(new_com)
     db.session.commit()
 
-    return schema.dump(new_com), 201
+    return 201
+    #return schema.dump(new_com), 201
 
 
-def update(id_sortie, id_commentaire, commentaire):
+def update(id_sortie, id_com, commentaire):
     update_commentaire = Commentaire.query.filter(
-        Commentaire.id_sortie == id_sortie, Commentaire.id_commentaire == id_commentaire
+        Commentaire.id_sortie == id_sortie, Commentaire.id_commentaire == id_com
     ).one_or_none()
 
     if update_commentaire is None:
         abort(
             404,
-            f'Commentaire not found for Id: {id_commentaire}',
+            f'Commentaire not found for Id: {id_com}',
         )
 
     else:
@@ -86,18 +78,18 @@ def update(id_sortie, id_commentaire, commentaire):
         return data, 200
 
 
-def delete(id_sortie, id_commentaire):
-    commentaire = Commentaire.query.filter(Commentaire.id_sortie == id_sortie, Commentaire.id_commentaire == id_commentaire).one_or_none()
+def delete(id_sortie, id_com):
+    commentaire = Commentaire.query.filter(Commentaire.id_sortie == id_sortie, Commentaire.id_commentaire == id_com).one_or_none()
 
     if commentaire is not None:
         db.session.delete(commentaire)
         db.session.commit()
         return make_response(
-            "Commentaire {id_commentaire} deleted".format(id_commentaire=id_commentaire), 200
+            f'Commentaire {id_com} deleted', 200
         )
 
     else:
         abort(
             404,
-            "Commentaire not found for Id: {id_commentaire}".format(id_commentaire=id_commentaire),
+            'Commentaire not found for Id: {id_com}',
         )

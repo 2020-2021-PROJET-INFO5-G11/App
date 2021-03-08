@@ -96,31 +96,65 @@ class Commentaire(db.Model):
 #--------------------------------------------------------------------------------
 
 class UserSchema(ma.SQLAlchemyAutoSchema):
+    commentaires = fields.Nested('ComSchema', default=[], many=True, exclude=("auteur",))
+    sorties_a_venir = fields.Nested('SortieSchema', default=[], many=True, exclude=("participants",))
     class Meta:
         model = User
         sqla_session = db.session
         load_instance = True
-    #commentaires = fields.Nested('ComSchema', default=[], many=True, exclude=("auteur",))
-    #sorties_a_venir = fields.Nested('SortieSchema', default=[], many=True, exclude=("participants",))
+
+class UserComSchema(ma.SQLAlchemyAutoSchema):
+    #This class exists to get around a recursion issue
+    class Meta:
+        model = Commentaire
+
+class UserSortieSchema(ma.SQLAlchemyAutoSchema):
+    #This class exists to get around a recursion issue
+    class Meta:
+        model = Sortie
 
 
 class ComSchema(ma.SQLAlchemyAutoSchema):
+    user = fields.Nested('UserSchema', default=None, exclude=("commentaires",))
+    sortie = fields.Nested('SortieSchema', default=None, exclude=("commentaires",))
     class Meta:
         model = Commentaire
         sqla_session = db.session
-        load_instance = True
-    user = fields.Nested('UserSchema', default=None, many=False, exclude=("pseudo",))
-    sortie = fields.Nested('SortieSchema', default=None, exclude=("commentaires",))
+
+class ComUserSchema(ma.SQLAlchemyAutoSchema):
+    #This class exists to get around a recursion issue
+    class Meta:
+        model = User
+
+class ComSortieSchema(ma.SQLAlchemyAutoSchema):
+    #This class exists to get around a recursion issue
+    class Meta:
+        model = Sortie
 
 
 class SortieSchema(ma.SQLAlchemyAutoSchema):
+    commentaires = fields.Nested('ComSchema', default=[], many=True, exclude=("sortie",))
+    participants = fields.Nested('UserSchema', default=[], many=True, exclude=("sortie",))
     class Meta:
         model = Sortie
         sqla_session = db.session
         load_instance = True
-    commentaires = fields.Nested('ComSchema', default=[], many=True, exclude=("sortie",))
-    #participants = fields.Nested('UserSchema', default=[], many=True, exclude=("sortie",))
 
+class SortieUserSchema(ma.SQLAlchemyAutoSchema):
+    #This class exists to get around a recursion issue
+    class Meta:
+        model = User
+    commentaires = fields.Nested('SortieComSchema', default=[], many=True)
+
+class SortieComSchema(ma.SQLAlchemyAutoSchema):
+    #This class exists to get around a recursion issue
+    class Meta:
+        model = Commentaire
+    """id_commentaire = fields.fields.Int()
+    id_user = fields.fields.Int()
+    id_sortie = fields.fields.Int()
+    contenu = fields.fields.Str()
+    timestamp = fields.fields.Str()"""
 
 
 @login.user_loader
