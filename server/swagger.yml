@@ -122,7 +122,7 @@ paths:
           description: Successful read commenaires list operation
           schema:
             $ref: '#/definitions/Commentaire'
-
+    
     post:
       operationId: entities.commentaire.comment
       tags:
@@ -132,7 +132,7 @@ paths:
       parameters:
         - name: id_sortie
           in: path
-          description: Sortie to comment
+          description: Id of the sortie to get
           type: integer
           required: True
         - name: com
@@ -144,6 +144,7 @@ paths:
           description: Successfully created sortie
           schema:
             $ref: '#/definitions/Commentaire'
+
 
   /sortie/{id_sortie}/commentaires/{id_commentaire}:
     get:
@@ -502,10 +503,6 @@ definitions:
     type: "object"
     properties:
       id_commentaire:
-        type: "integer"
-      id_user:
-        type: "integer"
-      id_sortie:
         type: "integer"
       contenu:
         type: "string"
