@@ -345,6 +345,28 @@ paths:
         200:
           description: Successfully deleted a user
 
+  /user/{id}/a_venir:
+    post:
+      operationId: entities.user.register
+      tags:
+        - User
+      summary: Register a user to a sortie
+      description: Register a user to a sortie
+      parameters:
+        - name: id_sortie
+          in: query
+          type: integer
+          description: Id of the sortie to register to
+          required: true
+        - name: id
+          in: path
+          type: integer
+          description: Id of the user to register
+          required: true
+      responses:
+        201:
+          description: Successfully registred user
+
   /user/login:
     get:
       tags:
@@ -484,12 +506,6 @@ definitions:
       sexe:
         type: "string"
       bio:
-        type: "string"
-      sorties_a_venir:
-        type: "string"
-      sorties_finies:
-        type: "string"
-      sorties_organisees:
         type: "string"
       role:
         type: "string"

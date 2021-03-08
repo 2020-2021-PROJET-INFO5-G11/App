@@ -109,3 +109,27 @@ def read_one_user_by_id(id):
 
 def get_previous_activities(user):
     return User.query.get('activites_finies')
+
+def register(id_sortie, id):
+    sortie_a_venir = Sortie.query.filter(
+        Sortie.id_sortie == id_sortie).one_or_none()
+
+    user = User.query.filter(User.id == id).one_or_none()
+
+    if sortie_a_venir is None:
+        abort(
+            404,
+            f'Sortie not found for Id: {id_sortie}',
+        )
+    if user is None:
+        abort(
+            404,
+            f'User not found for Id: {id}',
+        )
+    
+    else: 
+        user.sorties_a_venir.append(sortie_a_venir)
+        db.session.add(user)
+        db.session.commit()
+
+        return 201
