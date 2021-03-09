@@ -122,20 +122,18 @@ def get_incoming_activities():
     return sortie_schema.dump(sorties)
 
 
-def switch_to_previous(id_sortie, id):
+@login_required
+def switch_to_previous(id_sortie):
     sortie_a_venir = Sortie.query.filter(
         Sortie.id_sortie == id_sortie).one_or_none()
 
-    user = User.query.filter(User.id == id).one_or_none()
     if sortie_a_venir is None:
         abort(404, f'Sortie not found for Id: {id}')
-    if user is None:
-        abort(404, f'User not found for Id: {id}')
     
-    user.sorties_a_venir.remove(sortie_a_venir)
-    user.sorties_finies.append(sortie_a_venir)
+    current_user.sorties_a_venir.remove(sortie_a_venir)
+    current_user.sorties_finies.append(sortie_a_venir)
 
-    db.session.add(user)
+    db.session.add(current_user)
     db.session.commit()
 
     return 200
