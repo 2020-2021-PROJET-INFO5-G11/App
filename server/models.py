@@ -42,6 +42,7 @@ class User(UserMixin, db.Model):
     )
     sorties_a_venir = db.relationship('Sortie', secondary=userSortie_a_venir, lazy='subquery',
         backref=db.backref('participants', lazy=False))
+    sorties_finies = db.relationship('Sortie', secondary=userSortie_finies, lazy='subquery')
 
 
     def __repr__(self):
@@ -102,6 +103,7 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
         load_instance = True
     commentaires = fields.Nested('UserComSchema', default=[], many=True)
     sorties_a_venir = fields.Nested('UserSortieSchema', default=[], many=True)
+    sorties_finies = fields.Nested('UserSortieSchema', default=[], many=True)
 
 class UserComSchema(ma.SQLAlchemyAutoSchema):
     #This class exists to get around a recursion issue
@@ -124,7 +126,7 @@ class ComSchema(ma.SQLAlchemyAutoSchema):
 class ComUserSchema(ma.SQLAlchemyAutoSchema):
     #This class exists to get around a recursion issue
     class Meta:
-        odel = User
+        model = User
 
 class ComSortieSchema(ma.SQLAlchemyAutoSchema):
     #This class exists to get around a recursion issue

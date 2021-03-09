@@ -104,6 +104,118 @@ paths:
         200:
           description: Successfully deleted a sortie
 
+  /sortie/{id_sortie}/com:
+    get:
+      operationId: entities.commentaire.get_activity_comments
+      tags:
+        - Commentaire
+      summary: Get list of comments of an activity
+      description: Get list of comments of an activity
+      parameters:
+        - name: id_sortie
+          in: path
+          description: Id of the sortie to get
+          type: integer
+          required: True
+      responses:
+        200:
+          description: Successful read commenaires list operation
+          schema:
+            $ref: '#/definitions/Commentaire'
+    
+    post:
+      operationId: entities.commentaire.comment
+      tags:
+        - Commentaire
+      summary: Comment an acitivity
+      description: Comment an acitivity
+      parameters:
+        - name: id_sortie
+          in: path
+          description: Id of the sortie to get
+          type: integer
+          required: True
+        - name: com
+          in: query
+          type: string
+      responses:
+        201:
+          description: Successfully created sortie
+          schema:
+            $ref: '#/definitions/Commentaire'
+
+
+  /sortie/{id_sortie}/com/{id_com}:
+    get:
+      operationId: entities.commentaire.get_activity_single_comment
+      tags:
+        - Commentaire
+      summary: Get one comment of one activity by id
+      description: Get one comment of one activity by id
+      parameters:
+        - name: id_sortie
+          in: path
+          description: Id of the sortie to get
+          type: integer
+          required: True
+        - name: id_com
+          in: path
+          description: Id of the comment to get
+          type: integer
+          required: True
+      responses:
+        200:
+          description: Successful read commentaire from sortie operation
+          schema:
+            $ref: '#/definitions/Commentaire'
+
+    put:
+      operationId: entities.commentaire.update
+      tags:
+        - Commentaire
+      summary: Update a comment
+      description: Update a comment
+      parameters:
+        - name: id_sortie
+          in: path
+          description: Id of the sortie to get
+          type: integer
+          required: True
+        - name: id_com
+          in: path
+          description: Id of the com to update
+          type: integer
+          required: True
+        - name: com
+          in: query
+          type: string
+      responses:
+        200:
+          description: Successfully updated commentaire
+          schema:
+            $ref: '#/definitions/Commentaire'
+
+    delete:
+      operationId: entities.commentaire.delete
+      tags:
+        - Commentaire
+      summary: Delete a comment from the sortie
+      description: Delete a comment
+      parameters:
+        - name: id_sortie
+          in: path
+          type: integer
+          description: Id of the sortie
+          required: true
+        - name: id_com
+          in: path
+          type: integer
+          description: Id of the comment to delete
+          required: true
+      responses:
+        200:
+          description: Successfully deleted a comment
+
   /search/{search}:
     get:
       operationId: "entities.sortie.get_sorties_by_search"
@@ -217,6 +329,29 @@ paths:
           schema:
             $ref: '#/definitions/User'
 
+    put:
+      operationId: entities.user.switch_to_previous
+      tags:
+        - User
+      summary: Switch sortie from incoming to previous
+      description: Switch sortie from incoming to previous
+      parameters:
+        - name: id
+          in: path
+          description: Id the user to update
+          type: integer
+          required: True
+        - name: id_sortie
+          in: query
+          type: integer
+          description: Id of the sortie to register to
+          required: true
+      responses:
+        200:
+          description: Successfully updated user
+          schema:
+            $ref: '#/definitions/User'
+
     delete:
       operationId: entities.user.delete
       tags:
@@ -232,6 +367,66 @@ paths:
       responses:
         200:
           description: Successfully deleted a user
+
+  /user/{id}/a_venir:
+    get:
+      operationId: "entities.user.get_incoming_activities"
+      tags:
+        - User
+      summary: "get incoming activities"
+      description: "get incoming activities"
+      parameters:
+        - name: id
+          in: path
+          description: Id of the user to get
+          type: integer
+          required: True
+      responses:
+        200:
+          description: "Successful read user list incoming activities operation"
+          schema:
+            $ref: '#/definitions/Sortie'
+    post:
+      operationId: entities.user.register
+      tags:
+        - User
+      summary: Register a user to a sortie
+      description: Register a user to a sortie
+      parameters:
+        - name: id_sortie
+          in: query
+          type: integer
+          description: Id of the sortie to register to
+          required: true
+        - name: id
+          in: path
+          type: integer
+          description: Id of the user to register
+          required: true
+      responses:
+        201:
+          description: Successfully registred user
+
+    delete:
+      operationId: entities.user.cancel_registration
+      tags:
+        - User
+      summary: Cancel registration a user to a sortie
+      description: Cancel registration a user to a sortie
+      parameters:
+        - name: id_sortie
+          in: query
+          type: integer
+          description: Id of the sortie to register to
+          required: true
+        - name: id
+          in: path
+          type: integer
+          description: Id of the user to cancel registration for
+          required: true
+      responses:
+        201:
+          description: Successfully cancel registration user
 
   /user/login:
     get:
@@ -379,10 +574,6 @@ definitions:
     type: "object"
     properties:
       id_commentaire:
-        type: "integer"
-      id_user:
-        type: "integer"
-      id_sortie:
         type: "integer"
       contenu:
         type: "string"
