@@ -102,6 +102,7 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
         load_instance = True
     commentaires = fields.Nested('ComSchema', default=[], many=True, exclude=("auteur","sortie",), dump_only=True)
     sorties_a_venir = fields.Nested('SortieSchema', default=[], many=True, exclude=("participants","commentaires",), dump_only=True)
+    sorties_finies = fields.Nested('SortieSchema', default=[], many=True, exclude=("participants","commentaires",), dump_only=True)
 
 
 class ComSchema(ma.SQLAlchemyAutoSchema):

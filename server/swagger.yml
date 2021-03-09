@@ -381,6 +381,19 @@ paths:
           schema:
             $ref: '#/definitions/Sortie'
 
+  /user/current/finies:
+    get:
+      operationId: "entities.user.get_previous_activities"
+      tags:
+        - User
+      summary: "get previous activities"
+      description: "get previous activities"
+      responses:
+        200:
+          description: "Successful read user list previous activities operation"
+          schema:
+            $ref: '#/definitions/Sortie'
+
   /sortie/{id_sortie}/register:
     post:
       operationId: entities.user.register
