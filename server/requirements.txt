@@ -1,0 +1,11 @@
+Flask==1.1.2
+Flask-Cors==3.0.10
+
+
+
+pip install connexion marshmallow flask_marshmallow flask_cors
+pip install marshmallow-sqlalchemy
+pip install pylint-flask-sqlalchemy
+pip install pylint-flask
+pip install flask-login
+pip install connexion[swagger-ui]
