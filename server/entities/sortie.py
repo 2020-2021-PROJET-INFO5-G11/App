@@ -15,7 +15,7 @@ def read_all_sorties():
         .outerjoin(Commentaire).outerjoin(User)
         .all()
     )
-    
+
     sortie_schema = SortieSchema(many=True)
     return sortie_schema.dump(sorties)
 
@@ -66,14 +66,9 @@ def update(id_sortie, sortie):
     ).one_or_none()
 
     if update_sortie is None:
-        abort(
-            404,
-            f'Sortie not found for Id: {id_sortie}',
-        )
+        abort(404, f'Sortie not found for Id: {id_sortie}')
 
     else:
-
-       # sortie['commentaires'] = []
         schema = SortieSchema()
         update = schema.load(sortie, session=db.session)
 

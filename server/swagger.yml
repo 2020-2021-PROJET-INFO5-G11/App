@@ -190,7 +190,7 @@ paths:
           in: query
           type: string
       responses:
-        200:
+        201:
           description: Successfully updated commentaire
           schema:
             $ref: '#/definitions/Commentaire'
@@ -482,7 +482,7 @@ paths:
           description: "Current user successfully retreived"
           schema:
             $ref: '#/definitions/User'
-            
+
 
   /com:
     get:

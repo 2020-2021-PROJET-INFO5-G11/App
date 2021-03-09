@@ -98,28 +98,30 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = User
         sqla_session = db.session
+        #include_relationships = True
         load_instance = True
-    commentaires = fields.Nested('ComSchema', default=[], many=True, exclude=("auteur",))
-    sorties_a_venir = fields.Nested('SortieSchema', default=[], many=True, exclude=("participants",))
+    commentaires = fields.Nested('ComSchema', default=[], many=True, exclude=("auteur","sortie",), dump_only=True)
+    sorties_a_venir = fields.Nested('SortieSchema', default=[], many=True, exclude=("participants","commentaires",), dump_only=True)
 
 
 class ComSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Commentaire
         sqla_session = db.session
+        include_fk = True
         load_instance = True
-    auteur = fields.Nested('UserSchema', default=None, many=False, exclude=("pseudo",))
-    sortie = fields.Nested('SortieSchema', default=None, exclude=("commentaires",))
+    auteur = fields.Nested('UserSchema', default=None, many=False, exclude=("commentaires","sorties_a_venir",), dump_only=True)
+    sortie = fields.Nested('SortieSchema', default=None, exclude=("commentaires","participants",), dump_only=True)
 
 
 class SortieSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Sortie
         sqla_session = db.session
+        #include_relationships = True
         load_instance = True
-    commentaires = fields.Nested('ComSchema', default=[], many=True, exclude=("sortie",))
-    participants = fields.Nested('UserSchema', default=[], many=True, exclude=("sorties_a_venir",))
-
+    commentaires = fields.Nested('ComSchema', default=[], many=True, exclude=("sortie","auteur",), dump_only=True)
+    participants = fields.Nested('UserSchema', default=[], many=True, exclude=("sorties_a_venir","commentaires",), dump_only=True)
 
 
 @login.user_loader
