@@ -368,19 +368,13 @@ paths:
         200:
           description: Successfully deleted a user
 
-  /user/{id}/a_venir:
+  /user/current/a_venir:
     get:
       operationId: "entities.user.get_incoming_activities"
       tags:
         - User
       summary: "get incoming activities"
       description: "get incoming activities"
-      parameters:
-        - name: id
-          in: path
-          description: Id of the user to get
-          type: integer
-          required: True
       responses:
         200:
           description: "Successful read user list incoming activities operation"

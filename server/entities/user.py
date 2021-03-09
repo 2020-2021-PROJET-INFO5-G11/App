@@ -106,26 +106,20 @@ def read_one_user_by_id(id):
         abort(404, f'User not found for id: {id}')
 
 
-def get_previous_activities(id):
-    user = User.query.get(id)
-    
-    if user is not None:
-        sorties = user.sorties_finies
-        sortie_schema = SortieSchema(many=True)
-        return sortie_schema.dump(sorties)
-    else:
-        abort(404, f'User not found for id: {id}')
+@login_required
+def get_previous_activities():
+
+    sorties = current_user.sorties_finies
+    sortie_schema = SortieSchema(many=True)
+    return sortie_schema.dump(sorties)
 
 
-def get_incoming_activities(id):
-    user = User.query.get(id)
+@login_required
+def get_incoming_activities():
     
-    if user is not None:
-        sorties = user.sorties_a_venir
-        sortie_schema = SortieSchema(many=True)
-        return sortie_schema.dump(sorties)
-    else:
-        abort(404, f'User not found for id: {id}')
+    sorties = current_user.sorties_a_venir
+    sortie_schema = SortieSchema(many=True)
+    return sortie_schema.dump(sorties)
 
 
 def switch_to_previous(id_sortie, id):
