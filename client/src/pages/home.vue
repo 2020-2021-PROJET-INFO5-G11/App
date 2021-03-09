@@ -18,7 +18,7 @@
 
       <h1> Mes sorties à venir </h1> <br>
       <ul class="scrollmenu">
-        <li v-for="sortie in sorties" :key="sortie">
+        <li v-for="sortie in sorties_a_venir" :key="sortie">
           <!-- Image -->
           <div class="rect" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
             <img class="fit-picture" :src="getImgUrl(sortie.photo)"  >
@@ -56,7 +56,7 @@
       <!-- Historique de sorties -->
       <h1> Mon historique de sorties </h1> <br>
       <ul class="scrollmenu">
-        <li v-for="sortie in sorties" :key="sortie">
+        <li v-for="sortie in sorties_finies" :key="sortie">
           <!-- Image -->
           <div class="rect" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
             <img class="fit-picture" :src="getImgUrl(sortie.photo)"  >
@@ -106,7 +106,9 @@ export default {
   components: { Header, NavBar, Footer },
   data() {
     return {
-      sorties: [], 
+      sorties: [],
+      sorties_a_venir: [],
+      sorties_finies: [],
     };
   },
   methods: {
@@ -115,6 +117,26 @@ export default {
       axios.get(path)
         .then((res) => {
           this.sorties = res.data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    getIncomingSorties() {
+      const path = 'http://localhost:5000/api/user/current/a_venir';
+      axios.get(path)
+        .then((res) => {
+          this.sorties_a_venir = res.data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    getPreviousSorties() {
+      const path = 'http://localhost:5000/api/user/current/finies';
+      axios.get(path)
+        .then((res) => {
+          this.sorties_finies = res.data;
         })
         .catch((error) => {
           console.error(error);
@@ -142,6 +164,8 @@ export default {
   },
   created() {
     this.getSorties();
+    this.getIncomingSorties();
+    this.getPreviousSorties();
   }
 };
 </script>
