@@ -22,27 +22,19 @@
         <span class="id">ID: {{id}} </span>
 
         <!-- Buttons : show memberd and subscribe/unsuscribe-->
-        <div style="float: right">
+        <div style="float: right; margin-right: 1%;">
           <button @click="$bvModal.show('show-members')" class="showMembers">
             Voir les participants
           </button>
-          <button v-if="!is_subscribed" v-on:click="is_subscribed = true"
-            :disabled="sortie.capaciteMax - members.length + is_subscribed == 0" class="subscribe">
-            S'inscrire
+          <button @click="$bvModal.show('subscribe')" v-if="!is_subscribed && sortie.capaciteMax - members.length - is_subscribed != 0"
+            :disabled="sortie.capaciteMax - members.length - is_subscribed == 0" class="subscribe">
+            Inscription
           </button>
-          <button v-if="is_subscribed" v-on:click="is_subscribed = false"
+          <button @click="$bvModal.show('edit-subscribe')" v-if="is_subscribed"
             class="subscribe">
-            Se désinscrire
+            Modifier l'inscription
           </button>
           <br>
-          <div class="row">
-            <div class="membersCount">
-              <span> {{members.length + is_subscribed}} y participent déjà</span>
-            </div>
-            <div class="remainingPlaces ">
-              <span> {{sortie.capaciteMax - members.length - is_subscribed}} places restantes</span>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -67,16 +59,77 @@
             <br><br>
 
             <!-- Suscribe/Unsuscribe-->
-            <button v-if="!is_subscribed" v-on:click="is_subscribed = true"
+            <button v-if="!is_subscribed && sortie.capaciteMax - members.length - is_subscribed != 0" 
+                    @click="$bvModal.hide('show-members'); $bvModal.show('subscribe');"
                     :disabled="sortie.capaciteMax - members.length == 0" class="subscribe2">
               S'inscrire
             </button>
-            <button v-if="is_subscribed" v-on:click="is_subscribed = false"
+            <button v-if="is_subscribed" @click="$bvModal.hide('show-members'); $bvModal.show('edit-subscribe');"
                     class="subscribe2">
-              Se désinscrire
+              Modifier l'inscription
             </button>
             <br><br>
           </div>
+        </div>
+      </b-modal>
+
+      <!-- inscription pannel-->
+      <b-modal ref="subscribe" id="subscribe" hide-footer
+        title="Inscription à la sortie">
+        <div style="font-size: 20px;">
+          <br>
+          <div>
+            <div>
+              <span> {{members.length + is_subscribed}} personnes participent déjà à l'activité.</span>
+            </div>
+            <div>
+              <span> Il y a {{sortie.capaciteMax - sortie.nbInscrits - is_subscribed}} places restantes.</span>
+            </div>
+          </div>
+          <br>
+          <!-- nb -->
+          <span style="font-weight: bold;"> J'aimerais réserver </span> 
+          <input type="number" style="width: 55px;" min="1" :max="sortie.capaciteMax - members.length - is_subscribed" value="1"/> 
+          <span style="font-weight: bold;"> places. </span>
+          <br><br><br><br><br>
+          <!-- Suscribe/Unsuscribe-->
+          <div style="text-align: center;">
+            <button v-on:click="is_subscribed = true" @click="$bvModal.hide('subscribe');"
+                    :disabled="sortie.capaciteMax - members.length == 0" class="subscribe2">
+              Enregistrer
+            </button>
+          </div>
+          <br><br>
+        </div>
+      </b-modal>
+
+      <!-- edit inscription pannel-->
+      <b-modal ref="edit-subscribe" id="edit-subscribe" hide-footer
+        title="Inscription à la sortie">
+        <div style="font-size: 20px;">
+          <br>
+          <div>
+            <div>
+              <span> {{members.length + is_subscribed}} personnes participent déjà à l'activité.</span>
+            </div>
+            <div>
+              <span> Il y a {{sortie.capaciteMax - members.length - is_subscribed}} places restantes.</span>
+            </div>
+          </div>
+          <br>
+          <!-- nb -->
+          <span style="font-weight: bold;"> J'aimerais réserver </span> 
+          <input type="number" style="width: 55px;" min="0" :max="sortie.capaciteMax - members.length - is_subscribed" value="0"/> 
+          <span style="font-weight: bold;"> places. </span>
+          <br><br><br><br><br>
+          <!-- Suscribe/Unsuscribe-->
+          <div style="text-align: center;">
+            <button v-on:click="is_subscribed = false" @click="$bvModal.hide('edit-subscribe');"
+                    class="subscribe2">
+              Enregistrer la modification
+            </button>
+          </div>
+          <br><br>
         </div>
       </b-modal>
 
@@ -86,7 +139,10 @@
       <ul>
         <!-- Activity's photo-->
         <li style="height: 250px;">
-          <img class="fit-picture" :src="getImgUrl(sortie.photo)">
+          <div class="rect img-container" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
+            <img class="fit-picture" :src="getImgUrl(sortie.photo)"  >
+            <img v-if="sortie.capaciteMax - sortie.nbInscrits == 0" class="overlay-img fit-picture" src="../complet.png"  >
+          </div> <br>
         </li>
 
         <!-- Type + Description -->
@@ -147,16 +203,20 @@
             Capacité min : {{ sortie.capaciteMin }} 
             <span style="padding: 15px;">-</span>
             Capacité max : {{ sortie.capaciteMax }}
+            <br>  
+            <span> {{ sortie.capaciteMax - sortie.nbInscrits - is_subscribed }} places restantes </span>
           </span>
+
 
           <br><br><br>
         </li>
       </ul>
       
       <!-- Edit button -->
-      <div @click="$router.push({path: `/modification-sortie/${id}`})"
-           style="float: right; padding-right: 20px;">
-        <img class="edit" src="../edit.png" width="100">
+      <div @click="$router.push({path: `/modification-sortie/${id}`})" class="edit">
+        <img src="../edit.png" width="60">
+        <br> <span> Modifier </span>
+
       </div>
 
       <br><br>
@@ -202,7 +262,7 @@ export default {
     return {
       id: '0',
       userName: "Vernet Maxime",
-      members: ["ElJraidi Rim", "Sajide Idriss", "Manissadjian Gabriel"],
+      members: [],
       comments: ["Trop bien", "C'est sur le parking du haut le rdv ?", "Elle est difficile cette rando pour un débutant ?"],
       is_subscribed: false,
       sortie: {},
@@ -249,11 +309,10 @@ export default {
 }
 
 .edit {
+  float: right; 
+  padding-right: 8%;
   cursor: pointer;
-}
-
-.edit:hover {
-  width: 105px;
+  font-size: 13px;
 }
 
 .showMembers {
@@ -292,7 +351,7 @@ export default {
 }
 
 .subscribe {
-  width: 250px;
+  width: 300px;
   height: 60px;
   font-size: 30px;
   margin-left: 10px;
@@ -344,7 +403,7 @@ li {
 
 .resume {
   max-height: 210px;
-  width: 1000px;
+  width: 600px;
   overflow-x: scroll;
 }
 
@@ -411,6 +470,16 @@ li {
 .modal-backdrop
 {
     opacity:0.5 !important;
+}
+
+.img-container {
+     position: relative;
+}
+
+.overlay-img {
+     position: absolute;
+     top: 0;
+     left: 0;
 }
 
 </style>

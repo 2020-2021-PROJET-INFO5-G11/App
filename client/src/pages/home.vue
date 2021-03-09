@@ -18,63 +18,75 @@
 
       <h1> Mes sorties à venir </h1> <br>
       <ul class="scrollmenu">
-        <li style="margin-left:0em;">
-          <div class="rect">
-            <img class="fit-picture" src="../cinema.jpg"  >
-          </div>
-          <div class="title"> Sortie 7</div><br><br>
-        </li>
-        <li>
-          <div class="rect">
-            <img class="fit-picture" src="../randonnée.jpg">
-          </div>
-          <div class="title"> Sortie 8</div><br><br>
-        </li>
+        <li v-for="sortie in sorties" :key="sortie">
+          <!-- Image -->
+          <div class="rect" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
+            <img class="fit-picture" :src="getImgUrl(sortie.photo)"  >
+          </div> <br>
 
+          <!-- Name -->
+          <div class="data">
+            <span @click="$router.push({path: `/sortie/${sortie.id_sortie}`})" class="date"> {{sortie.date}} </span>
+            <span @click="$router.push({path: `/sortie/${sortie.id_sortie}`})" class="nom"> {{sortie.nom}} </span>
+            <br>
+            <div>
+              <!-- Buttons -->
+              <div class="data row" style="padding-left: 29px;">
+                <!-- View activity-->
+                <div class="view" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
+                  Voir <img src="../view.png" width="20">
+                </div>&ensp;
+                <!-- Edit button -->
+                <div class="edit" @click="$router.push({path: `/modification-sortie/${sortie.id_sortie}`})">
+                  Modifier <img src="../edit.png" width="20">
+                </div>&ensp;
+                <!-- Delete activity -->
+                <div class="delete" @click="onDeleteSortie(sortie)">
+                  Supprimer <img src="../delete.png" width="20">
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <br><br>
       </ul>
+
+      <br><br>
 
       <!-- Historique de sorties -->
       <h1> Mon historique de sorties </h1> <br>
       <ul class="scrollmenu">
-        <li style="margin-left:0em;">
-          <div class="rect">
-            <img class="fit-picture" src="../cinema.jpg">
-          </div>
-          <div class="title"> Sortie 6</div><br><br>
-        </li>
-        <li>
-          <div class="rect">
-            <img class="fit-picture" src="../cinema.jpg">
-          </div>
-          <div class="title"> Sortie 5</div><br><br>
-        </li>
-        <li>
-          <div class="rect">
-            <img class="fit-picture" src="../musée.jpg">
-          </div>
-          <div class="title"> Sortie 4</div><br><br>
-        </li>
-         <li>
-          <div class="rect">
-            <img class="fit-picture" src="../cinema.jpg">
-          </div>
-          <div class="title"> Sortie 3</div><br><br>
-        </li>
-         <li>
-          <div class="rect">
-            <img class="fit-picture" src="../randonnée.jpg">
-          </div>
-          <div class="title"> Sortie 2</div><br><br>
-        </li>
-         <li>
-          <div class="rect">
-            <img class="fit-picture" src="../musée.jpg">
-          </div>
-          <div class="title"> Sortie 1</div><br><br>
-        </li>
+        <li v-for="sortie in sorties" :key="sortie">
+          <!-- Image -->
+          <div class="rect" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
+            <img class="fit-picture" :src="getImgUrl(sortie.photo)"  >
+          </div> <br>
 
-        <li>
+          <!-- Name -->
+          <div class="data">
+            <span @click="$router.push({path: `/sortie/${sortie.id_sortie}`})" class="date"> {{sortie.date}} </span>
+            <span @click="$router.push({path: `/sortie/${sortie.id_sortie}`})" class="nom"> {{sortie.nom}} </span>
+            <br> 
+            <div>
+            <!-- Buttons -->
+              <div class="data row" style="padding-left: 29px;">
+                <!-- View activity-->
+                <div class="view" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
+                  Voir <img src="../view.png" width="20">
+                </div>&ensp;
+                <!-- Edit button -->
+                <div class="edit" @click="$router.push({path: `/modification-sortie/${sortie.id_sortie}`})">
+                  Modifier <img src="../edit.png" width="20">
+                </div>&ensp;
+                <!-- Delete activity -->
+                <div class="delete" @click="onDeleteSortie(sortie)">
+                  Supprimer <img src="../delete.png" width="20">
+                </div>
+              </div>  
+            </div>
+          </div>
         </li>
+        <br><br>
       </ul>
       <br><br>
     </body>
@@ -84,6 +96,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import Header from './header.vue';
 import NavBar from './navBar.vue';
 import Footer from './footer.vue';
@@ -93,14 +106,51 @@ export default {
   components: { Header, NavBar, Footer },
   data() {
     return {
+      sorties: [], 
     };
   },
   methods: {
+    getSorties() {
+      const path = 'http://localhost:5000/api/sortie';
+      axios.get(path)
+        .then((res) => {
+          this.sorties = res.data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    getImgUrl(image) {
+      return require('../'+image+'.jpg');
+    },
+    removeSortie(sortieID) {
+      const path = `http://localhost:5000/api/sortie/${sortieID}`;
+      axios.delete(path)
+        .then(() => {
+          this.getSorties();
+          this.message = 'Sortie supprimée!';
+          this.showMessage = true;
+        })
+        .catch((error) => {
+          console.error(error);
+          this.getSorties();
+        });
+    },
+    onDeleteSortie(sortie) {
+      this.removeSortie(sortie.id_sortie);
+    },
   },
+  created() {
+    this.getSorties();
+  }
 };
 </script>
 
 <style scoped>
+
+.bouton {
+  background-color: rgb(65, 192, 171);
+}
 
 i  {
   font-size: 35px;
@@ -119,11 +169,12 @@ i:hover {
 
 img:hover {
   opacity: 0.7;
+  cursor: pointer;
 }
 
 .fit-picture {
-  width: 291px;
-  height: 191px;
+  width: 320px;
+  height: 210px;
 }
 
 li {
@@ -134,9 +185,9 @@ li {
 .rect {
   border: solid;
   border-width: 5px;
-  border-color: rgb(65, 192, 171);
-  width: 300px;
-  height: 200px;
+  border-color: black;
+  width: 328px;
+  height: 219px;
 }
 
 .rect:hover {
@@ -158,4 +209,38 @@ h1{
   text-align: center;
 }
 
+.nom {
+  height: 26px;
+  word-break:break-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1; /* number of lines to show */
+  -webkit-box-orient: vertical;
+}
+.data {
+  width: 328px;
+  font-size: 20px;
+  text-align: center;
+}
+.nom:hover, .date:hover{
+  cursor: pointer;
+}
+
+.view, .edit, .delete {
+  padding: 4px;
+  cursor: pointer;
+}
+
+.view {
+  color: green;
+}
+
+.edit {
+  color: rgb(204, 134, 4);
+}
+
+.delete {
+  color: rgb(175, 29, 29);
+}
 </style>

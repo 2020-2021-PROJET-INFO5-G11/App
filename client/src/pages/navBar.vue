@@ -33,7 +33,7 @@
           </li>
 
           <!-- Group -->
-          <li class="group" @click="$router.push('/sorties')">
+          <li class="group" @click="$router.push('/groupes')">
             <div>
               <i class="fa fa-group fa-3x"></i>
             </div>
@@ -91,7 +91,7 @@
           </li>
 
           <!-- Profil button -->
-          <li class="profil" @click="$router.push('/sorties')">
+          <li class="profil" @click="$router.push('/profil/1')">
             <div>
               <i class="fa fa-user fa-3x"></i>
             </div>
@@ -99,7 +99,7 @@
           </li>
 
           <!-- log out button -->
-          <li class="logout" @click="$router.push('/sorties')">
+          <li class="logout" @click="$router.push('/connexion')">
             <div>
               <i class="fa fa-sign-out fa-3x"></i>
             </div>

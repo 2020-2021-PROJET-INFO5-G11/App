@@ -13,8 +13,10 @@
       <!-- -->
       <li v-for="(sortie) in sorties" :key="sortie">
         <!-- Image -->
-        <div class="rect" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
+        <div class="rect img-container" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
           <img class="fit-picture" :src="getImgUrl(sortie.photo)"  >
+          <img v-if="sortie.capaciteMax - sortie.nbInscrits == 0" class="overlay-img fit-picture" src="../complet.png"  >
+          {{sortie.nbInscrits}} inscrits
         </div> <br>
 
         <!-- Name -->
@@ -134,6 +136,16 @@ export default {
 </script>
 
 <style scoped>
+
+.img-container {
+     position: relative;
+}
+
+.overlay-img {
+     position: absolute;
+     top: 0;
+     left: 0;
+}
   
 .bouton {
   background-color: rgb(65, 192, 171);
