@@ -10,9 +10,8 @@
 
       <!-- Formulaire -->
       <form id="app"
-            @submit="checkForm"
+            @submit="submit"
             @reset="reset"
-            action="https://vuejs.org/"
             method="post">
 
         <br> <h1> Créer une sortie </h1> <br>
@@ -34,18 +33,18 @@
 
             <b-modal ref="addPhoto"
                      id="photo-modal"
+                     size="xl"
                      title="Choisir une photo de couverture pour l'activité"
                      hide-footer>
 
-              <div>
-                <div class="veritcal" style="text-align: center;" v-for="i in images" v-bind:key="i">
+              <ul style="overflow-y: scroll; height: 700px; width: 1200px;">
+                <li class="horizontal2" v-for="i in images" v-bind:key="i">
                   {{i}}
                   <br>
                   <img class="fit-picture" :src="getImgUrl(i)" @click="$bvModal.hide('photo-modal')"
                        v-on:click="setImage(i)"/>
-                  <br><br>
-                </div>
-              </div>
+                </li>
+              </ul>
 
             </b-modal>
 
@@ -148,15 +147,14 @@
               </li>
             </ul>
           </li>
-
         </ul>
 
         <br><br>
 
         <!-- submit button -->
         <div style="padding-left:800px">
-          <input class="submit" @click="submit" type="submit" value="Submit"> &ensp;
-          <input class="reset" type="reset" value="Reset">
+          <input class="submit" type="submit" value="Envoyer"> &ensp;
+          <input class="reset" type="reset" value="Reinitialiser">
           <br>
         </div>
         <br><br>
@@ -201,20 +199,17 @@ export default {
       },
       types: ['Autre', 'Cinéma', 'Culture', 'Musée', 'Musique', 'Repas', 'Sport'],
       organisateurs: ['ElJraidi Rim', 'Sajide Idriss', 'Manissadjian Gabriel'],
-      images: ['randonnée', 'cinema', 'musée', 'parc'],
+      images: ['cinema', 'escalade', 'escalade-sur-glace', 'football', 'foot-us', 'gymnastique', 'musée', 'parc', 'piscine', 'randonnée', 'rugby', 'salle-de-bloc', 'ski', 'tennis'],
       organisateur: null,
     };
   },
   methods: {
-    checkForm(e) {
-      if (this.nom && this.lieu && this.rdv && this.date
-      && this.heure && this.limite && this.min && this.max) {
+    checkForm() {
+      this.submit = true;
+      if (this.addSortieForm.nom && this.addSortieForm.lieu && this.addSortieForm.point_rdv && this.addSortieForm.date
+      && this.addSortieForm.heure && this.addSortieForm.dateLimite && this.addSortieForm.capaciteMin && this.addSortieForm.capaciteMax && this.addSortieForm.description) {
         return true;
       }
-
-      this.submit = true;
-
-      e.preventDefault();
       return false;
     },
     reset() {
@@ -231,7 +226,6 @@ export default {
         id_groupe: 0,
         typeSortie: 'Autre',
         photo: 'pas-de-photo',
-        nbInscrits: 0,
         description: '',
         dateLimite: '',
         commentaires: [],
@@ -273,38 +267,35 @@ export default {
       const path = 'http://localhost:5000/api/sortie';
       axios.post(path, payload)
         .then(() => {
-          this.getSorties();
-          this.message = 'Sortie added!';
-          this.showMessage = true;
+          this.$router.push({path: `/sorties`});
         })
         .catch((error) => {
           console.log(error);
-          this.getSorties();
         });
     },
     submit(evt) {
-      evt.preventDefault();
-      const payload = {
-        nom: this.addSortieForm.nom,
-        lieu: this.addSortieForm.lieu,
-        date: this.addSortieForm.date,
-        heure: this.addSortieForm.heure,
-        duree: this.addSortieForm.duree,
-        point_rdv: this.addSortieForm.point_rdv,
-        nbInscrits: 1,
-        capaciteMin: parseInt(this.addSortieForm.capaciteMin),
-        capaciteMax: parseInt(this.addSortieForm.capaciteMax),
-        privee: this.addSortieForm.privee,
-        id_groupe: this.addSortieForm.id_groupe,
-        typeSortie: this.addSortieForm.typeSortie,
-        photo: this.addSortieForm.photo,
-        nbInscrits: this.addSortieForm.nbInscrits,
-        description: this.addSortieForm.description,
-        dateLimite: this.addSortieForm.dateLimite,
-        //commentaires: this.addSortieForm.commentaires,
-      };
-      this.addSortie(payload);
-      this.$router.push({path: `/sorties`});
+      if(this.checkForm() === true ){
+        evt.preventDefault();
+        const payload = {
+          nom: this.addSortieForm.nom,
+          lieu: this.addSortieForm.lieu,
+          date: this.addSortieForm.date,
+          heure: this.addSortieForm.heure,
+          duree: this.addSortieForm.duree,
+          point_rdv: this.addSortieForm.point_rdv,
+          capaciteMin: parseInt(this.addSortieForm.capaciteMin),
+          capaciteMax: parseInt(this.addSortieForm.capaciteMax),
+          privee: this.addSortieForm.privee,
+          id_groupe: this.addSortieForm.id_groupe,
+          typeSortie: this.addSortieForm.typeSortie,
+          photo: this.addSortieForm.photo,
+          nbInscrits: 1,
+          description: this.addSortieForm.description,
+          dateLimite: this.addSortieForm.dateLimite,
+          //commentaires: this.addSortieForm.commentaires,
+        };
+        this.addSortie(payload);
+      }
     }
   },
 };
@@ -369,6 +360,14 @@ li.horizontal {
   width: 600px;
   display: inline-table;
   margin-left:4em;
+}
+
+li.horizontal2 {
+  padding: 5px;
+  display: inline-table;
+  text-align: center;
+  margin-top: 20px;
+  text-transform: uppercase;
 }
 
 li.veritcal {

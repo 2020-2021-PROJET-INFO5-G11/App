@@ -26,7 +26,7 @@
       <li>
         <div> Redirection </div>
         <div>
-          <i class="fa fa-home fa-3x"> Acceuil </i>
+          <i class="fa fa-home fa-3x" @click="$router.push('/accueil')"> Acceuil </i>
         </div>
         <div>
           <i class="fa fa-user fa-3x"> Profil </i>
