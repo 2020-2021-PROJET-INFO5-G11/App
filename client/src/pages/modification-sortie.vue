@@ -10,6 +10,7 @@
 
       <!-- Formulaire -->
       <form id="app"
+            @submit="edit"
             action="https://vuejs.org/"
             method="post">
 
@@ -32,18 +33,18 @@
 
             <b-modal ref="addPhoto"
                      id="photo-modal"
+                     size="xl"
                      title="Choisir une photo de couverture pour l'activité"
                      hide-footer>
 
-              <div>
-                <div class="veritcal" style="text-align: center;" v-for="i in images" v-bind:key="i">
+              <ul style="overflow-y: scroll; height: 700px; width: 1200px;">
+                <li class="horizontal2" v-for="i in images" v-bind:key="i">
                   {{i}}
                   <br>
                   <img class="fit-picture" :src="getImgUrl(i)" @click="$bvModal.hide('photo-modal')"
                        v-on:click="setImage(i)"/>
-                  <br><br>
-                </div>
-              </div>
+                </li>
+              </ul>
 
             </b-modal>
 
@@ -153,7 +154,7 @@
 
         <!-- submit button -->
         <div style="padding-left:800px">
-          <input class="submit" @click="edit" type="submit" value="Modifier la sortie"> &ensp;
+          <input class="submit" type="submit" value="Modifier la sortie"> &ensp;
           <br>
         </div>
         <br><br>
@@ -199,13 +200,18 @@ export default {
       username: 'Vernet Maxime',
       types: ['Autre', 'Cinéma', 'Culture', 'Musée', 'Musique', 'Repas', 'Sport'],
       organisateurs: ['ElJraidi Rim', 'Sajide Idriss', 'Manissadjian Gabriel'],
-      images: ['randonnée', 'cinema', 'musée', 'parc'],
+      images: ['cinema', 'escalade', 'escalade-sur-glace', 'football', 'foot-us', 'gymnastique', 'musée', 'parc', 'piscine', 'randonnée', 'rugby', 'salle-de-bloc', 'ski', 'tennis'],
       organisateur: null,
     };
   },
   methods: {
-    changeNom() {
-      this.editForm.nom = this.nom;
+    checkForm() {
+      this.submit = true;
+      if (this.nom && this.lieu && this.point_rdv && this.date
+      && this.heure && this.dateLimite && this.capaciteMin && this.capaciteMax && this.description) {
+        return true;
+      }
+      return false;
     },
     getSortie() {
       const path = `http://localhost:5000/api/sortie/${this.$route.params.id}`;
@@ -304,27 +310,29 @@ export default {
         });
     },
     edit(evt) {
-      evt.preventDefault();
-      const payload = {
-        nom: this.editForm.nom,
-        lieu: this.editForm.lieu,
-        date: this.editForm.date,
-        heure: this.editForm.heure,
-        duree: this.editForm.duree,
-        point_rdv: this.editForm.point_rdv,
-        nbInscrits: this.editForm.nbInscrits,
-        capaciteMin: parseInt(this.editForm.capaciteMin),
-        capaciteMax: parseInt(this.editForm.capaciteMax),
-        privee: this.editForm.privee,
-        // id_groupe: this.editForm.id_groupe,
-        typeSortie: this.editForm.typeSortie,
-        photo: this.editForm.photo,
-        nbInscrits: this.editForm.nbInscrits,
-        description: this.editForm.description,
-        dateLimite: this.editForm.dateLimite,
-        commentaires: this.editForm.commentaires,
-      };
-      this.updateSortie(payload, this.id);
+      if(this.checkForm() === true){
+        evt.preventDefault();
+        const payload = {
+          nom: this.editForm.nom,
+          lieu: this.editForm.lieu,
+          date: this.editForm.date,
+          heure: this.editForm.heure,
+          duree: this.editForm.duree,
+          point_rdv: this.editForm.point_rdv,
+          nbInscrits: this.editForm.nbInscrits,
+          capaciteMin: parseInt(this.editForm.capaciteMin),
+          capaciteMax: parseInt(this.editForm.capaciteMax),
+          privee: this.editForm.privee,
+          // id_groupe: this.editForm.id_groupe,
+          typeSortie: this.editForm.typeSortie,
+          photo: this.editForm.photo,
+          nbInscrits: this.editForm.nbInscrits,
+          description: this.editForm.description,
+          dateLimite: this.editForm.dateLimite,
+          //commentaires: this.editForm.commentaires,
+        };
+        this.updateSortie(payload, this.id);
+      }
     }
   },
   created() {
@@ -394,6 +402,14 @@ li.horizontal {
   width: 600px;
   display: inline-table;
   margin-left:4em;
+}
+
+li.horizontal2 {
+  padding: 5px;
+  display: inline-table;
+  text-align: center;
+  margin-top: 10px;
+  text-transform: uppercase;
 }
 
 li.veritcal {

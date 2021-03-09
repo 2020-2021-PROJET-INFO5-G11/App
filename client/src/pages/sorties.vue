@@ -36,8 +36,10 @@
       <!-- -->
       <li v-for="(sortie, index) in sorties" :key="index">
         <!-- Image -->
-        <div class="rect" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
+        <div class="rect img-container" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
           <img class="fit-picture" :src="getImgUrl(sortie.photo)"  >
+          <img v-if="sortie.capaciteMax - sortie.nbInscrits == 0" class="overlay-img fit-picture" src="../complet.png"  >
+          {{sortie.nbInscrits}} inscrits
         </div> <br>
 
         <!-- Name -->
@@ -47,28 +49,20 @@
         </div>
 
         <!-- Buttons -->
-        <div style="text-align: center;">
+        <div class="data row" style="padding-left: 29px;">
           <!-- View activity-->
-          <button type="button"
-                  class="bouton btn-sm"
-                  v-b-modal.sortie-view-modal
-                  @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
-              Voir sortie
-          </button>&ensp;
-          <!-- Edit activity -->
-          <button type="button"
-                  class="btn btn-warning btn-sm"
-                  v-b-modal.sortie-update-modal
-                  @click="$router.push({path: `/modification-sortie/${sortie.id_sortie}`})">
-              Modifier
-          </button>&ensp;
+          <div class="view" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
+            Voir <img src="../view.png" width="20">
+          </div>&ensp;
+          <!-- Edit button -->
+          <div class="edit" @click="$router.push({path: `/modification-sortie/${sortie.id_sortie}`})">
+            Modifier <img src="../edit.png" width="20">
+          </div>&ensp;
           <!-- Delete activity -->
-          <button type="button"
-                  class="btn btn-danger btn-sm"
-                  @click="onDeleteSortie(sortie)">
-              Supprimer
-          </button>
-        </div>
+          <div class="delete" @click="onDeleteSortie(sortie)">
+            Supprimer <img src="../delete.png" width="20">
+          </div>
+        </div>  
       </li>
 
     </ul>
@@ -240,6 +234,17 @@ export default {
 </script>
 
 <style scoped>
+
+.img-container {
+     position: relative;
+}
+
+.overlay-img {
+     position: absolute;
+     top: 0;
+     left: 0;
+}
+
 .bouton {
   background-color: rgb(65, 192, 171);
 }
@@ -300,5 +305,21 @@ img:hover {
   padding-left: 4em;
   font-size: 20px;
   text-align: center;
+}
+.view, .edit, .delete {
+  padding: 4px;
+  cursor: pointer;
+}
+
+.view {
+  color: green;
+}
+
+.edit {
+  color: rgb(204, 134, 4);
+}
+
+.delete {
+  color: rgb(175, 29, 29);
 }
 </style>
