@@ -6,6 +6,34 @@ from models import Sortie
 from models import User
 from models import Commentaire
 
+
+USERS = [
+    {
+        'pseudo': 'DD',
+        'password_hash': 'string',
+        'prenom': 'Didier',
+        'nom': 'Donsez',
+        'email': 'dd@uga.fr',
+        'photo': 'string',
+        'dateNaissance': '6942-06-66',
+        'ville': 'Grenoble',
+        'preferences': '',
+        'sexe': 'M',
+        'bio': 'J\'aime jhipster, et vous ?',
+        'photo': '',
+        'sorties_a_venir': [],
+        'sorties_finies': [],
+        'role': '',
+        'feedbacks': '',
+        'commentaires': [
+            ("jhipster", "2019-01-07 22:47:54"),
+            ("c", "2019-01-08 20:17:31"),
+            ("lavi", "2019-01-08 22:02:54"),
+        ],
+    },
+]
+
+
 # Data to initialize database with
 SORTIES = [
     {
@@ -21,7 +49,7 @@ SORTIES = [
         'id_groupe': None,
         'typeSortie': 'Sport',
         'photo': 'randonnée',
-        'nbInscrits': 1,
+        'nbInscrits': 0,
         'description': 'Ça vous dit de monter les voir la passerelle himalayenne du lac de Monteynard ?',
         'dateLimite': '2021-03-11',
         'commentaires': [
@@ -43,7 +71,7 @@ SORTIES = [
         'id_groupe': None,
         'typeSortie': 'Cinéma',
         'photo': 'cinema',
-        'nbInscrits': 1,
+        'nbInscrits': 0,
         'description': 'J\'ai un tarif de groupe pour aller voir ce filme au cinéma.',
         'dateLimite': '2021-03-03',
         'commentaires': [
@@ -63,7 +91,7 @@ SORTIES = [
         'id_groupe': None,
         'typeSortie': 'Autre',
         'photo': 'parc',
-        'nbInscrits': 1,
+        'nbInscrits': 0,
         'description': 'La balade du Frémont',
         'dateLimite': '2021-03-14',
         'commentaires': [
@@ -72,7 +100,6 @@ SORTIES = [
     }
 ]
 
-USERS = []
 
 # Delete database file if it exists currently
 if os.path.exists('entities.db'):
@@ -106,6 +133,16 @@ for user in USERS:
         preferences=user['preferences'], sexe=user['sexe'], bio=user['bio'], sorties_a_venir=user['sorties_a_venir'], \
         sorties_finies=user['sorties_finies'], role=user['role'], \
         feedbacks=user['feedbacks'])
+        
+    for com in user.get("commentaires"):
+        contenu, timestamp = com
+        u.commentaires.append(
+            Commentaire(
+                contenu=contenu,
+                timestamp=datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S"),
+            )
+        )
+
     db.session.add(u)
 
 db.session.commit()
