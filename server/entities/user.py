@@ -87,10 +87,10 @@ def delete(id):
         db.session.delete(user)
         db.session.commit()
         return make_response(
-            "User {id} deleted".format(id=id), 200
-        )
+            "User {id} deleted".format(id=id), 200)
     else:
         abort(404, f'User not found for id: {id}')
+
 
 def read_one_user_by_id(id):
     user = (
@@ -105,6 +105,7 @@ def read_one_user_by_id(id):
     else:
         abort(404, f'User not found for id: {id}')
 
+
 def get_previous_activities(id):
     user = User.query.get(id)
     
@@ -114,6 +115,7 @@ def get_previous_activities(id):
         return sortie_schema.dump(sorties)
     else:
         abort(404, f'User not found for id: {id}')
+
 
 def get_incoming_activities(id):
     user = User.query.get(id)
@@ -125,75 +127,53 @@ def get_incoming_activities(id):
     else:
         abort(404, f'User not found for id: {id}')
 
+
 def switch_to_previous(id_sortie, id):
     sortie_a_venir = Sortie.query.filter(
         Sortie.id_sortie == id_sortie).one_or_none()
 
     user = User.query.filter(User.id == id).one_or_none()
     if sortie_a_venir is None:
-        abort(
-            404,
-            f'Sortie not found for Id: {id_sortie}',
-        )
+        abort(404, f'Sortie not found for Id: {id}')
     if user is None:
-        abort(
-            404,
-            f'User not found for Id: {id}',
-        )
+        abort(404, f'User not found for Id: {id}')
     
-    else: 
-        user.sorties_a_venir.remove(sortie_a_venir)
-        user.sorties_finies.append(sortie_a_venir)
+    user.sorties_a_venir.remove(sortie_a_venir)
+    user.sorties_finies.append(sortie_a_venir)
 
-        db.session.add(user)
-        db.session.commit()
+    db.session.add(user)
+    db.session.commit()
 
-        return 200
+    return 200
 
-def register(id_sortie, id):
+
+@login_required
+def register(id_sortie):
     sortie_a_venir = Sortie.query.filter(
         Sortie.id_sortie == id_sortie).one_or_none()
 
-    user = User.query.filter(User.id == id).one_or_none()
-
     if sortie_a_venir is None:
-        abort(
-            404,
-            f'Sortie not found for Id: {id_sortie}',
-        )
-    if user is None:
-        abort(
-            404,
-            f'User not found for Id: {id}',
-        )
+        abort(404, f'Sortie not found for Id: {id}')
     
-    else: 
-        user.sorties_a_venir.append(sortie_a_venir)
-        db.session.add(user)
-        db.session.commit()
+    sortie_a_venir.nbInscrits += 1
+    current_user.sorties_a_venir.append(sortie_a_venir)
+    db.session.add(current_user)
+    db.session.commit()
 
-        return 201
+    return 201
 
-def cancel_registration(id_sortie, id):
+
+@login_required
+def cancel_registration(id_sortie):
     sortie_a_venir = Sortie.query.filter(
         Sortie.id_sortie == id_sortie).one_or_none()
 
-    user = User.query.filter(User.id == id).one_or_none()
-
     if sortie_a_venir is None:
-        abort(
-            404,
-            f'Sortie not found for Id: {id_sortie}',
-        )
-    if user is None:
-        abort(
-            404,
-            f'User not found for Id: {id}',
-        )
+        abort(404, f'Sortie not found for Id: {id}')
     
-    else: 
-        user.sorties_a_venir.remove(sortie_a_venir)
-        db.session.add(user)
-        db.session.commit()
+    sortie_a_venir.nbInscrits -= 1
+    current_user.sorties_a_venir.remove(sortie_a_venir)
+    db.session.add(current_user)
+    db.session.commit()
 
-        return 201
+    return 201

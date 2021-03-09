@@ -344,7 +344,7 @@ paths:
         - name: id_sortie
           in: query
           type: integer
-          description: Id of the sortie to register to
+          description: Id of the sortie to switch
           required: true
       responses:
         200:
@@ -386,6 +386,8 @@ paths:
           description: "Successful read user list incoming activities operation"
           schema:
             $ref: '#/definitions/Sortie'
+
+  /sortie/{id_sortie}/register:
     post:
       operationId: entities.user.register
       tags:
@@ -394,14 +396,9 @@ paths:
       description: Register a user to a sortie
       parameters:
         - name: id_sortie
-          in: query
-          type: integer
-          description: Id of the sortie to register to
-          required: true
-        - name: id
           in: path
           type: integer
-          description: Id of the user to register
+          description: Id of the sortie to register to
           required: true
       responses:
         201:
@@ -415,14 +412,9 @@ paths:
       description: Cancel registration a user to a sortie
       parameters:
         - name: id_sortie
-          in: query
-          type: integer
-          description: Id of the sortie to register to
-          required: true
-        - name: id
           in: path
           type: integer
-          description: Id of the user to cancel registration for
+          description: Id of the sortie to register to
           required: true
       responses:
         201:
