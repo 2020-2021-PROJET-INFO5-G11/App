@@ -6,6 +6,34 @@ from models import Sortie
 from models import User
 from models import Commentaire
 
+
+USERS = [
+    {
+        'pseudo': 'rimeljraidi',
+        'password_hash': 'string',
+        'prenom': 'Rim',
+        'nom': 'El Jraidi',
+        'email': 'rimeljraidi@uga.fr',
+        'photo': 'string',
+        'dateNaissance': '12-03-1998',
+        'ville': 'Grenoble',
+        'preferences': '',
+        'sexe': 'Femme',
+        'bio': 'J\'aime aller au ciné, et vous ?',
+        'photo': '',
+        'sorties_a_venir': [],
+        'sorties_finies': [],
+        'role': '',
+        'feedbacks': '',
+        'commentaires': [
+            ("C'est quel genre de film ?", "2019-01-07 22:47:54"),
+            ("test commentaire", "2019-01-08 20:17:31"),
+            ("coucou", "2019-01-08 22:02:54"),
+        ],
+    },
+]
+
+
 # Data to initialize database with
 SORTIES = [
     {
@@ -21,13 +49,13 @@ SORTIES = [
         'id_groupe': None,
         'typeSortie': 'Sport',
         'photo': 'randonnée',
-        'nbInscrits': 1,
+        'nbInscrits': 0,
         'description': 'Ça vous dit de monter les voir la passerelle himalayenne du lac de Monteynard ?',
         'dateLimite': '2021-03-11',
         'commentaires': [
-            ("C ou Montenar??!", "2019-01-07 22:47:54"),
-            ("Chepa gro", "2019-01-08 20:17:31"),
-            ("Wsh vs etes cons c marqué que c en hymalaya dans la description", "2019-01-08 22:02:54"),
+            ("C'est ou Montenar??!", "2019-01-07 22:47:54"),
+            ("Je sais pas ", "2019-01-08 20:17:31"),
+            ("C'est marqué dans la description", "2019-01-08 22:02:54"),
         ],
     },
     {
@@ -43,7 +71,7 @@ SORTIES = [
         'id_groupe': None,
         'typeSortie': 'Cinéma',
         'photo': 'cinema',
-        'nbInscrits': 1,
+        'nbInscrits': 0,
         'description': 'J\'ai un tarif de groupe pour aller voir ce filme au cinéma.',
         'dateLimite': '2021-03-03',
         'commentaires': [
@@ -63,16 +91,15 @@ SORTIES = [
         'id_groupe': None,
         'typeSortie': 'Autre',
         'photo': 'parc',
-        'nbInscrits': 1,
+        'nbInscrits': 0,
         'description': 'La balade du Frémont',
         'dateLimite': '2021-03-14',
         'commentaires': [
-            ("Richard le S mets nous 20 stp", "2021-03-04 23:24:45")
+            ("Trop bien !", "2021-03-04 23:24:45")
         ],
     }
 ]
 
-USERS = []
 
 # Delete database file if it exists currently
 if os.path.exists('entities.db'):
@@ -106,6 +133,16 @@ for user in USERS:
         preferences=user['preferences'], sexe=user['sexe'], bio=user['bio'], sorties_a_venir=user['sorties_a_venir'], \
         sorties_finies=user['sorties_finies'], role=user['role'], \
         feedbacks=user['feedbacks'])
+        
+    for com in user.get("commentaires"):
+        contenu, timestamp = com
+        u.commentaires.append(
+            Commentaire(
+                contenu=contenu,
+                timestamp=datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S"),
+            )
+        )
+
     db.session.add(u)
 
 db.session.commit()
