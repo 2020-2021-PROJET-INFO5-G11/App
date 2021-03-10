@@ -329,29 +329,6 @@ paths:
           schema:
             $ref: '#/definitions/User'
 
-    put:
-      operationId: entities.user.switch_to_previous
-      tags:
-        - User
-      summary: Switch sortie from incoming to previous
-      description: Switch sortie from incoming to previous
-      parameters:
-        - name: id
-          in: path
-          description: Id the user to update
-          type: integer
-          required: True
-        - name: id_sortie
-          in: query
-          type: integer
-          description: Id of the sortie to switch
-          required: true
-      responses:
-        200:
-          description: Successfully updated user
-          schema:
-            $ref: '#/definitions/User'
-
     delete:
       operationId: entities.user.delete
       tags:
@@ -368,24 +345,50 @@ paths:
         200:
           description: Successfully deleted a user
 
-  /user/{id}/a_venir:
+  /user/current/a_venir:
     get:
       operationId: "entities.user.get_incoming_activities"
       tags:
         - User
       summary: "get incoming activities"
       description: "get incoming activities"
-      parameters:
-        - name: id
-          in: path
-          description: Id of the user to get
-          type: integer
-          required: True
       responses:
         200:
           description: "Successful read user list incoming activities operation"
           schema:
             $ref: '#/definitions/Sortie'
+
+  /user/current/finies:
+    get:
+      operationId: "entities.user.get_previous_activities"
+      tags:
+        - User
+      summary: "get previous activities"
+      description: "get previous activities"
+      responses:
+        200:
+          description: "Successful read user list previous activities operation"
+          schema:
+            $ref: '#/definitions/Sortie'
+
+  /user/current/{id_sortie}/switch:
+    put:
+      operationId: entities.user.switch_to_previous
+      tags:
+        - User
+      summary: Switch sortie from incoming to previous
+      description: Switch sortie from incoming to previous
+      parameters:
+        - name: id_sortie
+          in: path
+          type: integer
+          description: Id of the sortie to switch
+          required: true
+      responses:
+        200:
+          description: Successfully updated user
+          schema:
+            $ref: '#/definitions/User'
 
   /sortie/{id_sortie}/register:
     post:
