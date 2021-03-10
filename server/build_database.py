@@ -9,7 +9,6 @@ from models import Commentaire
 
 USERS = [
     {
-        'pseudo': 'rimeljraidi',
         'password_hash': 'string',
         'prenom': 'Rim',
         'nom': 'El Jraidi',
@@ -53,7 +52,7 @@ SORTIES = [
         'description': 'Ça vous dit de monter les voir la passerelle himalayenne du lac de Monteynard ?',
         'dateLimite': '2021-03-11',
         'commentaires': [
-            ("C'est ou Montenar??!", "2019-01-07 22:47:54"),
+            ("C'est ou Monteynard ?", "2019-01-07 22:47:54"),
             ("Je sais pas ", "2019-01-08 20:17:31"),
             ("C'est marqué dans la description", "2019-01-08 22:02:54"),
         ],
@@ -128,7 +127,7 @@ for sort in SORTIES:
     db.session.add(s)
 
 for user in USERS:
-    u = User(pseudo=user['pseudo'], password_hash=user['password_hash'], prenom=user['prenom'], nom=user['nom'], \
+    u = User(password_hash=user['password_hash'], prenom=user['prenom'], nom=user['nom'], \
         email=user['email'], photo=user['photo'], dateNaissance=user['dateNaissance'], ville=user['ville'], \
         preferences=user['preferences'], sexe=user['sexe'], bio=user['bio'], sorties_a_venir=user['sorties_a_venir'], \
         sorties_finies=user['sorties_finies'], role=user['role'], \

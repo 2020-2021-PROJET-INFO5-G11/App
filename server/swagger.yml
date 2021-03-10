@@ -293,7 +293,7 @@ paths:
       operationId: "entities.user.read_one_user_by_id"
       tags:
         - User
-      summary: "The user data structure supported by the server application"
+      summary: "Read one user corresponding to the given id"
       description: "Read one user corresponding to the given id"
       parameters:
         - name: id
@@ -434,9 +434,9 @@ paths:
       - "application/xml"
       - "application/json"
       parameters:
-      - name: "username"
+      - name: "email"
         in: "query"
-        description: "The user name for login"
+        description: "The email of the user loging in"
         required: true
         type: "string"
       - name: "password"
@@ -538,8 +538,6 @@ definitions:
     properties:
       id:
         type: "integer"
-      pseudo:
-        type: "string"
       password_hash:
         type: "string"
       prenom:
