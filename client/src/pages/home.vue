@@ -106,7 +106,9 @@ export default {
   components: { Header, NavBar, Footer },
   data() {
     return {
-      sorties: [], 
+      sorties: [],
+      sorties_finies: [],
+      sorties_a_venir: [],
     };
   },
   methods: {
@@ -115,6 +117,26 @@ export default {
       axios.get(path)
         .then((res) => {
           this.sorties = res.data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    getPreviousSorties() {
+      const path = 'http://localhost:5000/api/user/current/finies';
+      axios.get(path)
+        .then((res) => {
+          this.sorties_finies = res.data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    getIncomingSorties() {
+      const path = 'http://localhost:5000/api/user/current/a_venir';
+      axios.get(path)
+        .then((res) => {
+          this.sorties_a_venir = res.data;
         })
         .catch((error) => {
           console.error(error);
@@ -142,6 +164,8 @@ export default {
   },
   created() {
     this.getSorties();
+    this.getIncomingSorties();
+    this.getPreviousSorties();
   }
 };
 </script>
