@@ -6,6 +6,7 @@
         <b-form-input
           id="input-1"
           required
+          v-model="form.username"
         ></b-form-input>
       </b-form-group>
 
@@ -14,6 +15,7 @@
         <b-form-input
           id="input-2"
           required
+          v-model="form.password"
         ></b-form-input>
       </b-form-group>
 
@@ -31,14 +33,18 @@
 </template>
 
 <script>
-
+import { mapActions } from "vuex";
 import Inscription from './inscription.vue';
 
 export default {
-  
+  name: "Login",
   components: { Inscription },
   data() {
     return {
+      form: {
+        userName: '',
+        password: '',
+      },
     };
   },
   mounted() {},
@@ -48,6 +54,21 @@ export default {
     },
     win_height() {
       return this.$q.screen.height - 0;
+    },
+  },
+  methods: {
+    ...mapActions(["LogIn"]),
+    async submit() {
+      const User = new FormData();
+      User.append("username", this.form.username);
+      User.append("password", this.form.password);
+      try {
+          await this.LogIn(User);
+          this.$router.push("/accueil");
+          this.showError = false
+      } catch (error) {
+        this.showError = true
+      }
     },
   },
 };

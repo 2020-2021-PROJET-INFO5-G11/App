@@ -99,7 +99,7 @@
           </li>
 
           <!-- log out button -->
-          <li class="logout" @click="$router.push('/connexion')">
+          <li class="logout" v-if="isLoggedIn" @click="logout">
             <div>
               <i class="fa fa-sign-out fa-3x"></i>
             </div>
@@ -120,6 +120,9 @@ export default {
       key: 0,
     };
   },
+  computed : {
+    isLoggedIn : function(){ return this.$store.getters.isAuthenticated}
+  },
   methods: {
     forceRerender() {
       this.key += 1;
@@ -129,6 +132,10 @@ export default {
         this.$router.push(`/recherche/${this.search_expression}`)
       }
     },
+    async logout (){
+      await this.$store.dispatch('LogOut')
+      this.$router.push('/login')
+    }
   },
 };
 </script>

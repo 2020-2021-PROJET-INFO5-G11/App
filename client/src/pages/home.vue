@@ -5,6 +5,9 @@
     <Header title="Page d'accueil"/>
     <!-- NavBar -->
     <NavBar> </NavBar>
+    <div v-if="User">
+      <p>Hi {{User}}</p>
+    </div>
     <!-- Body -->
     <body>
       <br>
@@ -97,6 +100,7 @@
 
 <script>
 import axios from 'axios';
+import { mapGetters, mapActions } from "vuex";
 import Header from './header.vue';
 import NavBar from './navBar.vue';
 import Footer from './footer.vue';
@@ -110,6 +114,9 @@ export default {
       sorties_finies: [],
       sorties_a_venir: [],
     };
+  },
+  computed: {
+    ...mapGetters({Sorties: "StateSorties", User: "StateUser"}),
   },
   methods: {
     getSorties() {

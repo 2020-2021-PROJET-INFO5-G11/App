@@ -78,11 +78,12 @@
 </template>
 
 <script>
-
+import { mapActions } from "vuex";
 import Header from './header.vue';
 import Footer from './footer.vue';
 
   export default {
+    name: "Register",
     components: { Header, Footer },
     data() {
       return {
@@ -96,9 +97,17 @@ import Footer from './footer.vue';
       }
     },
     methods: {
-      onSubmit(event) {
+      ...mapActions(["Register"]),
+      async onSubmit(event) {
         event.preventDefault()
         alert(JSON.stringify(this.form))
+        try {
+          await this.Register(this.form);
+          this.$router.push("/accueil");
+          this.showError = false
+        }catch (error) {
+          this.showError = true
+        }
       },
       onReset(event) {
         event.preventDefault()
