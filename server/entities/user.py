@@ -10,7 +10,7 @@ def login(email, password):
          abort(400, 'Utilisateur deja connecte')
     user = User.query.filter_by(email=email).first()
     if user is None :# or not user.check_password(password):
-        abort(400, 'Pseudo ou mot de passe incorrect')
+        abort(400, 'Email ou mot de passe incorrect')
     login_user(user)#, remember=form.remember_me.data)
     return 200
 

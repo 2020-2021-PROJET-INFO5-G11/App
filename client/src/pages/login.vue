@@ -57,21 +57,25 @@ export default {
   },
   methods: {
     login(){
+      var email_login = this.email
+      var password_login = this.password
       const path = 'http://localhost:5000/api/user/login'
-        return new Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
             axios.get(path, {
-            email: this.email,
-            password: this.password,
+              params: { email: email_login, password: password_login }
+            },{
+            headers: {
+              'Access-Control-Allow-Origin': '*',
+              'Content-Type': 'application/json',
+            },
             })
             .then(response => {
                 const token = response.data.access_token
                 localStorage.setItem('access_token', token)
-                context.commit('retrieveToken', token)
-                resolve(response)
+                resolve(response);
                 this.$router.push('/accueil');
             })
             .catch(error => {
-                console.log(error)
                 reject(error)
             })
         })
