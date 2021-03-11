@@ -6,7 +6,7 @@
         <b-form-input
           id="input-1"
           required
-          v-model="form.username"
+          v-model="email"
         ></b-form-input>
       </b-form-group>
 
@@ -15,11 +15,11 @@
         <b-form-input
           id="input-2"
           required
-          v-model="form.password"
+          v-model="password"
         ></b-form-input>
       </b-form-group>
 
-      <b-button variant="primary">Connexion</b-button>
+      <b-button variant="primary" @click="login">Connexion</b-button>
 
   <b-button v-b-modal.modal-1 variant="primary">Inscription</b-button>
   <b-modal id="modal-1" hide-footer>
@@ -33,18 +33,17 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import axios from 'axios'
+import Vuex from 'vuex'
 import Inscription from './inscription.vue';
 
 export default {
-  name: "Login",
+  name: 'login',
   components: { Inscription },
   data() {
     return {
-      form: {
-        userName: '',
-        password: '',
-      },
+      email: '',
+      password: '',
     };
   },
   mounted() {},
@@ -57,18 +56,25 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["LogIn"]),
-    async submit() {
-      const User = new FormData();
-      User.append("username", this.form.username);
-      User.append("password", this.form.password);
-      try {
-          await this.LogIn(User);
-          this.$router.push("/accueil");
-          this.showError = false
-      } catch (error) {
-        this.showError = true
-      }
+    login(){
+      const path = 'http://localhost:5000/api/user/login'
+        return new Promise((resolve, reject) => {
+            axios.get(path, {
+            email: this.email,
+            password: this.password,
+            })
+            .then(response => {
+                const token = response.data.access_token
+                localStorage.setItem('access_token', token)
+                context.commit('retrieveToken', token)
+                resolve(response)
+                this.$router.push('/accueil');
+            })
+            .catch(error => {
+                console.log(error)
+                reject(error)
+            })
+        })
     },
   },
 };

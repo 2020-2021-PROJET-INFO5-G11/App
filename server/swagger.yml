@@ -434,9 +434,9 @@ paths:
       - "application/xml"
       - "application/json"
       parameters:
-      - name: "username"
+      - name: "email"
         in: "query"
-        description: "The user name for login"
+        description: "The user email for login"
         required: true
         type: "string"
       - name: "password"

@@ -5,10 +5,10 @@ from config import db
 from models import User, UserSchema, Sortie, SortieSchema, Commentaire, ComSchema
 
 
-def login(username, password):
+def login(email, password):
     if current_user.is_authenticated:
          abort(400, 'Utilisateur deja connecte')
-    user = User.query.filter_by(pseudo=username).first()
+    user = User.query.filter_by(email=email).first()
     if user is None :# or not user.check_password(password):
         abort(400, 'Pseudo ou mot de passe incorrect')
     login_user(user)#, remember=form.remember_me.data)

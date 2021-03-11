@@ -23,7 +23,7 @@
           <b-form-input
             id="input-2"
             type="password"
-            v-model="form.password"
+            v-model="form.password_hash"
             placeholder="Entez votre mot de passe"
             name="up"
             required
@@ -37,7 +37,7 @@
           <b-form-input
             id="input-3"
             type="password"
-            v-model="form.rePassword"
+            v-model="rePassword"
             placeholder="Répétez votre mot de passe"
             name="up2"
             required
@@ -47,7 +47,7 @@
         <b-form-group id="input-group-4" label="Nom d'utilisateur:" label-for="input-4" description="Ce nom sera visible par les autres utilisateurs">
           <b-form-input
             id="input-4"
-            v-model="form.userName"
+            v-model="form.pseudo"
             placeholder="Entez votre nom"
             required
           ></b-form-input>
@@ -78,44 +78,46 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import axios from "axios";
 import Header from './header.vue';
 import Footer from './footer.vue';
 
   export default {
-    name: "Register",
     components: { Header, Footer },
     data() {
       return {
         form: {
           email: '',
-          password: '',
-          rePassword: '',
-          userName: '',
+          password_hash: '',
+          pseudo: '',
           sexe: this.sexe,
         },
+        rePassword: '',
       }
     },
     methods: {
-      ...mapActions(["Register"]),
-      async onSubmit(event) {
+      onSubmit(event) {
         event.preventDefault()
         alert(JSON.stringify(this.form))
-        try {
-          await this.Register(this.form);
-          this.$router.push("/accueil");
-          this.showError = false
-        }catch (error) {
-          this.showError = true
-        }
+        const path = 'http://localhost:5000/api/user'
+        return new Promise((resolve, reject) => {
+            axios.post(path, this.form)
+            .then(response => {
+                resolve(response);
+                this.$router.push('/connexion');
+            })
+            .catch(error => {
+                reject(error)
+            })
+        })
       },
       onReset(event) {
         event.preventDefault()
         // Reset our form values
         this.form.email = ''
-        this.form.name = ''
-        this.form.password = ''
-        this.form.rePassword = ''
+        this.form.pseudo = ''
+        this.form.password_hash = ''
+        this.rePassword = ''
         this.form.sexe = null
         // Trick to reset/clear native browser form validation state
         this.show = false
