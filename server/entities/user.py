@@ -135,7 +135,7 @@ def send_mail(id, content):
                   recipients=[user.email])
     msg.body = "testing"
     msg.html = "<b>testing</b>"
-    mail.send_mail(msg)
+    mail.send(msg)
     return 200
 
 

@@ -119,10 +119,9 @@ paths:
           description: Id of the user to send the mail to
           required: true
         - name: content
-          in: body
+          in: query
           description: Content of the mail
-          schema:
-            type: string
+          type: string
       responses:
         200:
           description: Mail sent successfully
