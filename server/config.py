@@ -4,6 +4,7 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_login import LoginManager
+from flask_mail import Mail
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -26,6 +27,10 @@ CORS(app.app, resources={r'/*': {'origins': '*'}})
 # enable login
 login = LoginManager(app.app)
 app.app.secret_key = 'secret key'
+
+# enable mails
+mail = Mail(app.app)
+MAIL_DEFAULT_SENDER = "from@example.com"
 
 # Create the SQLAlchemy db instance
 db = SQLAlchemy(app.app)

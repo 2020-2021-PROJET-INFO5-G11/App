@@ -1,7 +1,8 @@
 from flask import make_response, abort
 from flask_login import current_user, login_user, logout_user, login_required
+from flask_mail import Message
 
-from config import db
+from config import db, mail
 from models import User, UserSchema, Sortie, SortieSchema, Commentaire, ComSchema
 
 
@@ -117,6 +118,26 @@ def read_one_user_by_id(id):                    # Récupère le User dont l'id e
         abort(404, f'User not found for id: {id}')
 
 
+def send_mail(id, content):
+    """
+    requête associée:
+        /user/{id}/send_mail
+    paramètres :
+        id : id de l'utilisateur à qui envoyer le mail
+        content : contenu du mail
+    """
+
+    user = User.query.get(id)
+    if user is None:
+        abort(404, f'User not found for id: {id}')
+
+    msg = Message("Hello",
+                  recipients=[user.email])
+    msg.body = "testing"
+    msg.html = "<b>testing</b>"
+    mail.send_mail(msg)
+    return 200
+
 
 ### Fonctions s'appliquant au current_user
 
@@ -149,6 +170,24 @@ def logout():
     return
 
 
+@login_required
+def change_password(new_pwd):
+    """
+    requête associée:
+        
+    paramètres :
+        new_pwd : nouveau mot de passe
+    """
+
+    user = current_user
+    user.set_password(new_pwd)
+    db.session.add(user)
+    db.session.commit()
+    schema = UserSchema()
+
+    return schema.dump(user), 200
+
+
 def get_current():
     """
     requête associée:
@@ -169,20 +208,17 @@ def update_current(user):                       # Modifie les infos de l'utilisa
     """
 
     update_user = current_user
+    
+    schema = UserSchema()
+    update = schema.load(user, session=db.session)
 
-    if update_user is None:
-        abort(404, f'User not found for id: {id}')
-    else:
-        schema = UserSchema()
-        update = schema.load(user, session=db.session)
+    update.id = update_user.id
 
-        update.id = update_user.id
+    db.session.merge(update)
+    db.session.commit()
 
-        db.session.merge(update)
-        db.session.commit()
-
-        data = schema.dump(update_user)
-        return data, 201
+    data = schema.dump(update_user)
+    return data, 201
 
 
 @login_required
