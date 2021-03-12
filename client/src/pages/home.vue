@@ -11,7 +11,7 @@
 
       <!-- Boutton créer une sortie -->
         <i class="right fa fa-plus-circle fa-3x"
-         @click="$router.push('/creation-sortie')"> Créer une sortie</i> <br>
+         @click="$router.push('/creation-sortie')"> Créer une sortie</i> <br><br><br>
 
       <!-- Sorties à venir -->
       <!--  <li v-for="s in sorties" v-bind:key="s">{{ s.name }}</li> -->
