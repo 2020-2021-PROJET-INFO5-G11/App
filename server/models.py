@@ -17,6 +17,16 @@ userSortie_finies = db.Table('userSortie_finies',
     db.Column('id_sortie', db.Integer, db.ForeignKey('sorties.id_sortie'), primary_key=True)
 )
 
+groupeSortie = db.Table('groupeSortie',
+    db.Column('id_groupe', db.Integer, db.ForeignKey('groupe.id_groupe'), primary_key=True),
+    db.Column('id_sortie', db.Integer, db.ForeignKey('sorties.id_sortie'), primary_key=True)
+)
+
+groupeUser = db.Table('groupeUser',
+    db.Column('id_groupe', db.Integer, db.ForeignKey('groupe.id_groupe'), primary_key=True),
+    db.Column('id_user', db.Integer, db.ForeignKey('users.id'), primary_key=True)
+)
+
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -90,6 +100,16 @@ class Commentaire(db.Model):
     contenu = db.Column(db.String, nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+class Groupe(db.Model):
+    __tablename__ = 'groupe'
+    id_groupe = db.Column(db.Integer, primary_key=True)
+    nom = db.Column(db.String(32))
+    id_owner = db.Column(db.Integer, db.ForeignKey('users.id'))
+    description = db.Column(db.String, nullable=False)
+    sorties = db.relationship('Sortie', secondary=groupeSortie, lazy='subquery',
+        backref=db.backref('membres', lazy=False))
+    membres = db.relationship('User', secondary=groupeUser, lazy='subquery',
+        backref=db.backref('groupes', lazy=False))
 
 #--------------------------------------------------------------------------------
 # Schemas servant a afficher les entités au format Json
@@ -112,6 +132,14 @@ class ComSchema(ma.SQLAlchemyAutoSchema):
         load_instance = True
     auteur = fields.Nested('UserSchema', default=None, many=False, exclude=("commentaires","sorties_a_venir",), dump_only=True)
     sortie = fields.Nested('SortieSchema', default=None, exclude=("commentaires","participants",), dump_only=True)
+
+class GroupeSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Groupe
+        sqla_session = db.session
+        include_fk = True
+        load_instance = True
+    owner = fields.Nested('UserSchema', default=None, many=False, exclude=("commentaires","sorties_a_venir",), dump_only=True)
 
 
 class SortieSchema(ma.SQLAlchemyAutoSchema):
