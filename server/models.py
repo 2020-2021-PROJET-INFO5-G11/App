@@ -20,11 +20,10 @@ userSortie_finies = db.Table('userSortie_finies',
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    pseudo = db.Column(db.String(32), index=True)
     password_hash = db.Column(db.String(128))
     prenom = db.Column(db.String(32))
     nom = db.Column(db.String(32))
-    email = db.Column(db.String(32))
+    email = db.Column(db.String(64))
     photo = db.Column(db.String(32))
     dateNaissance = db.Column(db.String(32))
     ville = db.Column(db.String(32))
@@ -44,12 +43,12 @@ class User(UserMixin, db.Model):
 
 
     def __repr__(self):
-        return '<User {}>'.format(self.pseudo)
+        return '<User {}>'.format(self.prenom)
 
-    def set_password(self, password):
+    def set_password(self, password):           # Encode le mot de passe
         self.password_hash = generate_password_hash(password)
 
-    def check_password(self, password):
+    def check_password(self, password):         # Compare le mdp encodé à un string
         return check_password_hash(self.password_hash, password)
 
 
@@ -93,12 +92,12 @@ class Commentaire(db.Model):
 
 
 #--------------------------------------------------------------------------------
+# Schemas servant a afficher les entités au format Json
 
 class UserSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = User
         sqla_session = db.session
-        #include_relationships = True
         load_instance = True
     commentaires = fields.Nested('ComSchema', default=[], many=True, exclude=("auteur","sortie",), dump_only=True)
     sorties_a_venir = fields.Nested('SortieSchema', default=[], many=True, exclude=("participants","commentaires",), dump_only=True)
@@ -119,7 +118,6 @@ class SortieSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Sortie
         sqla_session = db.session
-        #include_relationships = True
         load_instance = True
     commentaires = fields.Nested('ComSchema', default=[], many=True, exclude=("sortie","auteur",), dump_only=True)
     participants = fields.Nested('UserSchema', default=[], many=True, exclude=("sorties_a_venir","commentaires",), dump_only=True)

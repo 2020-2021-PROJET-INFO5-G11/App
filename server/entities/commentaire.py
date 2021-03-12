@@ -7,6 +7,11 @@ from models import Commentaire, Sortie, User, ComSchema
 
 
 def get_all():
+    """
+    requête associée:
+        /com
+    """
+
     # Query the database for all the notes
     coms = Commentaire.query.order_by(db.desc(Commentaire.timestamp)).all()
 
@@ -16,12 +21,27 @@ def get_all():
 
 
 def get_activity_comments(id_sortie):
+    """
+    requête associée:
+        /sortie/{id_sortie}/com
+    paramètres :
+        id_sortie : id de la sortie dont on récupère les commentaires
+    """
+
     coms = Commentaire.query.filter(Commentaire.id_sortie == id_sortie).order_by(db.desc(Commentaire.timestamp)).all()
 
     com_schema = ComSchema(many=True)
     return com_schema.dump(coms)
 
 def get_activity_single_comment(id_sortie, id_com):
+    """
+    requête associée:
+        /sortie/{id_sortie}/com/{id_com}
+    paramètres :
+        id_sortie : id de la sortie dont on récupère un commentaire
+        id_com : id du commentaire à récupérer
+    """
+
     coms = Commentaire.query.filter(Commentaire.id_sortie == id_sortie, Commentaire.id_commentaire == id_com).order_by(db.desc(Commentaire.timestamp)).all()
 
     com_schema = ComSchema(many=True)
@@ -30,6 +50,13 @@ def get_activity_single_comment(id_sortie, id_com):
 
 @login_required
 def comment(id_sortie, com):
+    """
+    requête associée:
+        /sortie/{id_sortie}/com
+    paramètres :
+        id_sortie : id de la sortie à commenter
+        com : commentaire à poster (string)
+    """
 
     sortie = Sortie.query.filter(Sortie.id_sortie == id_sortie).one_or_none()
 
@@ -51,6 +78,15 @@ def comment(id_sortie, com):
 
 
 def update(id_sortie, id_com, com):
+    """
+    requête associée:
+        /sortie/{id_sortie}/com/{id_com}
+    paramètres :
+        id_sortie : id de la sortie dont on modifie un commentaire
+        id_com : id du commentaire à modifier
+        com : nouveau commentaire (string)
+    """
+
     update_com = (
         Commentaire.query
         .filter(Commentaire.id_sortie == id_sortie)
@@ -79,6 +115,14 @@ def update(id_sortie, id_com, com):
 
 
 def delete(id_sortie, id_com):
+    """
+    requête associée:
+        /sortie/{id_sortie}/com/{id_com}
+    paramètres :
+        id_sortie : id de la sortie dont on supprime un commentaire
+        id_com : id du commentaire à supprimer
+    """
+
     commentaire = Commentaire.query.filter(Commentaire.id_sortie == id_sortie, Commentaire.id_commentaire == id_com).one_or_none()
 
     if commentaire is not None:

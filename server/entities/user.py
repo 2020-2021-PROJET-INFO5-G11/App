@@ -1,66 +1,66 @@
 from flask import make_response, abort
 from flask_login import current_user, login_user, logout_user, login_required
+from flask_mail import Message
 
-from config import db
+from config import db, mail
 from models import User, UserSchema, Sortie, SortieSchema, Commentaire, ComSchema
 
 
-def login(username, password):
-    if current_user.is_authenticated:
-         abort(400, 'Utilisateur deja connecte')
-    user = User.query.filter_by(pseudo=username).first()
-    if user is None :# or not user.check_password(password):
-        abort(400, 'Pseudo ou mot de passe incorrect')
-    login_user(user)#, remember=form.remember_me.data)
-    return 200
-
-def logout():
-    logout_user()
-    return
-
-def get_current():
-    user_schema = UserSchema()
-    return user_schema.dump(current_user)
-
-
 def get_all_users():
-    users = (
-        User.query
-        .outerjoin(Commentaire)#.outerjoin(Sortie).select_from('sorties_a_venir')
-        .all()
-    )
-
+    """
+    requête associée:
+        /user
+    """
+    
+    users = User.query.all()
     user_schema = UserSchema(many=True)
     return user_schema.dump(users)
 
 
 def create(user):
+    """
+    requête associée:
+        /user
+    paramètres :
+        user : données de l'utilisateur à créer (format JSON)
+    """
+
     id = user.get('id')
     if User.query.get(id) is not None:
         abort(409, f'id {id} is already used')
 
-    pseudo = user.get('pseudo')
+    nom = user.get('nom')
+    prenom = user.get('prenom')
+    pwd = user.get('password_hash')
 
     existing_user = User.query \
-        .filter(User.pseudo == pseudo) \
+        .filter(User.nom == nom) \
+        .filter(User.prenom == prenom) \
         .one_or_none()
 
-    if existing_user is None:
-        schema = UserSchema()
+    if existing_user is not None:
+        abort(409, f'User {prenom} {nom} exists already')
+    
+    schema = UserSchema()
 
-        #user.password_hash = user.set_password(self, user.password_hash)
-        new_user = schema.load(user, session=db.session)
+    new_user = schema.load(user, session=db.session)
+    new_user.set_password(pwd)
 
-        db.session.add(new_user)
-        db.session.commit()
+    db.session.add(new_user)
+    db.session.commit()
 
-        return schema.dump(new_user), 201
-
-    else:
-        abort(409, f'User {pseudo} exists already')
+    return schema.dump(new_user), 201
 
 
 def update(id, user):
+    """
+    requête associée:
+        /user/{id}
+    paramètres :
+        id : id de l'utilisateur à modifier
+        user : nouvelles valeurs de l'utilisateur une fois modifié (format JSON)
+    """
+
     update_user = User.query.filter(
         User.id == id
     ).one_or_none()
@@ -77,27 +77,39 @@ def update(id, user):
         db.session.commit()
 
         data = schema.dump(update_user)
-        return data, 200
+        return data, 201
 
 
 def delete(id):
+    """
+    requête associée:
+        /user/{id}
+    paramètres :
+        id : id de l'utilisateur à supprimer
+    """
+
     user = User.query.filter(User.id == id).one_or_none()
 
     if user is not None:
+        if user == current_user:
+            logout()
         db.session.delete(user)
         db.session.commit()
         return make_response(
-            "User {id} deleted".format(id=id), 200)
+            "User {id} deleted".format(id=id), 204)
     else:
         abort(404, f'User not found for id: {id}')
 
 
-def read_one_user_by_id(id):
-    user = (
-        User.query
-        .outerjoin(Sortie).outerjoin(Commentaire)
-        .get(id)
-    )
+def read_one_user_by_id(id):                    # Récupère le User dont l'id est donné
+    """
+    requête associée:
+        /user/{id}
+    paramètres :
+        id : id de l'utilisateur
+    """
+
+    user = User.query.get(id)
 
     if user is not None:
         user_schema = UserSchema()
@@ -106,24 +118,142 @@ def read_one_user_by_id(id):
         abort(404, f'User not found for id: {id}')
 
 
-@login_required
-def get_previous_activities():
+def send_mail(id, content):
+    """
+    requête associée:
+        /user/{id}/send_mail
+    paramètres :
+        id : id de l'utilisateur à qui envoyer le mail
+        content : contenu du mail
+    """
 
-    sorties = current_user.sorties_finies
-    sortie_schema = SortieSchema(many=True)
-    return sortie_schema.dump(sorties)
+    user = User.query.get(id)
+    if user is None:
+        abort(404, f'User not found for id: {id}')
+
+    msg = Message("Hello",
+                  recipients=[user.email])
+    msg.body = "testing"
+    msg.html = "<b>testing</b>"
+    mail.send_mail(msg)
+    return 200
+
+
+### Fonctions s'appliquant au current_user
+
+
+def login(email, password):
+    """
+    requête associée:
+        /user/login
+    paramètres :
+        email : email de l'utilisateur voulant se connecter
+        password : mot de passe crypté de l'utilisateur voulant se connecter
+    """
+
+    if current_user.is_authenticated:
+         abort(400, 'Utilisateur deja connecte')
+    user = User.query.filter_by(email=email).first()
+    if user is None or not user.check_password(password):
+        abort(400, 'Pseudo ou mot de passe incorrect')
+    login_user(user)#, remember=form.remember_me.data)
+    return 200
+
+
+def logout():
+    """
+    requête associée:
+        /user/logout
+    """
+    
+    logout_user()
+    return
+
+
+@login_required
+def change_password(new_pwd):
+    """
+    requête associée:
+        
+    paramètres :
+        new_pwd : nouveau mot de passe
+    """
+
+    user = current_user
+    user.set_password(new_pwd)
+    db.session.add(user)
+    db.session.commit()
+    schema = UserSchema()
+
+    return schema.dump(user), 200
+
+
+def get_current():
+    """
+    requête associée:
+        /user/current
+    """
+    
+    user_schema = UserSchema()
+    return user_schema.dump(current_user)
+
+
+@login_required
+def update_current(user):                       # Modifie les infos de l'utilisateur courant
+    """
+    requête associée:
+        
+    paramètres :
+        user : nouvelles valeurs de l'utilisateur courant une fois modifié
+    """
+
+    update_user = current_user
+    
+    schema = UserSchema()
+    update = schema.load(user, session=db.session)
+
+    update.id = update_user.id
+
+    db.session.merge(update)
+    db.session.commit()
+
+    data = schema.dump(update_user)
+    return data, 201
 
 
 @login_required
 def get_incoming_activities():
-    
+    """
+    requête associée:
+        /user/current/a_venir
+    """
+
     sorties = current_user.sorties_a_venir
     sortie_schema = SortieSchema(many=True)
     return sortie_schema.dump(sorties)
 
 
 @login_required
-def switch_to_previous(id_sortie):
+def get_previous_activities():
+    """
+    requête associée:
+        /user/current/finies
+    """
+    
+    sorties = current_user.sorties_finies
+    sortie_schema = SortieSchema(many=True)
+    return sortie_schema.dump(sorties)
+
+
+@login_required
+def switch_to_previous(id_sortie):              # Une sortie à venir devient une sortie finie
+    """
+    requête associée:
+        /user/current/{id_sortie}/switch
+    parametres :
+        id_sortie : id de la sortie à changer de catégorie
+    """
+
     sortie_a_venir = Sortie.query.filter(
         Sortie.id_sortie == id_sortie).one_or_none()
 
@@ -140,7 +270,14 @@ def switch_to_previous(id_sortie):
 
 
 @login_required
-def register(id_sortie):
+def register(id_sortie):                        # Inscription à une sortie
+    """
+    requête associée:
+        /sortie/{id_sortie}/register
+    parametres :
+        id_sortie : id de la sortie à laquelle s'inscrire
+    """
+
     sortie_a_venir = Sortie.query.filter(
         Sortie.id_sortie == id_sortie).one_or_none()
 
@@ -156,7 +293,14 @@ def register(id_sortie):
 
 
 @login_required
-def cancel_registration(id_sortie):
+def cancel_registration(id_sortie):             # Désinscription d'une sortie
+    """
+    requête associée:
+        /sortie/{id_sortie}/register
+    parametres :
+        id_sortie : id de la sortie à laquelle se désinscrire
+    """
+
     sortie_a_venir = Sortie.query.filter(
         Sortie.id_sortie == id_sortie).one_or_none()
 
