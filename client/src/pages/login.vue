@@ -21,7 +21,7 @@
 
       <b-button variant="primary" @click="login">Connexion</b-button>
 
-  <b-button v-b-modal.modal-1 variant="primary">Inscription</b-button>
+  <b-button v-b-modal.modal-1 variant="primary" @click="register">Inscription</b-button>
   <b-modal id="modal-1" hide-footer>
     <Inscription/>
   </b-modal>
@@ -57,29 +57,24 @@ export default {
   },
   methods: {
     login(){
-      var email_login = this.email
-      var password_login = this.password
-      const path = 'http://localhost:5000/api/user/login'
-      return new Promise((resolve, reject) => {
-            axios.get(path, {
-              params: { email: email_login, password: password_login }
-            },{
-            headers: {
-              'Access-Control-Allow-Origin': '*',
-              'Content-Type': 'application/json',
-            },
-            })
-            .then(response => {
-                const token = response.data.access_token
-                localStorage.setItem('access_token', token)
-                resolve(response);
-                this.$router.push('/accueil');
-            })
-            .catch(error => {
-                reject(error)
-            })
-        })
+      this.$store.dispatch('login', { email: this.email, password: this.password })
+        .then(() => this.$router.push('/accueil'))
     },
+    register () {
+      this.$router.push('/inscription')
+    }
+  },
+  mounted () {
+    EventBus.$on('failedRegistering', (msg) => {
+      this.errorMsg = msg
+    })
+    EventBus.$on('failedAuthentication', (msg) => {
+      this.errorMsg = msg
+    })
+  },
+  beforeDestroy () {
+    EventBus.$off('failedRegistering')
+    EventBus.$off('failedAuthentication')
   },
 };
 </script>

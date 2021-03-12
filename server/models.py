@@ -42,6 +42,22 @@ class User(UserMixin, db.Model):
         backref=db.backref('participants', lazy=False))
     sorties_finies = db.relationship('Sortie', secondary=userSortie_finies, lazy='subquery')
 
+    @classmethod
+    def authenticate(cls, **kwargs):
+        email = kwargs.get('email')
+        password = kwargs.get('password')
+        
+        if not email or not password:
+            return None
+
+        user = cls.query.filter_by(email=email).first()
+        if not user or not check_password_hash(user.password, password):
+            return None
+
+        return user
+
+    def to_dict(self):
+        return dict(id=self.id, email=self.email)
 
     def __repr__(self):
         return '<User {}>'.format(self.pseudo)
