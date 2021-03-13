@@ -651,8 +651,40 @@ paths:
           required: true
       responses:
         200:
-          description: Successfully deleted a groupe
+          description: Successfully deleted a 
+          
+  /groupe/{id_groupe}/join:
+    post:
+      operationId: entities.user.join_groupe
+      tags:
+        - User
+      summary: Join a groupe
+      description: Join a groupe
+      parameters:
+        - name: id_groupe
+          in: path
+          type: integer
+          description: Id of the groupe to add the user to
+          required: true
+      responses:
+        201:
+          description: Successfully added user to groupe
 
+    delete:
+      operationId: entities.user.quit_groupe
+      tags:
+        - User
+      summary: Quit a groupe
+      description: Quit a groupe
+      parameters:
+        - name: id_groupe
+          in: path
+          type: integer
+          description: Id of the groupe to quit
+          required: true
+      responses:
+        201:
+          description: Successfully quit groupe user
 
 
 #------------------------------------------------------------------------------------------
@@ -737,3 +769,5 @@ definitions:
         type: "string"
       description:
         type: "string"
+      nbMembres:
+        type: "integer"

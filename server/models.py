@@ -106,8 +106,9 @@ class Groupe(db.Model):
     nom = db.Column(db.String(32))
     id_owner = db.Column(db.Integer, db.ForeignKey('users.id'))
     description = db.Column(db.String, nullable=False)
+    nbMembres = db.Column(db.Integer)
     sorties = db.relationship('Sortie', secondary=groupeSortie, lazy='subquery',
-        backref=db.backref('membres', lazy=False))
+        backref=db.backref('groupe', lazy=False))
     membres = db.relationship('User', secondary=groupeUser, lazy='subquery',
         backref=db.backref('groupes', lazy=False))
 
@@ -122,7 +123,7 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
     commentaires = fields.Nested('ComSchema', default=[], many=True, exclude=("auteur","sortie",), dump_only=True)
     sorties_a_venir = fields.Nested('SortieSchema', default=[], many=True, exclude=("participants","commentaires",), dump_only=True)
     sorties_finies = fields.Nested('SortieSchema', default=[], many=True, exclude=("participants","commentaires",), dump_only=True)
-
+    groupes = fields.Nested('GroupeSchema', default=[], many=True, exclude=("membres",), dump_only=True)
 
 class ComSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
@@ -139,7 +140,8 @@ class GroupeSchema(ma.SQLAlchemyAutoSchema):
         sqla_session = db.session
         include_fk = True
         load_instance = True
-    owner = fields.Nested('UserSchema', default=None, many=False, exclude=("commentaires","sorties_a_venir",), dump_only=True)
+    owner = fields.Nested('UserSchema', default=None, many=False, exclude=("commentaires","sorties_a_venir","groupes",), dump_only=True)
+    membres = fields.Nested('UserSchema', default=[], many=True, exclude=("commentaires","sorties_a_venir","groupes",), dump_only=True)
 
 
 class SortieSchema(ma.SQLAlchemyAutoSchema):
@@ -149,6 +151,7 @@ class SortieSchema(ma.SQLAlchemyAutoSchema):
         load_instance = True
     commentaires = fields.Nested('ComSchema', default=[], many=True, exclude=("sortie","auteur",), dump_only=True)
     participants = fields.Nested('UserSchema', default=[], many=True, exclude=("sorties_a_venir","commentaires",), dump_only=True)
+    groupe = fields.Nested('GroupeSchema', default=None, exclude=("membres",), dump_only=True)
 
 @login.user_loader
 def load_user(id):

@@ -3,7 +3,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Message
 
 from config import db, mail
-from models import User, UserSchema, Sortie, SortieSchema, Commentaire, ComSchema
+from models import User, UserSchema, Sortie, SortieSchema, Commentaire, ComSchema, Groupe, GroupeSchema
 
 
 def get_all_users():
@@ -282,7 +282,7 @@ def register(id_sortie):                        # Inscription à une sortie
         Sortie.id_sortie == id_sortie).one_or_none()
 
     if sortie_a_venir is None:
-        abort(404, f'Sortie not found for Id: {id}')
+        abort(404, f'Sortie not found for Id: {id_sortie}')
     
     sortie_a_venir.nbInscrits += 1
     current_user.sorties_a_venir.append(sortie_a_venir)
@@ -309,6 +309,52 @@ def cancel_registration(id_sortie):             # Désinscription d'une sortie
     
     sortie_a_venir.nbInscrits -= 1
     current_user.sorties_a_venir.remove(sortie_a_venir)
+    db.session.add(current_user)
+    db.session.commit()
+
+    return 201
+
+
+@login_required
+def join_groupe(id_groupe):                        # Inscription à une sortie
+    """
+    requête associée:
+        /groupe/{id_groupe}/join
+    parametres :
+        id_groupe : id du groupe que l'utilisateur veut rejoindre
+    """
+
+    groupe = Groupe.query.filter(
+        Groupe.id_groupe == id_groupe).one_or_none()
+
+    if groupe is None:
+        abort(404, f'Groupe not found for Id: {id_groupe}')
+    
+    groupe.nbMembres += 1
+    current_user.groupes.append(groupe)
+    db.session.add(current_user)
+    db.session.commit()
+
+    return 201
+
+
+@login_required
+def quit_groupe(id_groupe):             # Quitter un groupe
+    """
+    requête associée:
+        /groupe/{id_groupe}/join
+    parametres :
+        id_groupe : id du groupe que l'utilisateur veut quitter
+    """
+
+    groupe = Sortie.query.filter(
+        Groupe.id_groupe == id_groupe).one_or_none()
+
+    if groupe is None:
+        abort(404, f'Sortie not found for Id: {id}')
+    
+    groupe.nbMembres -= 1
+    current_user.groupes.remove(groupe)
     db.session.add(current_user)
     db.session.commit()
 
