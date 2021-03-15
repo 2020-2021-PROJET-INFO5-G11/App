@@ -127,13 +127,13 @@ def refuse(id_groupe):                        # Refuser ajout à un groupe
         id_groupe : id du groupe où l'on veut ajouter l'utilisateur
     """
 
-    demande = Demande.query.filter(Demande.id_groupe == id_groupe).filter(
-        Demande.id_user == current_user.id).one_or_none()
+    demande = Demande.query.filter(Demande.id_groupe == id_groupe, Demande.id_user == current_user.id).one_or_none()
 
     if demande is None:
         abort(404, f'Demande not found')
     
+    current_user.demandes.remove(demande)
     db.session.delete(demande)
     db.session.commit()
 
-    return 201
+    return make_response(f'Demande d ajout au groupe {id_groupe} deleted', 200)
