@@ -81,7 +81,7 @@
           </li>
 
           <!-- Notifications -->
-          <li class="activity" @click="$router.push('/sorties')">
+          <li class="activity" @click="$bvModal.show('notification-modal')">
             <div @click="$router.push('/sorties')">
               <div>
                 <i class="fa fa-bell-o fa-3x"></i>
@@ -108,7 +108,20 @@
         </ul>
       </li>
     </ul>
-    <div :key="key"></div>
+
+    <b-modal ref="notification"
+              id="notification-modal"
+              size="xl"
+              title="Notifications">
+
+      <ul style="overflow-y: scroll;">
+        <li v-for="n in notifications" v-bind:key="n">
+          <div class="notification"> {{n}} <br></div>
+        </li>
+        <br>
+      </ul>
+    </b-modal>
+
   </div>
 </template>
 
@@ -117,13 +130,10 @@ export default {
   data() {
     return {
       search_expression: '',
-      key: 0,
+      notifications: ["Nouvelle sortie créee : Foot Us", "Sortie supprimée : Aquagym"],
     };
   },
   methods: {
-    forceRerender() {
-      this.key += 1;
-    },
     searchSortie(e) {
       if (e.keyCode === 13) {
         this.$router.push(`/recherche/${this.search_expression}`)
@@ -135,6 +145,10 @@ export default {
 
 <style>
 /* objects */
+
+.notification {
+  font-size: 30px;
+}
 
 .navBand {
   padding: 10px;
