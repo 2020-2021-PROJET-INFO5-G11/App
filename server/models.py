@@ -17,6 +17,26 @@ userSortie_finies = db.Table('userSortie_finies',
     db.Column('id_sortie', db.Integer, db.ForeignKey('sorties.id_sortie'), primary_key=True)
 )
 
+groupeSortie = db.Table('groupeSortie',
+    db.Column('id_groupe', db.Integer, db.ForeignKey('groupes.id_groupe'), primary_key=True),
+    db.Column('id_sortie', db.Integer, db.ForeignKey('sorties.id_sortie'), primary_key=True)
+)
+
+groupeUser = db.Table('groupeUser',
+    db.Column('id_groupe', db.Integer, db.ForeignKey('groupes.id_groupe'), primary_key=True),
+    db.Column('id_user', db.Integer, db.ForeignKey('users.id'), primary_key=True)
+)
+
+demandeUser = db.Table('demandeUser',
+    db.Column('id_demande', db.Integer, db.ForeignKey('demandes.id_demande'), primary_key=True),
+    db.Column('id_user', db.Integer, db.ForeignKey('users.id'), primary_key=True)
+)
+
+demandeGroupe = db.Table('demandeGroupe',
+    db.Column('id_demande', db.Integer, db.ForeignKey('demandes.id_demande'), primary_key=True),
+    db.Column('id_groupe', db.Integer, db.ForeignKey('groupes.id_groupe'), primary_key=True)
+)
+
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -37,6 +57,7 @@ class User(UserMixin, db.Model):
         backref='auteur',
         order_by='desc(Commentaire.timestamp)'
     )
+    demandes = db.relationship('Demande', secondary=demandeUser, lazy='subquery')
     sorties_a_venir = db.relationship('Sortie', secondary=userSortie_a_venir, lazy='subquery',
         backref=db.backref('participants', lazy=False))
     sorties_finies = db.relationship('Sortie', secondary=userSortie_finies, lazy='subquery')
@@ -90,6 +111,29 @@ class Commentaire(db.Model):
     contenu = db.Column(db.String, nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+class Groupe(db.Model):
+    __tablename__ = 'groupes'
+    id_groupe = db.Column(db.Integer, primary_key=True)
+    nom = db.Column(db.String(32))
+    id_owner = db.Column(db.Integer, db.ForeignKey('users.id'))
+    description = db.Column(db.String, nullable=False)
+    nbMembres = db.Column(db.Integer)
+    demandes = db.relationship('Demande', secondary=demandeGroupe, lazy='subquery',
+        backref=db.backref('groupe', lazy=False))
+    sorties = db.relationship('Sortie', secondary=groupeSortie, lazy='subquery',
+        backref=db.backref('groupe', lazy=False))
+    membres = db.relationship('User', secondary=groupeUser, lazy='subquery',
+        backref=db.backref('groupes', lazy=False))
+
+
+class Demande(db.Model):
+    __tablename__ = 'demandes'
+    id_demande = db.Column(db.Integer, primary_key=True)
+    id_user = db.Column(db.Integer, db.ForeignKey('users.id'))
+    id_groupe = db.Column(db.Integer, db.ForeignKey('groupes.id_groupe'))
+    id_owner = db.Column(db.Integer)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
 
 #--------------------------------------------------------------------------------
 # Schemas servant a afficher les entités au format Json
@@ -102,7 +146,8 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
     commentaires = fields.Nested('ComSchema', default=[], many=True, exclude=("auteur","sortie",), dump_only=True)
     sorties_a_venir = fields.Nested('SortieSchema', default=[], many=True, exclude=("participants","commentaires",), dump_only=True)
     sorties_finies = fields.Nested('SortieSchema', default=[], many=True, exclude=("participants","commentaires",), dump_only=True)
-
+    groupes = fields.Nested('GroupeSchema', default=[], many=True, exclude=("membres","demandes",), dump_only=True)
+    demandes = fields.Nested('DemandeSchema', default=[], many=True, dump_only=True)
 
 class ComSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
@@ -110,9 +155,18 @@ class ComSchema(ma.SQLAlchemyAutoSchema):
         sqla_session = db.session
         include_fk = True
         load_instance = True
-    auteur = fields.Nested('UserSchema', default=None, many=False, exclude=("commentaires","sorties_a_venir",), dump_only=True)
+    auteur = fields.Nested('UserSchema', default=None, many=False, exclude=("commentaires","sorties_a_venir","sorties_finies","groupes","demandes",), dump_only=True)
     sortie = fields.Nested('SortieSchema', default=None, exclude=("commentaires","participants",), dump_only=True)
 
+class GroupeSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Groupe
+        sqla_session = db.session
+        include_fk = True
+        load_instance = True
+    owner = fields.Nested('UserSchema', default=None, many=False, exclude=("commentaires","sorties_a_venir","sorties_finies","groupes","demandes",), dump_only=True)
+    membres = fields.Nested('UserSchema', default=[], many=True, exclude=("commentaires","sorties_a_venir","sorties_finies","groupes","demandes",), dump_only=True)
+    demandes = fields.Nested('DemandeSchema', default=[], many=True, dump_only=True)
 
 class SortieSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
@@ -120,7 +174,16 @@ class SortieSchema(ma.SQLAlchemyAutoSchema):
         sqla_session = db.session
         load_instance = True
     commentaires = fields.Nested('ComSchema', default=[], many=True, exclude=("sortie","auteur",), dump_only=True)
-    participants = fields.Nested('UserSchema', default=[], many=True, exclude=("sorties_a_venir","commentaires",), dump_only=True)
+    participants = fields.Nested('UserSchema', default=[], many=True, exclude=("commentaires","sorties_a_venir","sorties_finies","groupes","demandes",), dump_only=True)
+    groupe = fields.Nested('GroupeSchema', default=None, exclude=("membres",), dump_only=True)
+
+
+class DemandeSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Demande
+        sqla_session = db.session
+        include_fk = True
+        load_instance = True
 
 @login.user_loader
 def load_user(id):

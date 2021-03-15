@@ -5,6 +5,8 @@ from config import db
 from models import Sortie
 from models import User
 from models import Commentaire
+from models import Groupe
+from models import Demande
 
 
 USERS = [
@@ -29,6 +31,7 @@ USERS = [
             ("test commentaire", "2019-01-08 20:17:31"),
             ("coucou", "2019-01-08 22:02:54"),
         ],
+        'demandes': [],
     },
 ]
 
@@ -99,6 +102,17 @@ SORTIES = [
     }
 ]
 
+GROUPES = [
+    {
+        'nom': 'Polytech',
+        'description': 'Rando entre popos',
+        'nbMembres': 0,
+        'membres': [],
+        'sorties': [],
+        'demandes': [],
+    }
+]
+
 
 # Delete database file if it exists currently
 if os.path.exists('entities.db'):
@@ -125,6 +139,11 @@ for sort in SORTIES:
         )
 
     db.session.add(s)
+
+for groupe in GROUPES:
+    g = Groupe(nom=groupe['nom'], description=groupe['description'], nbMembres=groupe['nbMembres'], membres=groupe['membres'], sorties=groupe['sorties'])
+
+    db.session.add(g)
 
 for user in USERS:
     u = User(password_hash=user['password_hash'], prenom=user['prenom'], nom=user['nom'], \
