@@ -116,3 +116,17 @@ def delete(id_groupe):
             "Groupe {id_groupe} deleted", 204)
     else:
         abort(404, f'Group not found for id: {id_groupe}')
+
+
+def get_groupes_by_search(search):
+    """
+    requête associée:
+        /search_groupe/{search}
+    paramètres :
+        search : nom ou partie du nom des groupes à renvoyer
+    """
+
+    groupes = Groupe.query.filter(Groupe.nom.contains(search) | Groupe.description.contains(search) | Groupe.id_groupe.contains(search))
+
+    groupe_schema = GroupeSchema(many=True)
+    return groupe_schema.dump(groupes)

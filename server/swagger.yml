@@ -711,6 +711,26 @@ paths:
           description: Successfully remove user from groupe
 
 
+  /search_groupe/{search}:
+    get:
+      operationId: "entities.groupe.get_groupes_by_search"
+      tags:
+        - Groupe
+      summary: Get one groupe by name
+      description: Read one groupe corresponding to the given name
+      parameters:
+        - name: search
+          in: path
+          description: name of the groupes to get
+          type: string
+          required: true
+      responses:
+        200:
+          description: "Successful search groupe list operation"
+          schema:
+            $ref: '#/definitions/Groupe'
+
+
 # --------------------- Demandes d'ajout -----------------------------
 
   /demandes:
