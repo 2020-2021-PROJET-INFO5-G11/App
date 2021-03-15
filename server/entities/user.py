@@ -347,11 +347,11 @@ def quit_groupe(id_groupe):             # Quitter un groupe
         id_groupe : id du groupe que l'utilisateur veut quitter
     """
 
-    groupe = Sortie.query.filter(
+    groupe = Groupe.query.filter(
         Groupe.id_groupe == id_groupe).one_or_none()
 
     if groupe is None:
-        abort(404, f'Sortie not found for Id: {id}')
+        abort(404, f'Groupe not found for Id: {id_groupe}')
     
     groupe.nbMembres -= 1
     current_user.groupes.remove(groupe)
