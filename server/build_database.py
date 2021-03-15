@@ -6,7 +6,7 @@ from models import Sortie
 from models import User
 from models import Commentaire
 from models import Groupe
-
+from models import Demande
 
 
 USERS = [
@@ -31,6 +31,7 @@ USERS = [
             ("test commentaire", "2019-01-08 20:17:31"),
             ("coucou", "2019-01-08 22:02:54"),
         ],
+        'demandes': [],
     },
 ]
 
@@ -108,6 +109,7 @@ GROUPES = [
         'nbMembres': 0,
         'membres': [],
         'sorties': [],
+        'demandes': [],
     }
 ]
 

@@ -652,23 +652,24 @@ paths:
       responses:
         200:
           description: Successfully deleted a 
-          
-  /groupe/{id_groupe}/join:
+  
+  /groupe/{id_groupe}/membres:
+
     post:
-      operationId: entities.user.join_groupe
+      operationId: entities.demande.accept
       tags:
         - User
-      summary: Join a groupe
-      description: Join a groupe
+      summary: Accept an invitation to join a groupe
+      description: Accept an invitation to join a groupe
       parameters:
         - name: id_groupe
           in: path
           type: integer
-          description: Id of the groupe to add the user to
+          description: Id of the groupe
           required: true
       responses:
         201:
-          description: Successfully added user to groupe
+          description: Successfully accept invitation to join a groupe
 
     delete:
       operationId: entities.user.quit_groupe
@@ -684,51 +685,130 @@ paths:
           required: true
       responses:
         201:
-          description: Successfully quit groupe user
+          description: Successfully quit groupe
+    
 
   /groupe/{id_groupe}/membre/{id}:
-    post:
-      operationId: entities.user.add_to_groupe
-      tags:
-        - Groupe
-      summary: Add someone to a groupe
-      description: Add someone to a groupe
-      parameters:
-        - name: id_groupe
-          in: path
-          type: integer
-          description: Id of the groupe to add the user to
-          required: true
-        - name: id
-          in: path
-          type: integer
-          description: Id of the user to add
-          required: true
-      responses:
-        201:
-          description: Successfully added user to groupe
-
     delete:
       operationId: entities.user.remove_from_groupe
       tags:
         - Groupe
-      summary: Remove a user from a groupe
-      description: Remove a groupe
+      summary: Remove someone from a groupe
+      description: Remove someone from a groupe
       parameters:
         - name: id_groupe
           in: path
           type: integer
-          description: Id of the groupe to remove the user from
+          description: Id of the groupe
           required: true
         - name: id
           in: path
           type: integer
-          description: Id of the user to remove
+          description: Id of the user
           required: true
       responses:
-        201:
+        200:
           description: Successfully remove user from groupe
 
+
+# --------------------- Demandes d'ajout -----------------------------
+
+  /demandes:
+    get:
+      operationId: entities.demande.get_all
+      tags:
+        - Demande
+      summary: Get all demandes
+      description: Get all demandes
+      responses:
+        201:
+          description: Successfully got demandes list
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Demande'
+
+
+  /groupe/{id_groupe}/demandes:
+    get:
+      operationId: entities.demande.get_groupe_demandes
+      tags:
+        - Demande
+      summary: Get list of demandes of a groupe
+      description: Get list of demandes of a groupe
+      parameters:
+        - name: id_groupe
+          in: path
+          description: Id of the groupe to get
+          type: integer
+          required: True
+      responses:
+        200:
+          description: Successful read demandes list operation
+          schema:
+            $ref: '#/definitions/Demande'
+      
+    post:
+      operationId: entities.demande.add_to_groupe
+      tags:
+        - Groupe
+      summary: Add someone to a group
+      description: Add someone to a group
+      parameters:
+        - name: id_groupe
+          in: path
+          description: Id of the groupe to get
+          type: integer
+          required: True
+        - name: id
+          in: query
+          type: integer
+          required: True
+      responses:
+        201:
+          description: Successfully sended invitation to join group
+          schema:
+            $ref: '#/definitions/Demande'
+
+    delete:
+      operationId: entities.demande.refuse
+      tags:
+        - Groupe
+      summary: Refuse an invitation to join a groupe
+      description: Refuse an invitation to join a groupe
+      parameters:
+        - name: id_groupe
+          in: path
+          type: integer
+          description: Id of the groupe
+          required: true
+      responses:
+        200:
+          description: Successfully refuse invitation to join a groupe
+
+  /groupe/{id_groupe}/demandes/{id_demande}:
+    get:
+      operationId: entities.demande.get_groupe_single_demande
+      tags:
+        - Demande
+      summary: Get one demande of one groupe by id
+      description: Get one demande of one groupe by id
+      parameters:
+        - name: id_groupe
+          in: path
+          description: Id of the groupe to get
+          type: integer
+          required: True
+        - name: id_demande
+          in: path
+          description: Id of the demande to get
+          type: integer
+          required: True
+      responses:
+        200:
+          description: Successful read demande from groupe operation
+          schema:
+            $ref: '#/definitions/Demande'
 
 #------------------------------------------------------------------------------------------
 
@@ -814,3 +894,15 @@ definitions:
         type: "string"
       nbMembres:
         type: "integer"
+
+  Demande:
+    type: "object"
+    properties:
+      id_groupe:
+        type: "integer"
+      id_user:
+        type: "integer"
+      id_owner:
+        type: "integer"
+      timestamp:
+        type: "string"

@@ -3,7 +3,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Message
 
 from config import db, mail
-from models import User, UserSchema, Sortie, SortieSchema, Commentaire, ComSchema, Groupe, GroupeSchema
+from models import User, UserSchema, Sortie, SortieSchema, Commentaire, ComSchema, Groupe, GroupeSchema, Demande, DemandeSchema
 
 
 def get_all_users():
@@ -316,33 +316,10 @@ def cancel_registration(id_sortie):             # Désinscription d'une sortie
 
 
 @login_required
-def join_groupe(id_groupe):                        # Rejoindre un groupe
-    """
-    requête associée:
-        /groupe/{id_groupe}/join
-    parametres :
-        id_groupe : id du groupe que l'utilisateur veut rejoindre
-    """
-
-    groupe = Groupe.query.filter(
-        Groupe.id_groupe == id_groupe).one_or_none()
-
-    if groupe is None:
-        abort(404, f'Groupe not found for Id: {id_groupe}')
-    
-    groupe.nbMembres += 1
-    current_user.groupes.append(groupe)
-    db.session.add(current_user)
-    db.session.commit()
-
-    return 201
-
-
-@login_required
 def quit_groupe(id_groupe):             # Quitter un groupe
     """
     requête associée:
-        /groupe/{id_groupe}/join
+        /groupe/{id_groupe}/membres
     parametres :
         id_groupe : id du groupe que l'utilisateur veut quitter
     """
@@ -356,32 +333,6 @@ def quit_groupe(id_groupe):             # Quitter un groupe
     groupe.nbMembres -= 1
     current_user.groupes.remove(groupe)
     db.session.add(current_user)
-    db.session.commit()
-
-    return 201
-
-
-def add_to_groupe(id_groupe, id):                        # Ajout d'un membre à un groupe
-    """
-    requête associée:
-        /groupe/{id_groupe}/membre/{id}
-    parametres :
-        id_groupe : id du groupe où l'on veut ajouter l'utilisateur
-        id : id de l'utilisateur à ajouter
-    """
-
-    groupe = Groupe.query.filter(
-        Groupe.id_groupe == id_groupe).one_or_none()
-
-    if groupe is None:
-        abort(404, f'Groupe not found for Id: {id_groupe}')
-
-    new_member = User.query.filter(
-        User.id == id).one_or_none()
-    
-    groupe.nbMembres += 1
-    new_member.groupes.append(groupe)
-    db.session.add(new_member)
     db.session.commit()
 
     return 201
