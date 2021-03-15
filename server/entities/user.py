@@ -316,7 +316,7 @@ def cancel_registration(id_sortie):             # Désinscription d'une sortie
 
 
 @login_required
-def join_groupe(id_groupe):                        # Inscription à une sortie
+def join_groupe(id_groupe):                        # Rejoindre un groupe
     """
     requête associée:
         /groupe/{id_groupe}/join
@@ -356,6 +356,58 @@ def quit_groupe(id_groupe):             # Quitter un groupe
     groupe.nbMembres -= 1
     current_user.groupes.remove(groupe)
     db.session.add(current_user)
+    db.session.commit()
+
+    return 201
+
+
+def add_to_groupe(id_groupe, id):                        # Ajout d'un membre à un groupe
+    """
+    requête associée:
+        /groupe/{id_groupe}/membre/{id}
+    parametres :
+        id_groupe : id du groupe où l'on veut ajouter l'utilisateur
+        id : id de l'utilisateur à ajouter
+    """
+
+    groupe = Groupe.query.filter(
+        Groupe.id_groupe == id_groupe).one_or_none()
+
+    if groupe is None:
+        abort(404, f'Groupe not found for Id: {id_groupe}')
+
+    new_member = User.query.filter(
+        User.id == id).one_or_none()
+    
+    groupe.nbMembres += 1
+    new_member.groupes.append(groupe)
+    db.session.add(new_member)
+    db.session.commit()
+
+    return 201
+
+
+def remove_from_groupe(id_groupe, id):             # Suppresion d'un membre d'un groupe
+    """
+    requête associée:
+        /groupe/{id_groupe}/membre/{id}
+    parametres :
+        id_groupe : id du groupe où l'on veut supprimer un utilisateur
+        id : id de l'utilisateur à supprimer
+    """
+
+    groupe = Groupe.query.filter(
+        Groupe.id_groupe == id_groupe).one_or_none()
+
+    if groupe is None:
+        abort(404, f'Groupe not found for Id: {id_groupe}')
+
+    old_member = User.query.filter(
+        User.id == id).one_or_none()
+    
+    groupe.nbMembres -= 1
+    old_member.groupes.remove(groupe)
+    db.session.add(old_member)
     db.session.commit()
 
     return 201

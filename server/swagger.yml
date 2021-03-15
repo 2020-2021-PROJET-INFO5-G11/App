@@ -686,6 +686,49 @@ paths:
         201:
           description: Successfully quit groupe user
 
+  /groupe/{id_groupe}/membre/{id}:
+    post:
+      operationId: entities.user.add_to_groupe
+      tags:
+        - Groupe
+      summary: Add someone to a groupe
+      description: Add someone to a groupe
+      parameters:
+        - name: id_groupe
+          in: path
+          type: integer
+          description: Id of the groupe to add the user to
+          required: true
+        - name: id
+          in: path
+          type: integer
+          description: Id of the user to add
+          required: true
+      responses:
+        201:
+          description: Successfully added user to groupe
+
+    delete:
+      operationId: entities.user.remove_from_groupe
+      tags:
+        - Groupe
+      summary: Remove a user from a groupe
+      description: Remove a groupe
+      parameters:
+        - name: id_groupe
+          in: path
+          type: integer
+          description: Id of the groupe to remove the user from
+          required: true
+        - name: id
+          in: path
+          type: integer
+          description: Id of the user to remove
+          required: true
+      responses:
+        201:
+          description: Successfully remove user from groupe
+
 
 #------------------------------------------------------------------------------------------
 
