@@ -6,7 +6,14 @@
     <NavBar> </NavBar>
 
     <!-- Title -->
-    <h2 style="padding-top: 20px; padding-left: 20px;"> Résultats de la recherche : {{$route.params.search}}</h2>
+    <!-- Boutton créer une sortie -->
+    <br>
+    <i class="right fa fa-plus-circle fa-3x"
+      @click="$router.push('/creation-sortie')"> Créer une sortie</i> <br>
+
+    <!-- Title -->
+    <h1 style="padding-top: 20px; padding-left: 20px;"> Résultats de la recherche : {{$route.params.search}}</h1>
+    <hr>
 
     <!-- Activities -->
     <ul class="scrollmenu">

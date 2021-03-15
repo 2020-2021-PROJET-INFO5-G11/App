@@ -62,5 +62,10 @@ export default new Router({
       name: 'modifier_profil',
       component: () => import('../pages/modifier_profil.vue')
     },
+    {
+      path: '/creation-groupe',
+      name: 'creation de groupe',
+      component: () => import('../pages/creation-groupe.vue'),
+    },
   ],
 });

@@ -6,7 +6,19 @@
     <!-- NavBar -->
     <NavBar/>
     <!-- Body -->
-    blablabla
+    <!-- Boutton créer un groupe -->
+    <br>
+        <i class="right fa fa-plus-circle fa-3x"
+         @click="$router.push('/creation-groupe')"> Créer un groupe</i> <br><br><br>
+
+      <h1> Mes groupes </h1>
+
+      <br><br>
+      <h1> Invitations à des groupes </h1> <br>
+
+      <br><br>
+
+
     <!-- Footer -->
     <Footer />
   </div>
