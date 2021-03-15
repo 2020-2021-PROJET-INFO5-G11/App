@@ -34,6 +34,7 @@ def get_user_groupes(id):
     return groupe_schema.dump(groupes)
 
 
+@login_required
 def create(groupe):
     """
     requête associée:
@@ -48,7 +49,6 @@ def create(groupe):
 
     nom = groupe.get('nom')
     description = groupe.get('description')
-    id_owner = groupe.get('id_owner')
 
     existing_groupe = Groupe.query \
         .filter(Groupe.nom == nom) \
@@ -61,7 +61,10 @@ def create(groupe):
     schema = GroupeSchema()
 
     new_groupe = schema.load(groupe, session=db.session)
-
+    new_groupe.nbMembres += 1
+    new_groupe.id_owner = current_user.id
+    new_groupe.owner = current_user
+    current_user.groupes.append(new_groupe)
     db.session.add(new_groupe)
     db.session.commit()
 
