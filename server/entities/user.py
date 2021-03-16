@@ -262,9 +262,8 @@ def switch_to_previous(id_sortie):              # Une sortie à venir devient un
     if info is None:
         abort(404, f'{current_user} is not registered to Sortie {id_sortie}')
     
-    #info.participant_ = info.participant
     #current_user.sorties_finies.append(info)
-    #current_user.sorties_a_venir.remove(info)
+    current_user.sorties_a_venir.remove(info)
 
     db.session.add(current_user)
     db.session.commit()
@@ -298,11 +297,9 @@ def register(id_sortie, organisateur, nb_inscrits):                        # Ins
         abort(401, f'{current_user} is already registered to Sortie {id_sortie}')
 
     info = InfoSortie(
-        id_user = current_user.id,
         id_sortie = id_sortie,
         organisateur = organisateur,
         nb_inscrits = nb_inscrits,
-        participant_ = None
     )
 
     current_user.sorties_a_venir.append(info)

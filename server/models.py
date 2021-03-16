@@ -49,7 +49,7 @@ class User(UserMixin, db.Model):
     )
     demandes = db.relationship('Demande', secondary=demandeUser, lazy='subquery')
     sorties_a_venir = db.relationship('InfoSortie', lazy='subquery', backref='participant')
-    sorties_finies = db.relationship('InfoSortie', lazy='subquery', backref='participant_')
+    sorties_finies = db.relationship('InfoSortie', lazy='subquery')
 
 
     def __repr__(self):
@@ -143,8 +143,8 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
         sqla_session = db.session
         load_instance = True
     commentaires = fields.Nested('ComSchema', default=[], many=True, exclude=("auteur","sortie",), dump_only=True)
-    sorties_a_venir = fields.Nested('InfoSortieSchema', default=[], many=True, exclude=("participant", "participant_",), dump_only=True)
-    sorties_finies = fields.Nested('InfoSortieSchema', default=[], many=True, exclude=("participant", "participant_",), dump_only=True)
+    sorties_a_venir = fields.Nested('InfoSortieSchema', default=[], many=True, exclude=("participant",), dump_only=True)
+    sorties_finies = fields.Nested('InfoSortieSchema', default=[], many=True, exclude=("participant",), dump_only=True)
     groupes = fields.Nested('GroupeSchema', default=[], many=True, exclude=("membres","demandes",), dump_only=True)
     demandes = fields.Nested('DemandeSchema', default=[], many=True, dump_only=True)
 
@@ -191,7 +191,6 @@ class InfoSortieSchema(ma.SQLAlchemyAutoSchema):
         sqla_session = db.session
         load_instance = True
     participant = fields.Nested('UserSchema', default=[], exclude=("commentaires","sorties_a_venir","sorties_finies","groupes","demandes",), dump_only=True)
-    participant_ = fields.Nested('UserSchema', default=[], exclude=("commentaires","sorties_a_venir","sorties_finies","groupes","demandes",), dump_only=True)
     sorties = fields.Nested('SortieSchema', default=[], exclude=("commentaires","participants",), dump_only=True)
 
 
