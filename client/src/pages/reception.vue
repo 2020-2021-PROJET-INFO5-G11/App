@@ -3,19 +3,33 @@
 
       <div class="row headBand">
         <div style="text-align: center;" class="col-md-auto">
-          <img class="fit-picture" src="../logo_blanc.png">
-          <h6 class="titre" > Osons Sortir</h6> <!--style="padding-left: 50px;"-->
+          <img class="fit-picture" src="../logo_blanc.png"  >
         </div>
         <div class="col-md-auto">
           <br>
-          <h1> Bienvenue !</h1>
+          <h1> Bienvenue </h1>
         </div>
 
-        <div class="connexion-1">
-          <b-button variant=primary>
-            Se connecter
-          </b-button>
-        </div>
+
+        <b-form-group
+          id="input-group-1" label="Adresse email:">
+          <b-form-input
+            id="input-1"
+            required
+          ></b-form-input>
+        </b-form-group> 
+        
+        <b-form-group
+        
+          id="input-group-2" label="Mot de passe:"  aria-describedby="password-help-block">
+          <b-form-input
+            id="input-2"
+            type="password"
+            required
+          ></b-form-input>
+        </b-form-group>
+
+        <b-button variant="primary" class="b1">Connexion</b-button>
       </div>
 
       <b-container>
@@ -48,10 +62,20 @@ export default {
     height: auto;
   }
 
-  .headBand {
-    background-color: rgb(65, 192, 171);
-    color: rgb(245, 245, 245);
+  .fit-picture {
+    width: 33%;
+    float : left;
   }
+
+  .titre {
+    float: left;
+  }
+
+ .headBand {
+  padding: 100 px;
+  background-color: rgb(65, 192, 171);
+  color: rgb(245, 245, 245);
+}
 
   .col-md-auto {
      text-align: center;
@@ -61,5 +85,9 @@ export default {
      text-align: center;
      width: 50%;
      height : 100%
+  }
+
+  .b1 {
+    height:100%;
   }
 </style>

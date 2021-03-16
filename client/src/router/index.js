@@ -8,6 +8,11 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
+      path: '/',
+      name: 'reception',
+      component: () => import('../pages/reception.vue'),
+    },
+    {
       path: '/connexion',
       name: 'connexion',
       component: () => import('../pages/login.vue'),
