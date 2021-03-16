@@ -195,7 +195,7 @@ def get_current():
     """
     
     user_schema = UserSchema()
-    return user_schema.dump(current_user)
+    return user_schema.dump(User.query.get(1)) ## TEST : HERE I USE FIRST USER INSTEAD OF CURRENT USER
 
 
 @login_required
@@ -245,7 +245,7 @@ def get_previous_activities():
     return sortie_schema.dump(sorties)
 
 
-@login_required
+#@login_required
 def switch_to_previous(id_sortie):              # Une sortie à venir devient une sortie finie
     """
     requête associée:
@@ -260,16 +260,17 @@ def switch_to_previous(id_sortie):              # Une sortie à venir devient un
     if sortie_a_venir is None:
         abort(404, f'Sortie not found for Id: {id}')
     
-    current_user.sorties_a_venir.remove(sortie_a_venir)
-    current_user.sorties_finies.append(sortie_a_venir)
+    user = User.query.get(1)
+    user.sorties_a_venir.remove(sortie_a_venir) ## TEST : HERE I USE FIRST USER INSTEAD OF CURRENT USER
+    user.sorties_finies.append(sortie_a_venir) ## TEST : HERE I USE FIRST USER INSTEAD OF CURRENT USER
 
-    db.session.add(current_user)
+    db.session.add(User.query.get(1)) ## TEST : HERE I USE FIRST USER INSTEAD OF CURRENT USER
     db.session.commit()
 
     return 200
 
 
-@login_required
+#@login_required
 def register(id_sortie):                        # Inscription à une sortie
     """
     requête associée:
@@ -285,8 +286,9 @@ def register(id_sortie):                        # Inscription à une sortie
         abort(404, f'Sortie not found for Id: {id}')
     
     sortie_a_venir.nbInscrits += 1
-    current_user.sorties_a_venir.append(sortie_a_venir)
-    db.session.add(current_user)
+    user = User.query.get(1)
+    user.sorties_a_venir.append(sortie_a_venir) ## TEST : HERE I USE FIRST USER INSTEAD OF CURRENT USER
+    db.session.add(User.query.get(1)) ## TEST : HERE I USE FIRST USER INSTEAD OF CURRENT USER
     db.session.commit()
 
     return 201

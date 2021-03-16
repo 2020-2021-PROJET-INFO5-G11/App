@@ -36,7 +36,7 @@ class User(UserMixin, db.Model):
         'Commentaire',
         backref='auteur',
         order_by='desc(Commentaire.timestamp)'
-    )
+    ) 
     sorties_a_venir = db.relationship('Sortie', secondary=userSortie_a_venir, lazy='subquery',
         backref=db.backref('participants', lazy=False))
     sorties_finies = db.relationship('Sortie', secondary=userSortie_finies, lazy='subquery')

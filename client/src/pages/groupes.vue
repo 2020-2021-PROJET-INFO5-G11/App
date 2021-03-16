@@ -11,7 +11,7 @@
         <i class="right fa fa-plus-circle fa-3x"
          @click="$router.push('/creation-groupe')"> Créer un groupe</i> <br><br><br>
 
-      <h1> Mes groupes </h1>
+      <h1> Vos groupes </h1>
 
       <br><br>
       <h1> Invitations à des groupes </h1> <br>
