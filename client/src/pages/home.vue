@@ -14,8 +14,6 @@
          @click="$router.push('/creation-sortie')"> Créer une sortie</i> <br>
 
       <!-- Sorties à venir -->
-      <!--  <li v-for="s in sorties" v-bind:key="s">{{ s.name }}</li> -->
-
       <h1> Bonjour {{current_user.prenom}} {{current_user.nom}}</h1><hr><br>
 
       <h1> Vos sorties à venir </h1> <br>
@@ -46,6 +44,11 @@
                 <div class="delete" @click="onDeleteSortie(sortie)">
                   Supprimer <img src="../delete.png" width="20">
                 </div>
+                <br>
+                <!-- View activity-->
+                <div class="switch" @click="switchSortie(sortie.id_sortie)">
+                  Déplacer vers votre historique <img src="../switch.png" width="20">
+                </div>&ensp;
               </div>
             </div>
           </div>
@@ -141,8 +144,17 @@ export default {
       axios.delete(path)
         .then(() => {
           this.getSorties();
-          this.message = 'Sortie supprimée!';
-          this.showMessage = true;
+        })
+        .catch((error) => {
+          console.error(error);
+          this.getSorties();
+        });
+    },
+    switchSortie(sortieID) {
+      const path = `http://localhost:5000/api/user/current/${sortieID}/switch`;
+      axios.put(path)
+        .then(() => {
+          this.getSorties();
         })
         .catch((error) => {
           console.error(error);
@@ -241,7 +253,7 @@ h1{
   cursor: pointer;
 }
 
-.view, .edit, .delete {
+.view, .edit, .delete, .switch {
   padding: 4px;
   cursor: pointer;
 }
@@ -256,5 +268,9 @@ h1{
 
 .delete {
   color: rgb(175, 29, 29);
+}
+
+.switch {
+  color: rgb(9, 94, 79);
 }
 </style>

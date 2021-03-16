@@ -94,7 +94,7 @@
           <br><br><br><br><br>
           <!-- Suscribe/Unsuscribe-->
           <div style="text-align: center;">
-            <button v-on:click="is_subscribed = true" @click="$bvModal.hide('subscribe');"
+            <button v-on:click="subscribe()" @click="$bvModal.hide('subscribe');"
                     :disabled="sortie.capaciteMax - members.length == 0" class="subscribe2">
               Enregistrer
             </button>
@@ -284,6 +284,16 @@ export default {
     getImgUrl(image) {
       return require('../'+image+'.jpg');
     },
+    subscribe() {
+      const path = `http://localhost:5000/api/sortie/${this.$route.params.id}/register`;
+      axios.post(path)
+        .then((res) => {
+          this.is_subscribed = true;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
     },
     created() {
       this.getSortie();

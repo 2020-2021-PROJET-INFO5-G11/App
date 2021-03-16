@@ -29,7 +29,7 @@
           <i class="fa fa-home fa-3x" @click="$router.push('/accueil')"> Acceuil </i>
         </div>
         <div>
-          <i class="fa fa-user fa-3x"> Profil </i>
+          <i class="fa fa-user fa-3x" @click="$router.push({path: `/profil/${current_user.id}`})"> Profil </i>
         </div>
       </li>
 
@@ -38,10 +38,30 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
-    return {};
+    return {
+      current_user: {},
+    };
   },
+  methods: {
+  getCurrentUser() {
+      const path = 'http://localhost:5000/api/user/current';
+      axios.get(path)
+        .then((res) => {
+          this.current_user = res.data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+  },
+  created() {
+    this.getCurrentUser();
+  }
+  
 };
 </script>
 
