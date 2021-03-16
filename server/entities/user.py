@@ -254,14 +254,17 @@ def switch_to_previous(id_sortie):              # Une sortie à venir devient un
         id_sortie : id de la sortie à changer de catégorie
     """
 
-    sortie_a_venir = Sortie.query.filter(
-        Sortie.id_sortie == id_sortie).one_or_none()
+    info = InfoSortie.query \
+        .filter(InfoSortie.id_sortie == id_sortie) \
+        .filter(InfoSortie.id_user == current_user.id) \
+        .first()
 
-    if sortie_a_venir is None:
-        abort(404, f'Sortie not found for Id: {id}')
+    if info is None:
+        abort(404, f'{current_user} is not registered to Sortie {id_sortie}')
     
-    current_user.sorties_a_venir.remove(sortie_a_venir)
-    current_user.sorties_finies.append(sortie_a_venir)
+    #info.participant_ = info.participant
+    #current_user.sorties_finies.append(info)
+    #current_user.sorties_a_venir.remove(info)
 
     db.session.add(current_user)
     db.session.commit()
@@ -270,12 +273,14 @@ def switch_to_previous(id_sortie):              # Une sortie à venir devient un
 
 
 @login_required
-def register(id_sortie):                        # Inscription à une sortie
+def register(id_sortie, organisateur, nb_inscrits):                        # Inscription à une sortie
     """
     requête associée:
         /sortie/{id_sortie}/register
     parametres :
         id_sortie : id de la sortie à laquelle s'inscrire
+        orgnisateur : l'utilisateur est organisateur ou non (booléen)
+        nb_inscrits : nombre de places réservées par l'utilisaeur
     """
 
     sortie_a_venir = Sortie.query.filter(
@@ -284,17 +289,26 @@ def register(id_sortie):                        # Inscription à une sortie
     if sortie_a_venir is None:
         abort(404, f'Sortie not found for Id: {id_sortie}')
     
+    existing_info = InfoSortie.query \
+        .filter(InfoSortie.id_sortie == id_sortie) \
+        .filter(InfoSortie.id_user == current_user.id) \
+        .one_or_none()
+
+    if existing_info is not None:
+        abort(401, f'{current_user} is already registered to Sortie {id_sortie}')
+
     info = InfoSortie(
         id_user = current_user.id,
         id_sortie = id_sortie,
-        organisateur = True,
-        nb_inscrits = 1
+        organisateur = organisateur,
+        nb_inscrits = nb_inscrits,
+        participant_ = None
     )
 
-    #schema = InfoSortieSchema()
-    #new_info = schema.load(info, session=db.session)
-
-    db.session.add(info)
+    current_user.sorties_a_venir.append(info)
+    db.session.commit()
+    
+    info.sorties.nbInscrits += nb_inscrits
     db.session.commit()
 
     return 201
@@ -308,15 +322,17 @@ def cancel_registration(id_sortie):             # Désinscription d'une sortie
     parametres :
         id_sortie : id de la sortie à laquelle se désinscrire
     """
-
-    sortie_a_venir = Sortie.query.filter(
-        Sortie.id_sortie == id_sortie).one_or_none()
-
-    if sortie_a_venir is None:
-        abort(404, f'Sortie not found for Id: {id}')
     
-    sortie_a_venir.nbInscrits -= 1
-    current_user.sorties_a_venir.remove(sortie_a_venir)
+    info = InfoSortie.query \
+        .filter(InfoSortie.id_sortie == id_sortie) \
+        .filter(InfoSortie.id_user == current_user.id) \
+        .first()
+
+    if info is None:
+        abort(404, f'{current_user} is not registered to Sortie {id_sortie}')
+    
+    info.sorties.nbInscrits -= info.nb_inscrits
+    db.session.delete(info)
     db.session.add(current_user)
     db.session.commit()
 

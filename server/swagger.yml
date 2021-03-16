@@ -293,6 +293,16 @@ paths:
           type: integer
           description: Id of the sortie to register to
           required: true
+        - name: organisateur
+          in: query
+          type: boolean
+          description: Id of the sortie to register to
+          required: true
+        - name: nb_inscrits
+          in: query
+          type: integer
+          description: Id of the sortie to register to
+          required: true
       responses:
         201:
           description: Successfully registred user
