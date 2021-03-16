@@ -3,7 +3,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Message
 
 from config import db, mail
-from models import User, UserSchema, Sortie, SortieSchema, Commentaire, ComSchema, Groupe, GroupeSchema, Demande, DemandeSchema
+from models import User, UserSchema, Sortie, SortieSchema, Commentaire, ComSchema, Groupe, GroupeSchema, Demande, DemandeSchema, InfoSortie, InfoSortieSchema
 
 
 def get_all_users():
@@ -111,11 +111,11 @@ def read_one_user_by_id(id):                    # Récupère le User dont l'id e
 
     user = User.query.get(id)
 
-    if user is not None:
-        user_schema = UserSchema()
-        return user_schema.dump(user)
-    else:
+    if user is None:
         abort(404, f'User not found for id: {id}')
+    user_schema = UserSchema()
+    return user_schema.dump(user)
+
 
 
 def send_mail(id, content):
@@ -284,9 +284,17 @@ def register(id_sortie):                        # Inscription à une sortie
     if sortie_a_venir is None:
         abort(404, f'Sortie not found for Id: {id_sortie}')
     
-    sortie_a_venir.nbInscrits += 1
-    current_user.sorties_a_venir.append(sortie_a_venir)
-    db.session.add(current_user)
+    info = InfoSortie(
+        id_user = current_user.id,
+        id_sortie = id_sortie,
+        organisateur = True,
+        nb_inscrits = 1
+    )
+
+    #schema = InfoSortieSchema()
+    #new_info = schema.load(info, session=db.session)
+
+    db.session.add(info)
     db.session.commit()
 
     return 201
