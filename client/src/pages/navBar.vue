@@ -91,7 +91,7 @@
           </li>
 
           <!-- Profil button -->
-          <li class="profil" @click="$router.push('/profil/1')">
+          <li class="profil" @click="$router.push({path: `/profil/${current_user.id}`})">
             <div>
               <i class="fa fa-user fa-3x"></i>
             </div>
@@ -126,20 +126,36 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
+      current_user: {},
       search_expression: '',
       notifications: ["Nouvelle sortie créee : Foot Us", "Sortie supprimée : Aquagym"],
     };
   },
   methods: {
+    getCurrentUser() {
+      const path = 'http://localhost:5000/api/user/current';
+      axios.get(path)
+        .then((res) => {
+          this.current_user = res.data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
     searchSortie(e) {
       if (e.keyCode === 13) {
         this.$router.push(`/recherche/${this.search_expression}`)
       }
     },
   },
+  created() {
+    this.getCurrentUser();
+  }
 };
 </script>
 
