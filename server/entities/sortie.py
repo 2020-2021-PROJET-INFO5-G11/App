@@ -101,7 +101,7 @@ def update(id_sortie, sortie):
 
         data = schema.dump(update_sortie)
 
-        return data, 200
+        return data, 201
 
 
 def delete(id_sortie):
@@ -118,7 +118,7 @@ def delete(id_sortie):
         db.session.delete(sortie)
         db.session.commit()
         return make_response(
-            "Sortie {id_sortie} deleted".format(id_sortie=id_sortie), 200
+            "Sortie {id_sortie} deleted".format(id_sortie=id_sortie), 204
         )
     else:
         abort(404, "Sortie not found for Id: {id_sortie}".format(id_sortie=id_sortie))
@@ -133,9 +133,9 @@ def get_sorties_by_search(search):
     """
 
     sorties = Sortie.query.filter(Sortie.nom.contains(search) | Sortie.typeSortie.contains(search) | Sortie.id_sortie.contains(search))
-
+    
     sortie_schema = SortieSchema(many=True)
-    return sortie_schema.dump(sorties)
+    return sortie_schema.dump(sorties), 200
 
 def get_sorties_by_type(type_sortie):
     """
@@ -148,4 +148,4 @@ def get_sorties_by_type(type_sortie):
     sorties = Sortie.query.filter(Sortie.typeSortie.contains(type_sortie))
 
     sortie_schema = SortieSchema(many=True)
-    return sortie_schema.dump(sorties)
+    return sortie_schema.dump(sorties), 200
