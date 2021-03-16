@@ -27,3 +27,8 @@ class userTest(unittest.TestCase):
     def test_2_get_all_users(self):
         r = requests.get("http://localhost:5000/api/user")
         self.assertEqual(r.status_code, 200)
+
+    # GET request to /api/user returns the details of a singme user
+    def test_3_get_single_user(self):
+        r = requests.get("http://localhost:5000/api/user", params={id : 1})
+        self.assertEqual(r.status_code, 200)

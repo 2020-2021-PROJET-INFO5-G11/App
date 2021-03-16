@@ -113,7 +113,7 @@ def read_one_user_by_id(id):                    # Récupère le User dont l'id e
 
     if user is not None:
         user_schema = UserSchema()
-        return user_schema.dump(user)
+        return user_schema.dump(user), 200
     else:
         abort(404, f'User not found for id: {id}')
 
