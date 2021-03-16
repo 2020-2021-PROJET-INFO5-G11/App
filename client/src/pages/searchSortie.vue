@@ -12,7 +12,7 @@
       @click="$router.push('/creation-sortie')"> Créer une sortie</i> <br>
 
     <!-- Title -->
-    <h1 style="padding-top: 20px; padding-left: 20px;"> Résultats de la recherche : {{$route.params.search}}</h1>
+    <h1> Résultats de la recherche : {{$route.params.search}}</h1>
     <hr>
 
     <!-- Activities -->
@@ -143,6 +143,10 @@ export default {
 </script>
 
 <style scoped>
+
+h1{
+  margin-left:1em;
+}
 
 .img-container {
      position: relative;

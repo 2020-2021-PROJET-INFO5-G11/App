@@ -11,14 +11,16 @@
 
       <!-- Boutton créer une sortie -->
         <i class="right fa fa-plus-circle fa-3x"
-         @click="$router.push('/creation-sortie')"> Créer une sortie</i> <br><br><br>
+         @click="$router.push('/creation-sortie')"> Créer une sortie</i> <br>
 
       <!-- Sorties à venir -->
       <!--  <li v-for="s in sorties" v-bind:key="s">{{ s.name }}</li> -->
 
-      <h1> Mes sorties à venir </h1> <br>
+      <h1> Bonjour {{current_user.prenom}} {{current_user.nom}}</h1><hr><br>
+
+      <h1> Vos sorties à venir </h1> <br>
       <ul class="scrollmenu">
-        <li v-for="sortie in sorties" :key="sortie">
+        <li v-for="sortie in current_user.sorties_a_venir" :key="sortie">
           <!-- Image -->
           <div class="rect" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
             <img class="fit-picture" :src="getImgUrl(sortie.photo)"  >
@@ -54,9 +56,9 @@
       <br><br>
 
       <!-- Historique de sorties -->
-      <h1> Mon historique de sorties </h1> <br>
+      <h1> Votre historique de sorties </h1> <br>
       <ul class="scrollmenu">
-        <li v-for="sortie in sorties" :key="sortie">
+        <li v-for="sortie in current_user.sorties_finies" :key="sortie">
           <!-- Image -->
           <div class="rect" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
             <img class="fit-picture" :src="getImgUrl(sortie.photo)"  >
@@ -106,7 +108,8 @@ export default {
   components: { Header, NavBar, Footer },
   data() {
     return {
-      sorties: [], 
+      sorties: [],
+      current_user: {},
     };
   },
   methods: {
@@ -115,6 +118,16 @@ export default {
       axios.get(path)
         .then((res) => {
           this.sorties = res.data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    getCurrentUser() {
+      const path = 'http://localhost:5000/api/user/current';
+      axios.get(path)
+        .then((res) => {
+          this.current_user = res.data;
         })
         .catch((error) => {
           console.error(error);
@@ -142,6 +155,7 @@ export default {
   },
   created() {
     this.getSorties();
+    this.getCurrentUser();
   }
 };
 </script>
@@ -210,7 +224,7 @@ h1{
 }
 
 .nom {
-  height: 26px;
+  height: 28px;
   word-break:break-all;
   overflow: hidden;
   text-overflow: ellipsis;

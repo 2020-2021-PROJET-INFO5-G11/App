@@ -40,7 +40,7 @@ def read_one_sortie_by_id(id_sortie):
     else:
         abort(404, f'Sortie not found for id: {id_sortie}')
 
-
+#@login_required
 def create(sortie):
     """
     requête associée:
@@ -64,6 +64,10 @@ def create(sortie):
     if existing_sortie is None:
         schema = SortieSchema()
         new_sortie = schema.load(sortie, session=db.session)
+
+        user = User.query.get(1)
+        new_sortie.nbInscrits += 1
+        user.sorties_a_venir.append(new_sortie) ## TEST : HERE I USE FIRST USER INSTEAD OF CURRENT USER
 
         db.session.add(new_sortie)
         db.session.commit()
