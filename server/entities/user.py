@@ -296,13 +296,24 @@ def register(id_sortie, organisateur, nb_inscrits):                        # Ins
     if existing_info is not None:
         abort(401, f'{current_user} is already registered to Sortie {id_sortie}')
 
-    info = InfoSortie(
+    """info = InfoSortie(
         id_sortie = id_sortie,
         organisateur = organisateur,
         nb_inscrits = nb_inscrits,
-    )
+    )"""
 
-    current_user.sorties_a_venir.append(info)
+    i = {
+        'id_user': current_user.id,
+        'id_sortie': id_sortie,
+        'organisateur': organisateur,
+        'nb_inscrits': nb_inscrits
+    }
+
+    schema = InfoSortieSchema()
+    info = schema.load(i, session=db.session)
+
+    
+    db.session.add(info)
     db.session.commit()
     
     info.sorties.nbInscrits += nb_inscrits

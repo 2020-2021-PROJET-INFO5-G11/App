@@ -87,7 +87,7 @@ class Sortie(db.Model):
         single_parent=True,
         order_by='asc(Commentaire.timestamp)'
     )
-    participants = db.relationship('InfoSortie', lazy='subquery', backref='sorties')
+    participants = db.relationship('InfoSortie', lazy='subquery', backref='sortie')
 
     def __repr__(self):
         return '{}'.format(self.nom)
@@ -173,7 +173,7 @@ class SortieSchema(ma.SQLAlchemyAutoSchema):
         sqla_session = db.session
         load_instance = True
     commentaires = fields.Nested('ComSchema', default=[], many=True, exclude=("sortie","auteur",), dump_only=True)
-    participants = fields.Nested('InfoSortieSchema', default=[], many=True, exclude=("sorties",), dump_only=True)
+    participants = fields.Nested('InfoSortieSchema', default=[], many=True, exclude=("sortie",), dump_only=True)
     groupe = fields.Nested('GroupeSchema', default=None, exclude=("membres",), dump_only=True)
 
 
@@ -191,7 +191,7 @@ class InfoSortieSchema(ma.SQLAlchemyAutoSchema):
         sqla_session = db.session
         load_instance = True
     participant = fields.Nested('UserSchema', default=[], exclude=("commentaires","sorties_a_venir","sorties_finies","groupes","demandes",), dump_only=True)
-    sorties = fields.Nested('SortieSchema', default=[], exclude=("commentaires","participants",), dump_only=True)
+    sortie = fields.Nested('SortieSchema', default=[], exclude=("commentaires","participants",), dump_only=True)
 
 
 
