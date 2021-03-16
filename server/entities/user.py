@@ -3,7 +3,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Message
 
 from config import db, mail
-from models import User, UserSchema, Sortie, SortieSchema, Commentaire, ComSchema
+from models import User, UserSchema, Sortie, SortieSchema, Commentaire, ComSchema, Groupe, GroupeSchema, Demande, DemandeSchema
 
 
 def get_all_users():
@@ -283,7 +283,7 @@ def register(id_sortie):                        # Inscription à une sortie
         Sortie.id_sortie == id_sortie).one_or_none()
 
     if sortie_a_venir is None:
-        abort(404, f'Sortie not found for Id: {id}')
+        abort(404, f'Sortie not found for Id: {id_sortie}')
     
     sortie_a_venir.nbInscrits += 1
     user = User.query.get(1)
@@ -312,6 +312,55 @@ def cancel_registration(id_sortie):             # Désinscription d'une sortie
     sortie_a_venir.nbInscrits -= 1
     current_user.sorties_a_venir.remove(sortie_a_venir)
     db.session.add(current_user)
+    db.session.commit()
+
+    return 201
+
+
+@login_required
+def quit_groupe(id_groupe):             # Quitter un groupe
+    """
+    requête associée:
+        /groupe/{id_groupe}/membres
+    parametres :
+        id_groupe : id du groupe que l'utilisateur veut quitter
+    """
+
+    groupe = Groupe.query.filter(
+        Groupe.id_groupe == id_groupe).one_or_none()
+
+    if groupe is None:
+        abort(404, f'Groupe not found for Id: {id_groupe}')
+    
+    groupe.nbMembres -= 1
+    current_user.groupes.remove(groupe)
+    db.session.add(current_user)
+    db.session.commit()
+
+    return 201
+
+
+def remove_from_groupe(id_groupe, id):             # Suppresion d'un membre d'un groupe
+    """
+    requête associée:
+        /groupe/{id_groupe}/membre/{id}
+    parametres :
+        id_groupe : id du groupe où l'on veut supprimer un utilisateur
+        id : id de l'utilisateur à supprimer
+    """
+
+    groupe = Groupe.query.filter(
+        Groupe.id_groupe == id_groupe).one_or_none()
+
+    if groupe is None:
+        abort(404, f'Groupe not found for Id: {id_groupe}')
+
+    old_member = User.query.filter(
+        User.id == id).one_or_none()
+    
+    groupe.nbMembres -= 1
+    old_member.groupes.remove(groupe)
+    db.session.add(old_member)
     db.session.commit()
 
     return 201
