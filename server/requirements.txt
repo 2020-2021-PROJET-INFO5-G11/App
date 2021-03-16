@@ -9,4 +9,5 @@ pip install pylint-flask-sqlalchemy
 pip install pylint-flask
 pip install flask-login
 pip install flask-mail
+pip install pytest-flask-sqlalchemy
 pip install connexion[swagger-ui]

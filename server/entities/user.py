@@ -14,7 +14,7 @@ def get_all_users():
     
     users = User.query.all()
     user_schema = UserSchema(many=True)
-    return user_schema.dump(users)
+    return user_schema.dump(users), 200
 
 
 def create(user):
