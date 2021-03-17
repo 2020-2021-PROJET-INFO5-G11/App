@@ -26,8 +26,8 @@
           <button @click="$bvModal.show('show-members')" class="showMembers">
             Voir les participants
           </button>
-          <button @click="$bvModal.show('subscribe')" v-if="!is_subscribed && sortie.capaciteMax - members.length - is_subscribed != 0"
-            :disabled="sortie.capaciteMax - members.length - is_subscribed == 0" class="subscribe">
+          <button @click="$bvModal.show('subscribe')" v-if="!is_subscribed && (sortie.capaciteMax - sortie.nbInscrits != 0)"
+            :disabled="sortie.capaciteMax - sortie.nbInscrits == 0" class="subscribe">
             Inscription
           </button>
           <button @click="$bvModal.show('edit-subscribe')" v-if="is_subscribed"
@@ -47,21 +47,23 @@
             <!-- User -->
             <div v-if="is_subscribed"
                  class="user">
-              {{ userName }} ( vous )
+              {{ current_user.prenom }} {{ current_user.nom }} ( vous )
               <br>
             </div>
             <!-- Other members -->
-            <div v-for="m in members" v-bind:key="m"
+            <div v-for="m in sortie.participants" v-bind:key="m"
                  class="member">
-              {{ m }}
+              <div v-if="m.userName !== current_user.userName">
+                {{ m.prenom }} {{ m.nom }}
+              </div>
               <br>
             </div>
             <br><br>
 
             <!-- Suscribe/Unsuscribe-->
-            <button v-if="!is_subscribed && sortie.capaciteMax - members.length - is_subscribed != 0" 
+            <button v-if="!is_subscribed && (sortie.capaciteMax - sortie.nbInscrits != 0)" 
                     @click="$bvModal.hide('show-members'); $bvModal.show('subscribe');"
-                    :disabled="sortie.capaciteMax - members.length == 0" class="subscribe2">
+                    :disabled="sortie.capaciteMax - sortie.nbInscrits == 0" class="subscribe2">
               S'inscrire
             </button>
             <button v-if="is_subscribed" @click="$bvModal.hide('show-members'); $bvModal.show('edit-subscribe');"
@@ -80,22 +82,23 @@
           <br>
           <div>
             <div>
-              <span> {{members.length + is_subscribed}} personnes participent déjà à l'activité.</span>
+              <span> {{sortie.nbInscrits}} personnes participent déjà à l'activité.</span>
             </div>
             <div>
-              <span> Il y a {{sortie.capaciteMax - sortie.nbInscrits - is_subscribed}} places restantes.</span>
+              <span> Il y a {{sortie.capaciteMax - sortie.nbInscrits}} places restantes.</span>
             </div>
           </div>
           <br>
           <!-- nb -->
           <span style="font-weight: bold;"> J'aimerais réserver </span> 
-          <input type="number" style="width: 55px;" min="1" :max="sortie.capaciteMax - members.length - is_subscribed" value="1"/> 
+          <!-- <input type="number" style="width: 55px;" min="1" :max="sortie.capaciteMax - sortie.nbInscrits" value="1"/> -->
+          <input type="number" style="width: 55px;" min="1" :max="1" value="1"/> 
           <span style="font-weight: bold;"> places. </span>
           <br><br><br><br><br>
           <!-- Suscribe/Unsuscribe-->
           <div style="text-align: center;">
-            <button v-on:click="is_subscribed = true" @click="$bvModal.hide('subscribe');"
-                    :disabled="sortie.capaciteMax - members.length == 0" class="subscribe2">
+            <button v-on:click="subscribe()" @click="$bvModal.hide('subscribe');"
+                    :disabled="sortie.capaciteMax - sortie.nbInscrits == 0" class="subscribe2">
               Enregistrer
             </button>
           </div>
@@ -110,21 +113,22 @@
           <br>
           <div>
             <div>
-              <span> {{members.length + is_subscribed}} personnes participent déjà à l'activité.</span>
+              <span> {{sortie.nbInscrits}} personnes participent déjà à l'activité.</span>
             </div>
             <div>
-              <span> Il y a {{sortie.capaciteMax - members.length - is_subscribed}} places restantes.</span>
+              <span> Il y a {{sortie.capaciteMax - sortie.nbInscrits}} places restantes.</span>
             </div>
           </div>
           <br>
           <!-- nb -->
           <span style="font-weight: bold;"> J'aimerais réserver </span> 
-          <input type="number" style="width: 55px;" min="0" :max="sortie.capaciteMax - members.length - is_subscribed" value="0"/> 
+          <!-- <input type="number" style="width: 55px;" min="0" :max="sortie.capaciteMax - sortie.nbInscrits value="0"/> -->
+          <input type="number" style="width: 55px;" min="0" :max="0" value="0"/>
           <span style="font-weight: bold;"> places. </span>
           <br><br><br><br><br>
           <!-- Suscribe/Unsuscribe-->
           <div style="text-align: center;">
-            <button v-on:click="is_subscribed = false" @click="$bvModal.hide('edit-subscribe');"
+            <button v-on:click="unsuscribe()" @click="$bvModal.hide('edit-subscribe');"
                     class="subscribe2">
               Enregistrer la modification
             </button>
@@ -204,7 +208,7 @@
             <span style="padding: 15px;">-</span>
             Capacité max : {{ sortie.capaciteMax }}
             <br>  
-            <span> {{ sortie.capaciteMax - sortie.nbInscrits - is_subscribed }} places restantes </span>
+            <span> {{ sortie.capaciteMax - sortie.nbInscrits }} places restantes </span>
           </span>
 
 
@@ -260,9 +264,8 @@ export default {
   components: { Header, NavBar, Footer },
   data() {
     return {
+      current_user: {},
       id: '0',
-      userName: "Vernet Maxime",
-      members: [],
       comments: ["Trop bien", "C'est sur le parking du haut le rdv ?", "Elle est difficile cette rando pour un débutant ?"],
       is_subscribed: false,
       sortie: {},
@@ -276,6 +279,7 @@ export default {
         .then((res) => {
           this.id = this.$route.params.id;
           this.sortie = res.data;
+          this.getCurrentUser();
         })
         .catch((error) => {
           console.error(error);
@@ -284,8 +288,46 @@ export default {
     getImgUrl(image) {
       return require('../'+image+'.jpg');
     },
+    subscribe() {
+      const path = `http://localhost:5000/api/sortie/${this.$route.params.id}/register`;
+      axios.post(path)
+        .then((res) => {
+          this.is_subscribed = true;
+          this.getSortie();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     },
-    created() {
+    unsuscribe() {
+      const path = `http://localhost:5000/api/sortie/${this.$route.params.id}/register`;
+      axios.delete(path)
+        .then((res) => {
+          this.is_subscribed = false;
+          this.getSortie();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    getCurrentUser() {
+      const path = 'http://localhost:5000/api/user/current';
+      axios.get(path)
+        .then((res) => {
+          this.current_user = res.data;
+          // Is suscribe
+          for(const p in this.sortie.participants){
+            if(p.userName === this.current_user.userName)
+              this.is_subscribed = true;
+              break;
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+    },
+    async created() {
       this.getSortie();
     },
 };

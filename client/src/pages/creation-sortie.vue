@@ -138,7 +138,7 @@
             <ul class = "scrollmenu">
               <br>
               <li class="veritcal">
-                <span class="vertical"> {{username}} (vous) </span>
+                <span class="vertical" @click="$router.push({path: `/profil/${current_user.id}`})"> {{current_user.prenom}} {{current_user.nom}} (vous) </span>
               </li>
 
               <li class="veritcal" v-for="o in organisateurs" v-bind:key="o">
@@ -178,7 +178,6 @@ export default {
   components: { Header, NavBar, Footer },
   data() {
     return {
-      username: 'Vernet Maxime',
       addSortieForm: {
         nom: '',
         lieu: '',
@@ -198,12 +197,23 @@ export default {
         commentaires: '',
       },
       types: ['Autre', 'Cinéma', 'Culture', 'Musée', 'Musique', 'Repas', 'Sport'],
-      organisateurs: ['ElJraidi Rim', 'Sajide Idriss', 'Manissadjian Gabriel'],
+      current_user: {},
+      organisateurs: [],
       images: ['cinema', 'escalade', 'escalade-sur-glace', 'football', 'foot-us', 'gymnastique', 'musée', 'parc', 'piscine', 'randonnée', 'rugby', 'salle-de-bloc', 'ski', 'tennis'],
       organisateur: null,
     };
   },
   methods: {
+    getCurrentUser() {
+      const path = 'http://localhost:5000/api/user/current';
+      axios.get(path)
+        .then((res) => {
+          this.current_user = res.data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
     checkForm() {
       this.submit = true;
       if (this.addSortieForm.nom && this.addSortieForm.lieu && this.addSortieForm.point_rdv && this.addSortieForm.date
@@ -230,7 +240,7 @@ export default {
         dateLimite: '',
         commentaires: [],
       }
-      this.organisateurs = ['ElJraidi Rim', 'Sajide Idriss', 'Manissadjian Gabriel'];
+      this.organisateurs = [];
       this.organisateur = null;
     },
     ajouterOrganisateur() {
@@ -289,7 +299,7 @@ export default {
           id_groupe: this.addSortieForm.id_groupe,
           typeSortie: this.addSortieForm.typeSortie,
           photo: this.addSortieForm.photo,
-          nbInscrits: 1,
+          nbInscrits: 0,
           description: this.addSortieForm.description,
           dateLimite: this.addSortieForm.dateLimite,
           //commentaires: this.addSortieForm.commentaires,
@@ -298,6 +308,9 @@ export default {
       }
     }
   },
+  created() {
+    this.getCurrentUser();
+  }
 };
 </script>
 

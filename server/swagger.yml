@@ -13,6 +13,9 @@ basePath: "/api"
 
 # Paths supported by the server application
 paths:
+
+# -------------------------- User --------------------------------
+
   /user:
     post:
       operationId: entities.user.create
@@ -408,6 +411,64 @@ paths:
         200:
           description: Successfully deleted a sortie
 
+
+  /search/{search}:
+    get:
+      operationId: "entities.sortie.get_sorties_by_search"
+      tags:
+        - Sortie
+      summary: Get one sortie by name
+      description: Read one sortie corresponding to the given name
+      parameters:
+        - name: search
+          in: path
+          description: name of the sorties to get
+          type: string
+          required: true
+      responses:
+        200:
+          description: "Successful search sortie list operation"
+          schema:
+            $ref: '#/definitions/Sortie'
+
+  /filter/{type_sortie}:
+    get:
+      operationId: "entities.sortie.get_sorties_by_type"
+      tags:
+        - Sortie
+      summary: "The sortie data structure supported by the server application"
+      description: "Filter sorties corresponding to the given type of sortie"
+      parameters:
+        - name: type_sortie
+          in: path
+          description: type of the sorties to get
+          type: string
+          required: true
+      responses:
+        200:
+          description: "Successful filter sortie list operation"
+          schema:
+            $ref: '#/definitions/Sortie'
+
+
+# --------------------- Commentaire -----------------------------
+
+  /com:
+    get:
+      operationId: entities.commentaire.get_all
+      tags:
+        - Commentaire
+      summary: Get all commentaires
+      description: Get all commentaires
+      responses:
+        201:
+          description: Successfully got commentaires list
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Commentaire'
+
+
   /sortie/{id_sortie}/com:
     get:
       operationId: entities.commentaire.get_activity_comments
@@ -520,62 +581,6 @@ paths:
         200:
           description: Successfully deleted a comment
 
-  /search/{search}:
-    get:
-      operationId: "entities.sortie.get_sorties_by_search"
-      tags:
-        - Sortie
-      summary: Get one sortie by name
-      description: Read one sortie corresponding to the given name
-      parameters:
-        - name: search
-          in: path
-          description: name of the sorties to get
-          type: string
-          required: true
-      responses:
-        200:
-          description: "Successful search sortie list operation"
-          schema:
-            $ref: '#/definitions/Sortie'
-
-  /filter/{type_sortie}:
-    get:
-      operationId: "entities.sortie.get_sorties_by_type"
-      tags:
-        - Sortie
-      summary: "The sortie data structure supported by the server application"
-      description: "Filter sorties corresponding to the given type of sortie"
-      parameters:
-        - name: type_sortie
-          in: path
-          description: type of the sorties to get
-          type: string
-          required: true
-      responses:
-        200:
-          description: "Successful filter sortie list operation"
-          schema:
-            $ref: '#/definitions/Sortie'
-
-
-# --------------------- Commentaire -----------------------------
-
-  /com:
-    get:
-      operationId: entities.commentaire.get_all
-      tags:
-        - Commentaire
-      summary: Get all commentaires
-      description: Get all commentaires
-      responses:
-        201:
-          description: Successfully got commentaires list
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Commentaire'
-
 
 # --------------------- Groupe -----------------------------
 
@@ -615,6 +620,24 @@ paths:
 
 
   /groupe/{id_groupe}:
+    get:
+      operationId: entities.groupe.get_one
+      tags:
+        - Groupe
+      summary: Get one groupe by id
+      description: Read one groupe corresponding to the given id
+      parameters:
+        - name: id_groupe
+          in: path
+          description: Id of the groupe to get
+          type: integer
+          required: True
+      responses:
+        200:
+          description: Successful read groupe list operation
+          schema:
+            $ref: '#/definitions/Groupe'
+
     put:
       operationId: entities.groupe.update
       tags:
@@ -771,7 +794,7 @@ paths:
     post:
       operationId: entities.demande.add_to_groupe
       tags:
-        - Groupe
+        - Demande
       summary: Add someone to a group
       description: Add someone to a group
       parameters:
@@ -793,7 +816,7 @@ paths:
     delete:
       operationId: entities.demande.refuse
       tags:
-        - Groupe
+        - Demande
       summary: Refuse an invitation to join a groupe
       description: Refuse an invitation to join a groupe
       parameters:
@@ -914,6 +937,8 @@ definitions:
         type: "string"
       nbMembres:
         type: "integer"
+      photo:
+        type: "string"
 
   Demande:
     type: "object"

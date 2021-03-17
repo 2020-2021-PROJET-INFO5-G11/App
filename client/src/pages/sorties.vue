@@ -13,7 +13,7 @@
       @click="$router.push('/creation-sortie')"> Créer une sortie</i> <br>
 
     <!-- Title -->
-    <h1 class="title"> Toutes les sorties </h1>
+    <h1> Toutes les sorties </h1>
     <hr>
 
     <!-- Alert message -->
@@ -321,5 +321,9 @@ img:hover {
 
 .delete {
   color: rgb(175, 29, 29);
+}
+
+h1{
+  margin-left:1em;
 }
 </style>

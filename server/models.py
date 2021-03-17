@@ -41,10 +41,10 @@ class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     password_hash = db.Column(db.String(128))
-    prenom = db.Column(db.String(32))
-    nom = db.Column(db.String(32))
+    prenom = db.Column(db.String(32), index=True)
+    nom = db.Column(db.String(32), index=True)
     email = db.Column(db.String(64))
-    photo = db.Column(db.String(32))
+    photo = db.Column(db.String(32))        # A remplacer par un autre type
     dateNaissance = db.Column(db.String(32))
     ville = db.Column(db.String(32))
     preferences = db.Column(db.String(32))
@@ -52,11 +52,9 @@ class User(UserMixin, db.Model):
     bio = db.Column(db.String(1024))
     role = db.Column(db.String(32))
     feedbacks = db.Column(db.String(32))
-    commentaires = db.relationship(
-        'Commentaire',
-        backref='auteur',
-        order_by='desc(Commentaire.timestamp)'
-    )
+
+    commentaires = db.relationship('Commentaire', backref='auteur', 
+        order_by='desc(Commentaire.timestamp)')
     demandes = db.relationship('Demande', secondary=demandeUser, lazy='subquery')
     sorties_a_venir = db.relationship('Sortie', secondary=userSortie_a_venir, lazy='subquery',
         backref=db.backref('participants', lazy=False))
@@ -91,16 +89,12 @@ class Sortie(db.Model):
     nbInscrits = db.Column(db.Integer)
     description = db.Column(db.String(1024))
     dateLimite = db.Column(db.String(32))
-    commentaires = db.relationship(
-        'Commentaire',
-        backref='sortie',
-        cascade='all, delete, delete-orphan',
-        single_parent=True,
-        order_by='asc(Commentaire.timestamp)'
+    commentaires = db.relationship('Commentaire', backref='sortie', cascade='all, delete, delete-orphan',
+        single_parent=True, order_by='asc(Commentaire.timestamp)'
     )
 
     def __repr__(self):
-        return '<Sortie {}>'.format(self.nom)
+        return '{}'.format(self.prenom)
 
 
 class Commentaire(db.Model):
@@ -118,6 +112,7 @@ class Groupe(db.Model):
     id_owner = db.Column(db.Integer, db.ForeignKey('users.id'))
     description = db.Column(db.String, nullable=False)
     nbMembres = db.Column(db.Integer)
+    photo = db.Column(db.String(32))
     demandes = db.relationship('Demande', secondary=demandeGroupe, lazy='subquery',
         backref=db.backref('groupe', lazy=False))
     sorties = db.relationship('Sortie', secondary=groupeSortie, lazy='subquery',
@@ -126,7 +121,7 @@ class Groupe(db.Model):
         backref=db.backref('groupes', lazy=False))
 
 
-class Demande(db.Model):
+class Demande(db.Model):                # Invitations aux groupes
     __tablename__ = 'demandes'
     id_demande = db.Column(db.Integer, primary_key=True)
     id_user = db.Column(db.Integer, db.ForeignKey('users.id'))
