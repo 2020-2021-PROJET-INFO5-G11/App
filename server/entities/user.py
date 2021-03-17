@@ -14,7 +14,7 @@ def get_all_users():
     
     users = User.query.all()
     user_schema = UserSchema(many=True)
-    return user_schema.dump(users)
+    return user_schema.dump(users), 200
 
 
 def create(user):
@@ -113,7 +113,7 @@ def read_one_user_by_id(id):                    # Récupère le User dont l'id e
 
     if user is not None:
         user_schema = UserSchema()
-        return user_schema.dump(user)
+        return user_schema.dump(user), 200
     else:
         abort(404, f'User not found for id: {id}')
 
@@ -155,7 +155,7 @@ def login(email, password):
          abort(400, 'Utilisateur deja connecte')
     user = User.query.filter_by(email=email).first()
     if user is None or not user.check_password(password):
-        abort(400, 'Pseudo ou mot de passe incorrect')
+        abort(404, 'Pseudo ou mot de passe incorrect')
     login_user(user)#, remember=form.remember_me.data)
     return 200
 
@@ -167,7 +167,7 @@ def logout():
     """
     
     logout_user()
-    return
+    return 200
 
 
 @login_required
@@ -225,7 +225,7 @@ def update_current(user):                       # Modifie les infos de l'utilisa
 def get_incoming_activities():
     """
     requête associée:
-        /user/current/a_venir
+        /user/current/a_venir<
     """
 
     sorties = current_user.sorties_a_venir
