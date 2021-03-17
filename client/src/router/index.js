@@ -67,5 +67,15 @@ export default new Router({
       name: 'creation de groupe',
       component: () => import('../pages/creation-groupe.vue'),
     },
+    {
+      path: '/modification-groupe/:id',
+      name: 'modification de groupe',
+      component: () => import('../pages/modification-groupe.vue'),
+    },
+    {
+      path: '/groupe/:id',
+      name: 'groupe',
+      component: () => import('../pages/viewGroupe.vue'),
+    },
   ],
 });

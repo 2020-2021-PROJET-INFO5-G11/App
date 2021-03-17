@@ -19,6 +19,23 @@ def get_all():
     groupe_schema = GroupeSchema(many=True)
     return groupe_schema.dump(groupes)
 
+def get_one(id_groupe):
+    """
+    requête associée:
+        /groupe/{id_groupe}
+    """
+
+    groupe = (
+        Groupe.query.filter(Groupe.id_groupe == id_groupe)
+        .one_or_none()
+    )
+
+    if groupe is not None:
+        groupe_schema = GroupeSchema()
+        return groupe_schema.dump(groupe)
+    else:
+        abort(404, f'Groupe not found for id: {id_groupe}')
+
 
 def get_user_groupes(id):
     """

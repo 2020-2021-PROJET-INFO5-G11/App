@@ -620,6 +620,24 @@ paths:
 
 
   /groupe/{id_groupe}:
+    get:
+      operationId: entities.groupe.get_one
+      tags:
+        - Groupe
+      summary: Get one groupe by id
+      description: Read one groupe corresponding to the given id
+      parameters:
+        - name: id_groupe
+          in: path
+          description: Id of the groupe to get
+          type: integer
+          required: True
+      responses:
+        200:
+          description: Successful read groupe list operation
+          schema:
+            $ref: '#/definitions/Groupe'
+
     put:
       operationId: entities.groupe.update
       tags:
@@ -919,6 +937,8 @@ definitions:
         type: "string"
       nbMembres:
         type: "integer"
+      photo:
+        type: "string"
 
   Demande:
     type: "object"
