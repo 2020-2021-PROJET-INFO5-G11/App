@@ -36,6 +36,11 @@
             :disabled="!is_invited" class="subscribe">
             Refuser l'invitation
           </button>
+          <button v-if="is_member"
+            @click="$bvModal.show('invite-member')"
+            :disabled="!is_invited" class="inviteMember">
+            Inviter à rejoindre
+          </button>
           <br>
         </div>
       </div>
@@ -67,62 +72,22 @@
         </div>
       </b-modal>
 
-      <!-- inscription pannel-->
-      <b-modal ref="subscribe" id="subscribe" hide-footer
-        title="Inscription au groupe">
-        <div style="font-size: 20px;">
-          <br>
-          <div>
-            <div>
-              <span> {{groupe.nbMembres}} personnes participent déjà à l'activité.</span>
+      <b-modal ref="inviteMember" id="invite-member" hide-footer
+        title="Inviter un utilisateur">
+        <div>
+          <div style="text-align: center; font-size: 30px;">
+            <br>
+            <div v-for="u in utilisateurs" v-bind:key="u"
+                 class="user">
+              <div v-if="u.userName !== current_user.userName">
+                <span @click="invite(this.id, u.id)" class="user"> {{u.nom }} {{u.prenom}} </span>
+              </div>
+              <br>
             </div>
-            <div>
-              <span> Il y a {{groupe.capaciteMax - groupe.nbInscrits}} places restantes.</span>
-            </div>
-          </div>
-          <br>
-          <!-- nb -->
-          <span style="font-weight: bold;"> J'aimerais réserver </span> 
-          <!-- <input type="number" style="width: 55px;" min="1" :max="groupe.capaciteMax - groupe.nbInscrits" value="1"/> -->
-          <input type="number" style="width: 55px;" min="1" :max="1" value="1"/> 
-          <span style="font-weight: bold;"> places. </span>
-          <br><br><br><br><br>
-          <!-- Suscribe/Unsuscribe-->
-          <div style="text-align: center;">
-            <button v-on:click="subscribe()" @click="$bvModal.hide('subscribe');"
-                    :disabled="groupe.capaciteMax - groupe.nbInscrits == 0" class="subscribe2">
-              Enregistrer
-            </button>
-          </div>
-          <br><br>
-        </div>
-      </b-modal>
+            <br><br>
 
-      <!-- edit inscription pannel-->
-      <b-modal ref="edit-subscribe" id="edit-subscribe" hide-footer
-        title="Inscription à la groupe">
-        <div style="font-size: 20px;">
-          <br>
-          <div>
-            <div>
-              <span> {{groupe.nbMembres}} personnes font partie de ce groupe.</span>
-            </div>
+            <br><br>
           </div>
-          <br>
-          <!-- nb -->
-          <span style="font-weight: bold;"> J'aimerais réserver </span> 
-          <!-- <input type="number" style="width: 55px;" min="0" :max="groupe.capaciteMax - groupe.nbInscrits value="0"/> -->
-          <input type="number" style="width: 55px;" min="0" :max="0" value="0"/>
-          <span style="font-weight: bold;"> places. </span>
-          <br><br><br><br><br>
-          <!-- Suscribe/Unsuscribe-->
-          <div style="text-align: center;">
-            <button v-on:click="unsuscribe()" @click="$bvModal.hide('edit-subscribe');"
-                    class="subscribe2">
-              Enregistrer la modification
-            </button>
-          </div>
-          <br><br>
         </div>
       </b-modal>
 
@@ -189,6 +154,7 @@ export default {
       accepted: false,
       is_member: false,
       groupe: {},
+      utilisateurs: [],
     };
   },
   methods: {
@@ -200,6 +166,16 @@ export default {
           this.id = this.$route.params.id;
           this.groupe = res.data;
           this.getCurrentUser();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    getUtilisateurs() {
+      const path = 'http://localhost:5000/api/user';
+      axios.get(path)
+        .then((res) => {
+          this.utilisateurs = res.data;
         })
         .catch((error) => {
           console.error(error);
@@ -248,9 +224,20 @@ export default {
           console.error(error);
         });
     },
+    invite(groupeID, userID) {
+      const path = `http://localhost:5000/api/POST /groupe/${groupeID}/demandes`;
+      axios.post(path, userID)
+        .then((res) => {
+          this.$router.go();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
   },
   async created() {
     this.getGroupe();
+    this.getUtilisateurs();
   },
 };
 </script>
@@ -280,6 +267,16 @@ export default {
 }
 
 .showMembers {
+  width: 350px;
+  height: 60px;
+  font-size: 30px;
+  text-decoration: bold;
+  background-color: rgb(61, 150, 135);
+  border-color: white;
+  color: whitesmoke;
+}
+
+.inviteMember {
   width: 350px;
   height: 60px;
   font-size: 30px;
@@ -334,6 +331,13 @@ export default {
 }
 
 .showMembers:hover {
+  font-size: 32px;
+  background-color: rgb(15, 138, 117);
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.inviteMember:hover {
   font-size: 32px;
   background-color: rgb(15, 138, 117);
   cursor: pointer;
