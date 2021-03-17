@@ -51,7 +51,7 @@ def get_user_groupes(id):
     return groupe_schema.dump(groupes)
 
 
-@login_required
+#@login_required
 def create(groupe):
     """
     requête associée:
@@ -61,6 +61,10 @@ def create(groupe):
     """
 
     id_groupe = groupe.get('id_groupe')
+
+    # Using first user of users list since current doesn't work
+    user = User.query.get(1)
+
     if Groupe.query.get(id_groupe) is not None:
         abort(409, f'id {id_groupe} is already used for another group')
 
@@ -79,9 +83,15 @@ def create(groupe):
 
     new_groupe = schema.load(groupe, session=db.session)
     new_groupe.nbMembres += 1
-    new_groupe.id_owner = current_user.id
-    new_groupe.owner = current_user
-    current_user.groupes.append(new_groupe)
+
+    new_groupe.id_owner = user.id
+    new_groupe.owner = user
+    user.groupes.append(new_groupe)
+
+    #new_groupe.id_owner = current_user.id
+    #new_groupe.owner = current_user
+    #current_user.groupes.append(new_groupe)
+
     db.session.add(new_groupe)
     db.session.commit()
 

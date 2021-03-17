@@ -57,6 +57,9 @@ def add_to_groupe(id_groupe, id):                        # Demande d'ajout d'un 
         id : id de l'utilisateur à ajouter
     """
 
+    # Using first user of users list since current doesn't work
+    user = User.query.get(1)
+
     groupe = Groupe.query.filter(
         Groupe.id_groupe == id_groupe).one_or_none()
 
@@ -99,6 +102,7 @@ def accept(id_groupe):                        # Accepter ajout à un groupe
     groupe = Groupe.query.filter(
         Groupe.id_groupe == id_groupe).one_or_none()
 
+    # Using first user of users list since current doesn't work
     user = User.query.get(1)
 
     if groupe is None:
@@ -112,9 +116,15 @@ def accept(id_groupe):                        # Accepter ajout à un groupe
     
     groupe.nbMembres += 1
     groupe.demandes.remove(demande)
+
     user.demandes.remove(demande)
     user.groupes.append(groupe)
     db.session.add(user)
+
+    #current_user.demandes.remove(demande)
+    #current_user.groupes.append(groupe)
+    #db.session.add(current_user)
+
     db.session.delete(demande)
     db.session.commit()
 
@@ -129,12 +139,18 @@ def refuse(id_groupe):                        # Refuser ajout à un groupe
         id_groupe : id du groupe où l'on veut ajouter l'utilisateur
     """
 
+    # Using first user of users list since current doesn't work
+    user = User.query.get(1)
+
     demande = Demande.query.filter(Demande.id_groupe == id_groupe, Demande.id_user == user.id).one_or_none()
 
     if demande is None:
         abort(404, f'Demande not found')
     
     user.demandes.remove(demande)
+
+    #current_user.demandes.remove(demande)
+
     db.session.delete(demande)
     db.session.commit()
 

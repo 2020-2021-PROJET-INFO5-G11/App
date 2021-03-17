@@ -21,18 +21,20 @@
         <span class="nom"> {{groupe.nom}} &ensp;-&ensp; </span>
         <span class="id">ID: {{id}} </span>
 
-        <!-- Buttons : show memberd and subscribe/unsuscribe-->
+        <!-- Buttons : show members and accept/refuse-->
         <div style="float: right; margin-right: 1%;">
           <button @click="$bvModal.show('show-members')" class="showMembers">
             Voir les membres
           </button>
-          <button @click="$bvModal.show('subscribe')" v-if="!is_subscribed && (groupe.capaciteMax - groupe.nbInscrits != 0)"
-            :disabled="groupe.capaciteMax - groupe.nbInscrits == 0" class="subscribe">
+          <button v-if="is_invited"
+            @click="accept(id)"
+            :disabled="!is_invited" class="subscribe">
             Accepter l'invitation
           </button>
-          <button @click="$bvModal.show('edit-subscribe')" v-if="is_subscribed"
-            class="subscribe">
-            Modifier l'inscription
+          <button v-if="is_invited"
+            @click="refuse(id)"
+            :disabled="!is_invited" class="subscribe">
+            Refuser l'invitation
           </button>
           <br>
         </div>
@@ -45,7 +47,7 @@
           <div style="text-align: center; font-size: 30px;">
             <br>
             <!-- User -->
-            <div v-if="is_subscribed"
+            <div v-if="is_member"
                  class="user">
               {{ current_user.prenom }} {{ current_user.nom }} ( vous )
               <br>
@@ -60,16 +62,6 @@
             </div>
             <br><br>
 
-            <!-- Suscribe/Unsuscribe-->
-            <button v-if="!is_subscribed && (groupe.capaciteMax - groupe.nbInscrits != 0)" 
-                    @click="$bvModal.hide('show-members'); $bvModal.show('subscribe');"
-                    :disabled="groupe.capaciteMax - groupe.nbInscrits == 0" class="subscribe2">
-              S'inscrire
-            </button>
-            <button v-if="is_subscribed" @click="$bvModal.hide('show-members'); $bvModal.show('edit-subscribe');"
-                    class="subscribe2">
-              Modifier l'inscription
-            </button>
             <br><br>
           </div>
         </div>
@@ -193,7 +185,9 @@ export default {
     return {
       current_user: {},
       id: '0',
-      is_subscribed: false,
+      is_invited: false,
+      accepted: false,
+      is_member: false,
       groupe: {},
     };
   },
@@ -211,48 +205,53 @@ export default {
           console.error(error);
         });
     },
-    subscribe() {
-      const path = `http://localhost:5000/api/groupe/${this.$route.params.id}/register`;
-      axios.post(path)
-        .then((res) => {
-          this.is_subscribed = true;
-          this.getGroupe();
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    },
-    unsuscribe() {
-      const path = `http://localhost:5000/api/groupe/${this.$route.params.id}/register`;
-      axios.delete(path)
-        .then((res) => {
-          this.is_subscribed = false;
-          this.getGroupe();
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    },
     getCurrentUser() {
       const path = 'http://localhost:5000/api/user/current';
       axios.get(path)
         .then((res) => {
           this.current_user = res.data;
-          // Is suscribe
+          // Is invited
+          for(const p in this.groupe.demandes){
+            if(p.userName === this.current_user.userName)
+              this.is_invited = true;
+              break;
+          }
+          // Is member
           for(const p in this.groupe.membres){
             if(p.userName === this.current_user.userName)
-              this.is_subscribed = true;
+              this.is_member = true;
               break;
           }
         })
         .catch((error) => {
           console.error(error);
         });
-    }
     },
-    async created() {
-      this.getGroupe();
+    accept(groupeID) {
+      const path = `http://localhost:5000/api/groupe/${groupeID}/membres`;
+      axios.post(path)
+        .then((res) => {
+          this.accepted = true;
+          this.$router.go();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     },
+    refuse(groupeID) {
+      const path = `http://localhost:5000/api/groupe/${groupeID}/demandes`;
+      axios.delete(path)
+        .then((res) => {
+          
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+  },
+  async created() {
+    this.getGroupe();
+  },
 };
 </script>
 

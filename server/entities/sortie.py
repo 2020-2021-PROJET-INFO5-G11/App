@@ -65,7 +65,10 @@ def create(sortie):
         schema = SortieSchema()
         new_sortie = schema.load(sortie, session=db.session)
 
+        # Using first user of users list since current doesn't work
         user = User.query.get(1)
+        #user = current_user
+
         new_sortie.nbInscrits += 1
         user.sorties_a_venir.append(new_sortie) ## TEST : HERE I USE FIRST USER INSTEAD OF CURRENT USER
 

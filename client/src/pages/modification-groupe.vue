@@ -123,6 +123,26 @@ export default {
           console.error(error);
         });
     },
+    accept(groupeID) {
+      const path = `http://localhost:5000/api/groupe/${groupeID}/membres`;
+      axios.post(path)
+        .then((res) => {
+          this.$router.go();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    refuse(groupeID) {
+      const path = `http://localhost:5000/api/groupe/${groupeID}/demandes`;
+      axios.delete(path)
+        .then((res) => {
+          
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
     getGroupe() {
       const path = `http://localhost:5000/api/groupe/${this.$route.params.id}`;
       axios.get(path)
@@ -137,8 +157,15 @@ export default {
           console.error(error);
         });
     },
-    ajouterMembre() {
-      
+    inviterMembre(id_user) {
+      const path = `http://localhost:5000/api/groupe/${groupeID}/demandes`;
+      axios.post(path, id_user)
+        .then((res) => {
+          this.$router.go();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     },
     supprimerMembre(o) {
       
@@ -181,7 +208,7 @@ export default {
   created() {
       this.getGroupe();
       this.getCurrentUser();
-    },
+  },
 };
 </script>
 
