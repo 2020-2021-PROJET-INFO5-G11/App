@@ -116,16 +116,6 @@ export default {
     };
   },
   methods: {
-    getSorties() {
-      const path = 'http://localhost:5000/api/sortie';
-      axios.get(path)
-        .then((res) => {
-          this.sorties = res.data;
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    },
     getCurrentUser() {
       const path = 'http://localhost:5000/api/user/current';
       axios.get(path)
@@ -143,22 +133,22 @@ export default {
       const path = `http://localhost:5000/api/sortie/${sortieID}`;
       axios.delete(path)
         .then(() => {
-          this.getSorties();
+          this.getCurrentUser();
         })
         .catch((error) => {
           console.error(error);
-          this.getSorties();
+          this.getCurrentUser();
         });
     },
     switchSortie(sortieID) {
       const path = `http://localhost:5000/api/user/current/${sortieID}/switch`;
       axios.put(path)
         .then(() => {
-          this.getSorties();
+          this.getCurrentUser();
         })
         .catch((error) => {
           console.error(error);
-          this.getSorties();
+          this.getCurrentUser();
         });
     },
     onDeleteSortie(sortie) {
@@ -166,7 +156,6 @@ export default {
     },
   },
   created() {
-    this.getSorties();
     this.getCurrentUser();
   }
 };

@@ -36,9 +36,7 @@
       "plugin:vue/essential",
       "@vue/airbnb"
     ],
-    "parserOptions": {
-      
-    },
+    "parserOptions": {},
     "rules": {
       "no-multiple-empty-lines": [
         2,
