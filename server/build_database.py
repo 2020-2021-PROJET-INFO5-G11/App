@@ -9,6 +9,7 @@ from models import Groupe
 from models import Demande
 
 
+# Data to initialize database with
 USERS = [
     {
         'password_hash': 'string',
@@ -35,8 +36,6 @@ USERS = [
     },
 ]
 
-
-# Data to initialize database with
 SORTIES = [
     {
         'nom': 'Randonnée à Monteynard',

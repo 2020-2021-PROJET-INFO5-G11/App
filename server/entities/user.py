@@ -12,9 +12,8 @@ def get_all_users():
         /user
     """
     
-    users = InfoSortie.query.all()
-    #users = User.query.all()
-    user_schema = InfoSortieSchema(many=True)
+    users = User.query.all()
+    user_schema = UserSchema(many=True)
     return user_schema.dump(users)
 
 
