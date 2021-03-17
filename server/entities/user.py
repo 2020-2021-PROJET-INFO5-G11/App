@@ -3,7 +3,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Message
 
 from config import db, mail
-from models import User, UserSchema, Sortie, SortieSchema, Commentaire, ComSchema, Groupe, GroupeSchema, Demande, DemandeSchema
+from models import User, UserSchema, Sortie, SortieSchema, Commentaire, ComSchema, Groupe, GroupeSchema, Demande, DemandeSchema, InfoSortie, InfoSortieSchema, InfoSortieFinie, InfoSortieFinieSchema
 
 
 def get_all_users():
@@ -12,8 +12,9 @@ def get_all_users():
         /user
     """
     
-    users = User.query.all()
-    user_schema = UserSchema(many=True)
+    users = InfoSortie.query.all()
+    #users = User.query.all()
+    user_schema = InfoSortieSchema(many=True)
     return user_schema.dump(users)
 
 
@@ -111,11 +112,11 @@ def read_one_user_by_id(id):                    # Récupère le User dont l'id e
 
     user = User.query.get(id)
 
-    if user is not None:
-        user_schema = UserSchema()
-        return user_schema.dump(user)
-    else:
+    if user is None:
         abort(404, f'User not found for id: {id}')
+    user_schema = UserSchema()
+    return user_schema.dump(user)
+
 
 
 def send_mail(id, content):
@@ -229,8 +230,8 @@ def get_incoming_activities():
     """
 
     sorties = current_user.sorties_a_venir
-    sortie_schema = SortieSchema(many=True)
-    return sortie_schema.dump(sorties)
+    info_schema = InfoSortieSchema(many=True)
+    return info_schema.dump(sorties)
 
 
 @login_required
@@ -241,8 +242,8 @@ def get_previous_activities():
     """
     
     sorties = current_user.sorties_finies
-    sortie_schema = SortieSchema(many=True)
-    return sortie_schema.dump(sorties)
+    info_schema = InfoSortieFinieSchema(many=True)
+    return info_schema.dump(sorties)
 
 
 #@login_required
@@ -254,29 +255,38 @@ def switch_to_previous(id_sortie):              # Une sortie à venir devient un
         id_sortie : id de la sortie à changer de catégorie
     """
 
-    sortie_a_venir = Sortie.query.filter(
-        Sortie.id_sortie == id_sortie).one_or_none()
+    info = InfoSortie.query \
+        .filter(InfoSortie.id_sortie == id_sortie) \
+        .filter(InfoSortie.id_user == current_user.id) \
+        .first()
 
-    if sortie_a_venir is None:
-        abort(404, f'Sortie not found for Id: {id}')
+    if info is None:
+        abort(404, f'{current_user} is not registered to Sortie {id_sortie}')
     
-    user = User.query.get(1)
-    user.sorties_a_venir.remove(sortie_a_venir) ## TEST : HERE I USE FIRST USER INSTEAD OF CURRENT USER
-    user.sorties_finies.append(sortie_a_venir) ## TEST : HERE I USE FIRST USER INSTEAD OF CURRENT USER
+    info2 = InfoSortieFinie(
+        id_user = info.id_user,
+        id_sortie = info.id_sortie,
+        organisateur = info.organisateur,
+        nb_inscrits = info.nb_inscrits,
+    )
 
-    db.session.add(User.query.get(1)) ## TEST : HERE I USE FIRST USER INSTEAD OF CURRENT USER
+    db.session.delete(info)
+    current_user.sorties_finies.append(info2)
+
     db.session.commit()
 
     return 200
 
 
-#@login_required
-def register(id_sortie):                        # Inscription à une sortie
+@login_required
+def register(id_sortie, organisateur, nb_inscrits):                        # Inscription à une sortie
     """
     requête associée:
         /sortie/{id_sortie}/register
     parametres :
         id_sortie : id de la sortie à laquelle s'inscrire
+        orgnisateur : l'utilisateur est organisateur ou non (booléen)
+        nb_inscrits : nombre de places réservées par l'utilisaeur
     """
 
     sortie_a_venir = Sortie.query.filter(
@@ -285,10 +295,24 @@ def register(id_sortie):                        # Inscription à une sortie
     if sortie_a_venir is None:
         abort(404, f'Sortie not found for Id: {id_sortie}')
     
-    sortie_a_venir.nbInscrits += 1
-    user = User.query.get(1)
-    user.sorties_a_venir.append(sortie_a_venir) ## TEST : HERE I USE FIRST USER INSTEAD OF CURRENT USER
-    db.session.add(User.query.get(1)) ## TEST : HERE I USE FIRST USER INSTEAD OF CURRENT USER
+    existing_info = InfoSortie.query \
+        .filter(InfoSortie.id_sortie == id_sortie) \
+        .filter(InfoSortie.id_user == current_user.id) \
+        .one_or_none()
+
+    if existing_info is not None:
+        abort(401, f'{current_user} is already registered to Sortie {id_sortie}')
+
+    info = InfoSortie(
+        id_user = current_user.id,
+        id_sortie = id_sortie,
+        organisateur = organisateur,
+        nb_inscrits = nb_inscrits,
+    )
+    
+    current_user.sorties_a_venir.append(info)
+    db.session.commit()
+    info.sortie.nbInscrits += nb_inscrits
     db.session.commit()
 
     return 201
@@ -302,17 +326,18 @@ def cancel_registration(id_sortie):             # Désinscription d'une sortie
     parametres :
         id_sortie : id de la sortie à laquelle se désinscrire
     """
-
-    sortie_a_venir = Sortie.query.filter(
-        Sortie.id_sortie == id_sortie).one_or_none()
-
-    if sortie_a_venir is None:
-        abort(404, f'Sortie not found for Id: {id}')
     
-    sortie_a_venir.nbInscrits -= 1
-    user = User.query.get(1)
-    user.sorties_a_venir.remove(sortie_a_venir) ## TEST : HERE I USE FIRST USER INSTEAD OF CURRENT USER
-    db.session.add(user) ## TEST : HERE I USE FIRST USER INSTEAD OF CURRENT USER
+    info = InfoSortie.query \
+        .filter(InfoSortie.id_sortie == id_sortie) \
+        .filter(InfoSortie.id_user == current_user.id) \
+        .first()
+
+    if info is None:
+        abort(404, f'{current_user} is not registered to Sortie {id_sortie}')
+    
+    info.sorties.nbInscrits -= info.nb_inscrits
+    db.session.delete(info)
+    db.session.add(current_user)
     db.session.commit()
 
     return 201

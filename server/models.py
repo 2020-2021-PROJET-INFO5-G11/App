@@ -7,14 +7,14 @@ from marshmallow_sqlalchemy import fields
 from config import db, ma, login
 
 
-userSortie_a_venir = db.Table('userSortie_a_venir',
+userInfo = db.Table('userInfo',
     db.Column('id_user', db.Integer, db.ForeignKey('users.id'), primary_key=True),
-    db.Column('id_sortie', db.Integer, db.ForeignKey('sorties.id_sortie'), primary_key=True)
+    db.Column('id_info', db.Integer, db.ForeignKey('infoSorties.id_info'), primary_key=True)
 )
 
-userSortie_finies = db.Table('userSortie_finies',
+userInfoF = db.Table('userInfoF',
     db.Column('id_user', db.Integer, db.ForeignKey('users.id'), primary_key=True),
-    db.Column('id_sortie', db.Integer, db.ForeignKey('sorties.id_sortie'), primary_key=True)
+    db.Column('id_info', db.Integer, db.ForeignKey('infoSortiesFinies.id_info'), primary_key=True)
 )
 
 groupeSortie = db.Table('groupeSortie',
@@ -58,13 +58,14 @@ class User(UserMixin, db.Model):
         order_by='desc(Commentaire.timestamp)'
     )
     demandes = db.relationship('Demande', secondary=demandeUser, lazy='subquery')
-    sorties_a_venir = db.relationship('Sortie', secondary=userSortie_a_venir, lazy='subquery',
-        backref=db.backref('participants', lazy=False))
-    sorties_finies = db.relationship('Sortie', secondary=userSortie_finies, lazy='subquery')
+    sorties_a_venir = db.relationship('InfoSortie', secondary=userInfo, lazy='subquery', 
+        backref=db.backref('participant', lazy=False))
+    sorties_finies = db.relationship('InfoSortieFinie', secondary=userInfoF, lazy='subquery', 
+        backref=db.backref('participant_', lazy=False))
 
 
     def __repr__(self):
-        return '<User {}>'.format(self.prenom)
+        return '{}'.format(self.prenom)
 
     def set_password(self, password):           # Encode le mot de passe
         self.password_hash = generate_password_hash(password)
@@ -98,9 +99,11 @@ class Sortie(db.Model):
         single_parent=True,
         order_by='asc(Commentaire.timestamp)'
     )
+    participants = db.relationship('InfoSortie', lazy='subquery', backref='sortie')
+    participants_ = db.relationship('InfoSortieFinie', lazy='subquery', backref='sortie')
 
     def __repr__(self):
-        return '<Sortie {}>'.format(self.nom)
+        return '{}'.format(self.nom)
 
 
 class Commentaire(db.Model):
@@ -135,6 +138,23 @@ class Demande(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 
+class InfoSortie(db.Model):
+    __tablename__ = 'infoSorties'
+    id_info = db.Column(db.Integer, primary_key=True)
+    id_user = db.Column(db.Integer, db.ForeignKey('users.id'))
+    id_sortie = db.Column(db.Integer, db.ForeignKey('sorties.id_sortie'))
+    organisateur = db.Column(db.Boolean)
+    nb_inscrits = db.Column(db.Integer)
+
+class InfoSortieFinie(db.Model):
+    __tablename__ = 'infoSortiesFinies'
+    id_info = db.Column(db.Integer, primary_key=True)
+    id_user = db.Column(db.Integer, db.ForeignKey('users.id'))
+    id_sortie = db.Column(db.Integer, db.ForeignKey('sorties.id_sortie'))
+    organisateur = db.Column(db.Boolean)
+    nb_inscrits = db.Column(db.Integer)
+
+
 #--------------------------------------------------------------------------------
 # Schemas servant a afficher les entités au format Json
 
@@ -144,8 +164,8 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
         sqla_session = db.session
         load_instance = True
     commentaires = fields.Nested('ComSchema', default=[], many=True, exclude=("auteur","sortie",), dump_only=True)
-    sorties_a_venir = fields.Nested('SortieSchema', default=[], many=True, exclude=("participants","commentaires",), dump_only=True)
-    sorties_finies = fields.Nested('SortieSchema', default=[], many=True, exclude=("participants","commentaires",), dump_only=True)
+    sorties_a_venir = fields.Nested('InfoSortieSchema', default=[], many=True, exclude=("participant",), dump_only=True)
+    sorties_finies = fields.Nested('InfoSortieSchema', default=[], many=True, exclude=("participant",), dump_only=True)
     groupes = fields.Nested('GroupeSchema', default=[], many=True, exclude=("membres","demandes",), dump_only=True)
     demandes = fields.Nested('DemandeSchema', default=[], many=True, dump_only=True)
 
@@ -155,8 +175,8 @@ class ComSchema(ma.SQLAlchemyAutoSchema):
         sqla_session = db.session
         include_fk = True
         load_instance = True
-    auteur = fields.Nested('UserSchema', default=None, many=False, exclude=("commentaires","sorties_a_venir","sorties_finies","groupes","demandes",), dump_only=True)
-    sortie = fields.Nested('SortieSchema', default=None, exclude=("commentaires","participants",), dump_only=True)
+    auteur = fields.Nested('UserSchema', default=None, exclude=("commentaires","sorties_a_venir","sorties_finies","groupes","demandes",), dump_only=True)
+    sortie = fields.Nested('SortieSchema', default=None, exclude=("commentaires","participants","participants_",), dump_only=True)
 
 class GroupeSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
@@ -174,7 +194,8 @@ class SortieSchema(ma.SQLAlchemyAutoSchema):
         sqla_session = db.session
         load_instance = True
     commentaires = fields.Nested('ComSchema', default=[], many=True, exclude=("sortie","auteur",), dump_only=True)
-    participants = fields.Nested('UserSchema', default=[], many=True, exclude=("commentaires","sorties_a_venir","sorties_finies","groupes","demandes",), dump_only=True)
+    participants = fields.Nested('InfoSortieSchema', default=[], many=True, exclude=("sortie",), dump_only=True)
+    participants_ = fields.Nested('InfoSortieFinieSchema', default=[], many=True, exclude=("sortie",), dump_only=True)
     groupe = fields.Nested('GroupeSchema', default=None, exclude=("membres",), dump_only=True)
 
 
@@ -184,6 +205,26 @@ class DemandeSchema(ma.SQLAlchemyAutoSchema):
         sqla_session = db.session
         include_fk = True
         load_instance = True
+
+
+class InfoSortieSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = InfoSortie
+        sqla_session = db.session
+        include_fk = True
+        load_instance = True
+    participant = fields.Nested('UserSchema', default=[], exclude=("commentaires","sorties_a_venir","sorties_finies","groupes","demandes",), dump_only=True)
+    sortie = fields.Nested('SortieSchema', default=[], exclude=("commentaires","participants","participants_",), dump_only=True)
+
+class InfoSortieFinieSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = InfoSortieFinie
+        sqla_session = db.session
+        load_instance = True
+    participant_ = fields.Nested('UserSchema', default=[], exclude=("commentaires","sorties_a_venir","sorties_finies","groupes","demandes",), dump_only=True)
+    sortie = fields.Nested('SortieSchema', default=[], exclude=("commentaires","participants","participants_",), dump_only=True)
+
+
 
 @login.user_loader
 def load_user(id):
