@@ -318,7 +318,7 @@ def register(id_sortie, organisateur, nb_inscrits):                        # Ins
     return 201
 
 
-@login_required
+# @login_required
 def cancel_registration(id_sortie):             # Désinscription d'une sortie
     """
     requête associée:
