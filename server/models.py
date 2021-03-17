@@ -112,6 +112,7 @@ class Groupe(db.Model):
     id_owner = db.Column(db.Integer, db.ForeignKey('users.id'))
     description = db.Column(db.String, nullable=False)
     nbMembres = db.Column(db.Integer)
+    photo = db.Column(db.String(32))
     demandes = db.relationship('Demande', secondary=demandeGroupe, lazy='subquery',
         backref=db.backref('groupe', lazy=False))
     sorties = db.relationship('Sortie', secondary=groupeSortie, lazy='subquery',
