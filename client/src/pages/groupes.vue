@@ -116,7 +116,7 @@ export default {
       const path = `http://localhost:5000/api/groupe/${groupeID}/membres`;
       axios.post(path)
         .then((res) => {
-          
+          this.$router.go();
         })
         .catch((error) => {
           console.error(error);
