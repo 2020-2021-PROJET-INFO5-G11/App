@@ -294,7 +294,7 @@ def register(id_sortie):                        # Inscription à une sortie
     return 201
 
 
-@login_required
+# @login_required
 def cancel_registration(id_sortie):             # Désinscription d'une sortie
     """
     requête associée:
@@ -310,8 +310,9 @@ def cancel_registration(id_sortie):             # Désinscription d'une sortie
         abort(404, f'Sortie not found for Id: {id}')
     
     sortie_a_venir.nbInscrits -= 1
-    current_user.sorties_a_venir.remove(sortie_a_venir)
-    db.session.add(current_user)
+    user = User.query.get(1)
+    user.sorties_a_venir.remove(sortie_a_venir) ## TEST : HERE I USE FIRST USER INSTEAD OF CURRENT USER
+    db.session.add(user) ## TEST : HERE I USE FIRST USER INSTEAD OF CURRENT USER
     db.session.commit()
 
     return 201
