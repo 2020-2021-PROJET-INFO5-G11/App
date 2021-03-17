@@ -138,7 +138,7 @@
             <ul class = "scrollmenu">
               <br>
               <li class="veritcal">
-                <span class="vertical"> {{username}} (vous) </span>
+                <span class="vertical"> {{current_user.prenom}} {{current_user.nom}} (vous) </span>
               </li>
 
               <li class="veritcal" v-for="o in organisateurs" v-bind:key="o">
@@ -197,9 +197,9 @@ export default {
       //sortie: this.getSortie(),
       sortie: {},
       editForm: {}, 
-      username: 'Vernet Maxime',
       types: ['Autre', 'Cinéma', 'Culture', 'Musée', 'Musique', 'Repas', 'Sport'],
-      organisateurs: ['ElJraidi Rim', 'Sajide Idriss', 'Manissadjian Gabriel'],
+      current_user: {},
+      organisateurs: [],
       images: ['cinema', 'escalade', 'escalade-sur-glace', 'football', 'foot-us', 'gymnastique', 'musée', 'parc', 'piscine', 'randonnée', 'rugby', 'salle-de-bloc', 'ski', 'tennis'],
       organisateur: null,
     };
@@ -212,6 +212,16 @@ export default {
         return true;
       }
       return false;
+    },
+    getCurrentUser() {
+      const path = 'http://localhost:5000/api/user/current';
+      axios.get(path)
+        .then((res) => {
+          this.current_user = res.data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     },
     getSortie() {
       const path = `http://localhost:5000/api/sortie/${this.$route.params.id}`;
@@ -337,7 +347,7 @@ export default {
   },
   created() {
       this.getSortie();
-      console.log("done");
+      this.getCurrentUser();
     },
 };
 </script>
