@@ -195,7 +195,7 @@ def get_current():
     """
     
     user_schema = UserSchema()
-    return user_schema.dump(User.query.get(1)) ## TEST : HERE I USE FIRST USER INSTEAD OF CURRENT USER
+    return user_schema.dump(User.query.first()) ## TEST : HERE I USE FIRST USER INSTEAD OF CURRENT USER
 
 
 @login_required
