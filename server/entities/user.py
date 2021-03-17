@@ -3,7 +3,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Message
 
 from config import db, mail
-from models import User, UserSchema, Sortie, SortieSchema, Commentaire, ComSchema, Groupe, GroupeSchema, Demande, DemandeSchema, InfoSortie, InfoSortieSchema
+from models import User, UserSchema, Sortie, SortieSchema, Commentaire, ComSchema, Groupe, GroupeSchema, Demande, DemandeSchema, InfoSortie, InfoSortieSchema, InfoSortieFinie, InfoSortieFinieSchema
 
 
 def get_all_users():
@@ -12,8 +12,9 @@ def get_all_users():
         /user
     """
     
-    users = User.query.all()
-    user_schema = UserSchema(many=True)
+    users = InfoSortie.query.all()
+    #users = User.query.all()
+    user_schema = InfoSortieSchema(many=True)
     return user_schema.dump(users)
 
 
@@ -229,8 +230,8 @@ def get_incoming_activities():
     """
 
     sorties = current_user.sorties_a_venir
-    sortie_schema = SortieSchema(many=True)
-    return sortie_schema.dump(sorties)
+    info_schema = InfoSortieSchema(many=True)
+    return info_schema.dump(sorties)
 
 
 @login_required
@@ -241,8 +242,8 @@ def get_previous_activities():
     """
     
     sorties = current_user.sorties_finies
-    sortie_schema = SortieSchema(many=True)
-    return sortie_schema.dump(sorties)
+    info_schema = InfoSortieFinieSchema(many=True)
+    return info_schema.dump(sorties)
 
 
 #@login_required
@@ -262,10 +263,16 @@ def switch_to_previous(id_sortie):              # Une sortie à venir devient un
     if info is None:
         abort(404, f'{current_user} is not registered to Sortie {id_sortie}')
     
-    current_user.sorties_finies.append(info)
-    current_user.sorties_a_venir.remove(info)
+    info2 = InfoSortieFinie(
+        id_user = info.id_user,
+        id_sortie = info.id_sortie,
+        organisateur = info.organisateur,
+        nb_inscrits = info.nb_inscrits,
+    )
 
-    db.session.add(current_user)
+    db.session.delete(info)
+    current_user.sorties_finies.append(info2)
+
     db.session.commit()
 
     return 200
@@ -297,23 +304,14 @@ def register(id_sortie, organisateur, nb_inscrits):                        # Ins
         abort(401, f'{current_user} is already registered to Sortie {id_sortie}')
 
     info = InfoSortie(
+        id_user = current_user.id,
         id_sortie = id_sortie,
         organisateur = organisateur,
         nb_inscrits = nb_inscrits,
     )
-
-    """i = {
-        'id_user': current_user.id,
-        'id_sortie': id_sortie,
-        'organisateur': organisateur,
-        'nb_inscrits': nb_inscrits
-    }
-
-    schema = InfoSortieSchema()
-    info = schema.load(i, session=db.session)
-"""
     
-    current_user.sorties_a_venir.append(info)    
+    current_user.sorties_a_venir.append(info)
+    db.session.commit()
     info.sortie.nbInscrits += nb_inscrits
     db.session.commit()
 
