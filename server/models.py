@@ -7,6 +7,11 @@ from marshmallow_sqlalchemy import fields
 from config import db, ma, login
 
 
+userInfo = db.Table('userInfo',
+    db.Column('id_user', db.Integer, db.ForeignKey('users.id'), primary_key=True),
+    db.Column('id_info', db.Integer, db.ForeignKey('infoSorties.id_info'), primary_key=True)
+)
+
 groupeSortie = db.Table('groupeSortie',
     db.Column('id_groupe', db.Integer, db.ForeignKey('groupes.id_groupe'), primary_key=True),
     db.Column('id_sortie', db.Integer, db.ForeignKey('sorties.id_sortie'), primary_key=True)
@@ -48,8 +53,10 @@ class User(UserMixin, db.Model):
         order_by='desc(Commentaire.timestamp)'
     )
     demandes = db.relationship('Demande', secondary=demandeUser, lazy='subquery')
-    sorties_a_venir = db.relationship('InfoSortie', lazy='subquery', backref='participant')
-    sorties_finies = db.relationship('InfoSortie', lazy='subquery')
+    sorties_a_venir = db.relationship('InfoSortie', secondary=userInfo, lazy='subquery', 
+        backref=db.backref('participant', lazy=False))
+    sorties_finies = db.relationship('InfoSortie', secondary=userInfo, lazy='subquery', 
+        backref=db.backref('participant_', lazy=False))
 
 
     def __repr__(self):
