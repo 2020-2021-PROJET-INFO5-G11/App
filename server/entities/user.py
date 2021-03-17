@@ -335,7 +335,7 @@ def cancel_registration(id_sortie):             # Désinscription d'une sortie
     if info is None:
         abort(404, f'{current_user} is not registered to Sortie {id_sortie}')
     
-    info.sorties.nbInscrits -= info.nb_inscrits
+    info.sortie.nbInscrits -= info.nb_inscrits
     db.session.delete(info)
     db.session.add(current_user)
     db.session.commit()
