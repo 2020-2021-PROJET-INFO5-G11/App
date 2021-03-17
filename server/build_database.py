@@ -264,12 +264,11 @@ for groupe in GROUPES:
     db.session.add(g)
 
 for user in USERS:
-    u = User(prenom=user['prenom'], nom=user['nom'], \
+    u = User(password_hash=user['password_hash'], prenom=user['prenom'], nom=user['nom'], \
         email=user['email'], photo=user['photo'], dateNaissance=user['dateNaissance'], ville=user['ville'], \
         preferences=user['preferences'], sexe=user['sexe'], bio=user['bio'], sorties_a_venir=user['sorties_a_venir'], \
         sorties_finies=user['sorties_finies'], role=user['role'], \
         feedbacks=user['feedbacks'])
-    u.set_password(user['password_hash'])
         
     for com in user.get("commentaires"):
         contenu, timestamp = com
