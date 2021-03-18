@@ -145,7 +145,7 @@
         <li style="height: 250px;">
           <div class="rect img-container" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
             <img class="fit-picture" :src="getImgUrl(sortie.photo)"  >
-            <img v-if="sortie.capaciteMax - sortie.nbInscrits == 0" class="overlay-img fit-picture" src="../complet.png"  >
+            <img v-if="sortie.capaciteMax - sortie.nbInscrits == 0" class="overlay-img fit-picture" src="../assets/complet.png"  >
           </div> <br>
         </li>
 
@@ -218,7 +218,7 @@
       
       <!-- Edit button -->
       <div @click="$router.push({path: `/modification-sortie/${id}`})" class="edit">
-        <img src="../edit.png" width="60">
+        <img src="../assets/edit.png" width="60">
         <br> <span> Modifier </span>
 
       </div>
@@ -240,7 +240,7 @@
       <div v-for="c in comments" v-bind:key="c"
              class="comment">
         <div style="padding: 5px;">
-          {{ c }}
+          {{c.timestamp}} - {{ c.contenu }}
         </div>
       </div>
 
@@ -279,6 +279,7 @@ export default {
         .then((res) => {
           this.id = this.$route.params.id;
           this.sortie = res.data;
+          this.comments= res.data.commentaires;
           this.getCurrentUser();
         })
         .catch((error) => {
@@ -286,7 +287,7 @@ export default {
         });
     },
     getImgUrl(image) {
-      return require('../'+image+'.jpg');
+      return require('../assets/'+image+'.jpg');
     },
     subscribe() {
       const path = `http://localhost:5000/api/sortie/${this.$route.params.id}/register`;

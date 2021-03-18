@@ -38,7 +38,7 @@
         <!-- Image -->
         <div class="rect img-container" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
           <img class="fit-picture" :src="getImgUrl(sortie.photo)"  >
-          <img v-if="sortie.capaciteMax - sortie.nbInscrits == 0" class="overlay-img fit-picture" src="../complet.png"  >
+          <img v-if="sortie.capaciteMax - sortie.nbInscrits == 0" class="overlay-img fit-picture" src="../assets/complet.png"  >
           {{sortie.nbInscrits}} inscrits
         </div> <br>
 
@@ -52,20 +52,53 @@
         <div class="data row" style="padding-left: 29px;">
           <!-- View activity-->
           <div class="view" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
-            Voir <img src="../view.png" width="20">
+            Voir <img src="../assets/view.png" width="20">
           </div>&ensp;
           <!-- Edit button -->
           <div class="edit" @click="$router.push({path: `/modification-sortie/${sortie.id_sortie}`})">
-            Modifier <img src="../edit.png" width="20">
+            Modifier <img src="../assets/edit.png" width="20">
           </div>&ensp;
           <!-- Delete activity -->
-          <div class="delete" @click="onDeleteSortie(sortie)">
-            Supprimer <img src="../delete.png" width="20">
+          <div class="delete" v-b-modal="'suppression-modal'" @click="selectedSortie = sortie">
+            Supprimer <img src="../assets/delete.png" width="20">
           </div>
+
         </div>  
       </li>
 
     </ul>
+
+    <!-- Suppression -->
+    <b-modal ref="suppression"
+        id="suppression-modal"
+        size="xl"
+        title="Page de suppression de sortie"
+        hide-footer>
+
+      <div style="text-align: center;">
+        <span style=" font-size: 30px;"> Êtes-vous sûr de vouloir supprimer</span><br><br><br>
+      </div>
+
+      <div class="justify-center">
+
+        <!-- Image -->
+        <div class="rect img-container">
+          <img v-if="selectedSortie.photo !== undefined" class="fit-picture" :src="getImgUrl(selectedSortie.photo)">
+        </div> <br>
+
+        <!-- Name -->
+        <div class="data">
+          <span class="date"> {{selectedSortie.date}} </span>
+          <span class="nom"> {{selectedSortie.nom}} </span><br> 
+        </div>
+
+        <!-- Buttons -->
+        <div class="data">
+          <button style = "color: green" @click="$bvModal.hide('suppression-modal'); onDeleteSortie(selectedSortie); selectedSortie = {};"> Oui </button>
+          &ensp;<button style = "color: red" @click="$bvModal.hide('suppression-modal'); selectedSortie = {};"> Non </button>
+        </div>
+      </div>
+    </b-modal>
 
     <!-- Footer -->
     <br><br>
@@ -84,6 +117,7 @@ export default {
   data() {
     return {
       key: 0,
+      selectedSortie: {},
       sorties: [],
       addSortieForm: {
         nom: '',
@@ -109,7 +143,7 @@ export default {
       this.key += 1;
     },
     getImgUrl(image) {
-      return require('../'+image+'.jpg');
+      return require('../assets/'+image+'.jpg');
     },
     getSorties() {
       const path = 'http://localhost:5000/api/sortie';
@@ -326,4 +360,15 @@ img:hover {
 h1{
   margin-left:1em;
 }
+
+img, span, button {
+    display: inline;
+    float: none;
+}
+
+.justify-center {
+  display: grid;
+  justify-content: center;
+}
+
 </style>

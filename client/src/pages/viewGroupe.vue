@@ -123,7 +123,7 @@
       
       <!-- Edit button -->
       <div @click="$router.push({path: `/modification-groupe/${id}`})" class="edit">
-        <img src="../edit.png" width="60">
+        <img src="../assets/edit.png" width="60">
         <br> <span> Modifier </span>
       </div>
 
@@ -214,7 +214,7 @@ export default {
         });
     },
    getImgUrl(image) {
-      return require('../'+image+'.jpg');
+      return require('../assets/'+image+'.jpg');
     },
     accept(groupeID) {
       const path = `http://localhost:5000/api/groupe/${groupeID}/membres`;

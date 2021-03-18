@@ -113,7 +113,7 @@ export default {
       this.getCurrentUser();
     },
     getImgUrl(image) {
-      return require('../'+image+'.jpg');
+      return require('../assets/'+image+'.jpg');
     },
     onHide(evt) {
       evt.preventDefault();

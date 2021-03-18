@@ -29,15 +29,15 @@
               <div class="data row" style="padding-left: 29px;">
                 <!-- View activity-->
                 <div class="view" @click="$router.push({path: `/groupe/${groupe.id_groupe}`})">
-                  Voir <img src="../view.png" width="20">
+                  Voir <img src="../assets/view.png" width="20">
                 </div>&ensp;
                 <!-- Edit button -->
                 <div class="edit" @click="$router.push({path: `/modification-groupe/${groupe.id_groupe}`})">
-                  Modifier <img src="../edit.png" width="20">
+                  Modifier <img src="../assets/edit.png" width="20">
                 </div>&ensp;
                 <!-- Delete activity -->
-                <div class="delete" @click="onDeleteGroupe(groupe)">
-                  Supprimer <img src="../delete.png" width="20">
+                <div class="delete" v-b-modal="'suppression-modal'" @click="selectedGroupe = groupe">
+                  Supprimer <img src="../assets/delete.png" width="20">
                 </div>
                 <br>
                 &ensp;
@@ -63,17 +63,49 @@
           <div class="data row" style="padding-left: 59px;">
             <!-- View activity-->
             <div class="accept" @click="accept(demande.id_groupe)">
-              Accepter <img src="../accept.png" width="20">
+              Accepter <img src="../assets/accept.png" width="20">
             </div>&ensp;
             <!-- Edit button -->
             <div class="refuse" @click="refuse(demande.id_groupe)">
-              Refuser <img src="../refuse.png" width="20">
+              Refuser <img src="../assets/refuse.png" width="20">
             </div>&ensp;
           </div>  
         </li>
         <br><br>
       </ul>
       <br><br>
+
+      <!-- Suppression -->
+      <b-modal ref="suppression"
+        id="suppression-modal"
+        size="xl"
+        title="Page de suppression de sortie"
+        hide-footer>
+
+        <div style="text-align: center;">
+          <span style=" font-size: 30px;"> Êtes-vous sûr de vouloir supprimer</span><br><br><br>
+        </div>
+
+        <div class="justify-center">
+
+          <!-- Image -->
+          <div class="rect img-container">
+            <img v-if="selectedGroupe.photo !== undefined" class="fit-picture" :src="getImgUrl(selectedGroupe.photo)">
+          </div> <br>
+
+          <!-- Name -->
+          <div class="data">
+            <span class="date"> {{selectedGroupe.date}} </span>
+            <span class="nom"> {{selectedGroupe.nom}} </span><br> 
+          </div>
+
+          <!-- Buttons -->
+          <div class="data">
+            <button style = "color: green" @click="$bvModal.hide('suppression-modal'); onDeleteGroupe(selectedGroupe); selectedGroupe = {};"> Oui </button>
+            &ensp;<button style = "color: red" @click="$bvModal.hide('suppression-modal'); selectedGroupe = {};"> Non </button>
+          </div>
+        </div>
+      </b-modal>
 
 
     <!-- Footer -->
@@ -92,6 +124,7 @@ export default {
   components: { Header, NavBar, Footer },
   data() {
     return {
+      selectedGroupe: {},
       groupes: [],
       invitation_groupe: [],
       demandes: [],
@@ -176,7 +209,7 @@ export default {
         });
     },
     getImgUrl(image) {
-      return require('../'+image+'.jpg');
+      return require('../assets/'+image+'.jpg');
     },
     removeGroupe(groupeID) {
       const path = `http://localhost:5000/api/groupe/${groupeID}`;
@@ -299,6 +332,11 @@ h1{
 
 .switch {
   color: rgb(9, 94, 79);
+}
+
+.justify-center {
+  display: grid;
+  justify-content: center;
 }
 
 </style>

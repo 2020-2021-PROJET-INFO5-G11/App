@@ -7,7 +7,7 @@
 
       <li class="left">
         <div style="text-align: center;" class="col-md-auto">
-          <img class="fit-picture" src="../logo_blanc.png"  >
+          <img class="fit-picture" src="../assets/logo_blanc.png"  >
           <h5 style="padding-left: 5px;"> Osons sortir </h5>  
         </div>
       </li>
@@ -56,7 +56,7 @@
     </b-modal>
 
     <b-container>
-      <img class="background" src="../reception.jpg"/>
+      <img class="background" src="../assets/reception.jpg"/>
     </b-container>
 
     <Footer/>
