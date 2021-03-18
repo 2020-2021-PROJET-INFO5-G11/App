@@ -98,9 +98,9 @@
             <br><br>
             <div>
               <span> Capacité minimum </span>
-              <input  v-model="capaciteMin" @input="onChange()" type="number" style="width:70px;" required/>
+              <input  v-model="capaciteMin" @change="onChange()" type="number" style="width:70px;" required/>
               <span style="margin-left: 10px;"> Capacité maximum </span>
-              <input  v-model="capaciteMax" @input="onChange()" type="number" style="width:70px;" required/>
+              <input  v-model="capaciteMax" @change="onChange()" type="number" style="width:70px;" required/>
             <br><br>
             </div>
 
@@ -307,7 +307,12 @@ export default {
       this.editForm.typeSortie = this.typeSortie;
       this.editForm.photo = this.photo;
       this.editForm.description = this.description;
-      this.editForm.dateLimite = this.dateLimite;      
+      this.editForm.dateLimite = this.dateLimite;     
+      
+      if(this.editForm.capaciteMin > this.editForm.capaciteMax){
+        this.editForm.capaciteMin = this.editForm.capaciteMax;
+        this.capaciteMin = this.capaciteMax;
+      } 
     },
     updateSortie(payload, sortieID) {
       const path = `http://localhost:5000/api/sortie/${sortieID}`;

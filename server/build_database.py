@@ -78,6 +78,7 @@ SORTIES = [
         'nbInscrits': 0,
         'description': 'Ça vous dit de monter les voir la passerelle himalayenne du lac de Monteynard ?',
         'dateLimite': '2021-03-11',
+        'archivee' : False,
         'commentaires': [
             ("C'est ou Monteynard ?", "2019-01-07 22:47:54"),
             ("Je sais pas ", "2019-01-08 20:17:31"),
@@ -100,6 +101,7 @@ SORTIES = [
         'nbInscrits': 0,
         'description': 'J\'ai un tarif de groupe pour aller voir ce filme au cinéma.',
         'dateLimite': '2021-03-03',
+        'archivee' : False,
         'commentaires': [
             ("coucou", "2019-01-07 22:47:54")
         ],
@@ -120,6 +122,7 @@ SORTIES = [
         'nbInscrits': 0,
         'description': 'La balade du Frémont',
         'dateLimite': '2021-03-14',
+        'archivee' : False,
         'commentaires': [
             ("Trop bien !", "2021-03-04 23:24:45")
         ],
@@ -140,6 +143,7 @@ SORTIES = [
         'nbInscrits': 0,
         'description': 'Petit match ?',
         'dateLimite': '2021-03-11',
+        'archivee' : False,
         'commentaires': [
             ("C'est ou le rendez-vous ?", "2019-01-07 22:47:54"),
             ("C'est marqué dans la description", "2019-01-08 22:02:54"),
@@ -161,6 +165,7 @@ SORTIES = [
         'nbInscrits': 0,
         'description': 'Tarif : 10e / heure',
         'dateLimite': '2021-03-11',
+        'archivee' : False,
         'commentaires': [],
     },
     {
@@ -179,6 +184,7 @@ SORTIES = [
         'nbInscrits': 0,
         'description': 'Inscription semestre 4',
         'dateLimite': '2021-03-11',
+        'archivee' : False,
         'commentaires': [
             ("C'est résérvé aux licences ?", "2019-01-07 22:47:54"),
             ("Non on peut s'inscrire en Master ", "2019-01-08 20:17:31"),
@@ -201,6 +207,7 @@ SORTIES = [
         'nbInscrits': 0,
         'description': 'Niveau confirmé minimum',
         'dateLimite': '2021-03-11',
+        'archivee' : False,
         'commentaires': [
             ("On nous prète du materiel ?", "2019-01-07 22:47:54"),
             ("Non il faut venir avec le siens", "2019-01-08 20:17:31"),
@@ -222,6 +229,7 @@ SORTIES = [
         'nbInscrits': 0,
         'description': '4 équipes minimum',
         'dateLimite': '2021-03-11',
+        'archivee' : False,
         'commentaires': [],
     },
     {
@@ -240,6 +248,7 @@ SORTIES = [
         'nbInscrits': 0,
         'description': 'Ça vous dit d\'aller voir le marathon HP avec moi mercredi ?',
         'dateLimite': '2021-03-11',
+        'archivee' : False,
         'commentaires': [],
     }
 ]
@@ -258,7 +267,7 @@ for sort in SORTIES:
         heure=sort['heure'], duree=sort['duree'], point_rdv=sort['point_rdv'], capaciteMin=sort['capaciteMin'], \
         capaciteMax=sort['capaciteMax'], privee=sort['privee'], id_groupe=sort['id_groupe'], \
         typeSortie=sort['typeSortie'], photo=sort['photo'], nbInscrits=sort['nbInscrits'], \
-        description=sort['description'], dateLimite=sort['dateLimite'])
+        description=sort['description'], dateLimite=sort['dateLimite'], archivee=sort['archivee'])
 
     for com in sort.get("commentaires"):
         contenu, timestamp = com

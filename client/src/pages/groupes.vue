@@ -11,7 +11,8 @@
         <i class="right fa fa-plus-circle fa-3x"
          @click="$router.push('/creation-groupe')"> Créer un groupe</i> <br><br>
 
-      <h1> Vos groupes </h1><br> 
+      <br><hr>
+      <h1> Vos groupes </h1><hr><br> 
       <ul class="scrollmenu">
         <li v-for="groupe in current_user.groupes" :key="groupe">
 
@@ -47,8 +48,8 @@
         </li>
       </ul>
 
-      <br><br>
-      <h1> Invitations à des groupes </h1> <br>
+      <br><hr>
+      <h1> Invitations à des groupes </h1><hr><br>
       <ul class="scrollmenu">
         <li v-for="(demande, index) in current_user.demandes" :key="demande">
           <!-- Nom + Image -->
@@ -78,8 +79,8 @@
       <!-- Suppression -->
       <b-modal ref="suppression"
         id="suppression-modal"
-        size="xl"
-        title="Page de suppression de sortie"
+        size="l"
+        title="Page de suppression de groupe"
         hide-footer>
 
         <div style="text-align: center;">

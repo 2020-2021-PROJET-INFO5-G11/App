@@ -268,7 +268,6 @@ export default {
 }
 
 .id:hover {
-  font-size: 50px;
   cursor: copy;
 }
 

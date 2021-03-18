@@ -62,8 +62,6 @@ def create(groupe):
 
     id_groupe = groupe.get('id_groupe')
 
-    # Using first user of users list since current doesn't work
-    user = User.query.get(1)
 
     if Groupe.query.get(id_groupe) is not None:
         abort(409, f'id {id_groupe} is already used for another group')
@@ -84,6 +82,9 @@ def create(groupe):
     new_groupe = schema.load(groupe, session=db.session)
     new_groupe.nbMembres += 1
 
+    # Using first user of users list since current doesn't work
+    user = User.query.get(1)
+    
     new_groupe.id_owner = user.id
     new_groupe.owner = user
     user.groupes.append(new_groupe)

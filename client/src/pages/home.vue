@@ -2,7 +2,7 @@
   <div>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Header -->
-    <Header title="Page d'accueil"/>
+    <Header :title="'Bonjour ' + current_user.prenom + ' ' + current_user.nom + ', voici votre page d\'accueil !'"/>
     <!-- NavBar -->
     <NavBar> </NavBar>
     <!-- Body -->
@@ -11,17 +11,17 @@
 
       <!-- Boutton créer une sortie -->
         <i class="right fa fa-plus-circle fa-3x"
-         @click="$router.push('/creation-sortie')"> Créer une sortie</i> <br>
+         @click="$router.push('/creation-sortie')"> Créer une sortie</i> <br><br>
 
       <!-- Sorties à venir -->
-      <h1> Bonjour {{current_user.prenom}} {{current_user.nom}}</h1><hr><br>
-
-      <h1> Vos sorties à venir </h1> <br>
+      <br><hr>
+      <h1> Vos sorties à venir </h1><hr><br>
       <ul class="scrollmenu">
         <li v-for="sortie in current_user.sorties_a_venir" :key="sortie">
           <!-- Image -->
-          <div class="rect" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
+          <div class="rect img-container" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
             <img class="fit-picture" :src="getImgUrl(sortie.photo)"  >
+            <img v-if="sortie.capaciteMax - sortie.nbInscrits == 0" class="overlay-img fit-picture" src="../assets/complet.png"  >
           </div> <br>
 
           <!-- Name -->
@@ -46,7 +46,7 @@
                 </div>
                 <br>
                 <!-- View activity-->
-                <div class="switch" @click="switchSortie(sortie.id_sortie)">
+                <div class="switch" @click="switchSortie(sortie.id_sortie); archiverSortie(sortie);">
                   Déplacer vers votre historique <img src="../assets/switch.png" width="20">
                 </div>&ensp;
               </div>
@@ -56,15 +56,15 @@
         <br><br>
       </ul>
 
-      <br><br>
-
       <!-- Historique de sorties -->
-      <h1> Votre historique de sorties </h1> <br>
+      <hr>
+      <h1> Votre historique de sorties </h1><hr><br>
       <ul class="scrollmenu">
         <li v-for="sortie in current_user.sorties_finies" :key="sortie">
           <!-- Image -->
-          <div class="rect" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
+          <div class="rect img-container" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
             <img class="fit-picture" :src="getImgUrl(sortie.photo)"  >
+            <img v-if="sortie.capaciteMax - sortie.nbInscrits == 0" class="overlay-img fit-picture" src="../assets/complet.png"  >
           </div> <br>
 
           <!-- Name -->
@@ -98,7 +98,7 @@
       <!-- Suppression -->
       <b-modal ref="suppression"
         id="suppression-modal"
-        size="xl"
+        size="l"
         title="Page de suppression de sortie"
         hide-footer>
 
@@ -186,6 +186,38 @@ export default {
           this.getCurrentUser();
         });
     },
+    updateSortie(payload, sortieID) {
+      const path = `http://localhost:5000/api/sortie/${sortieID}`;
+      axios.put(path, payload)
+        .then(() => {
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    archiverSortie(sortie) {
+      console.log(sortie)
+      const payload = {
+          nom: sortie.nom,
+          lieu: sortie.lieu,
+          date: sortie.date,
+          heure: sortie.heure,
+          duree: sortie.duree,
+          point_rdv: sortie.point_rdv,
+          nbInscrits: sortie.nbInscrits,
+          capaciteMin: parseInt(sortie.capaciteMin),
+          capaciteMax: parseInt(sortie.capaciteMax),
+          privee: sortie.privee,
+          typeSortie: sortie.typeSortie,
+          photo: sortie.photo,
+          nbInscrits: sortie.nbInscrits,
+          description: sortie.description,
+          dateLimite: sortie.dateLimite,
+          archivee: true,
+        };
+        this.updateSortie(payload, sortie.id_sortie);
+
+    },
     onDeleteSortie(sortie) {
       this.removeSortie(sortie.id_sortie);
     },
@@ -225,6 +257,16 @@ img:hover {
 .fit-picture {
   width: 320px;
   height: 210px;
+}
+
+.img-container {
+     position: relative;
+}
+
+.overlay-img {
+     position: absolute;
+     top: 0;
+     left: 0;
 }
 
 li {

@@ -9,9 +9,10 @@
     <!-- Boutton créer une sortie -->
     <br>
     <i class="right fa fa-plus-circle fa-3x"
-      @click="$router.push('/creation-sortie')"> Créer une sortie</i> <br>
+      @click="$router.push('/creation-sortie')"> Créer une sortie</i> <br><br>
 
     <!-- Title -->
+    <br><hr>
     <h1> Résultats de la recherche : {{$route.params.search}}</h1>
     <hr>
 
@@ -19,35 +20,37 @@
     <ul class="scrollmenu">
       <!-- -->
       <li v-for="(sortie) in sorties" :key="sortie">
-        <!-- Image -->
-        <div class="rect img-container" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
-          <img class="fit-picture" :src="getImgUrl(sortie.photo)"  >
-          <img v-if="sortie.capaciteMax - sortie.nbInscrits == 0" class="overlay-img fit-picture" src="../assets/complet.png"  >
-          {{sortie.nbInscrits}} inscrits
-        </div> <br>
+        <div v-if="sortie.archivee == false" style="padding: 4em;">
+          <!-- Image -->
+          <div class="rect img-container" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
+            <img class="fit-picture" :src="getImgUrl(sortie.photo)"  >
+            <img v-if="sortie.capaciteMax - sortie.nbInscrits == 0" class="overlay-img fit-picture" src="../assets/complet.png"  >
+            {{sortie.nbInscrits}} inscrits
+          </div> <br>
 
-        <!-- Name -->
-        <div class="data">
-          <span @click="$router.push({path: `/sortie/${sortie.id_sortie}`})" class="date"> {{sortie.date}} </span>
-          <span @click="$router.push({path: `/sortie/${sortie.id_sortie}`})" class="nom"> {{sortie.nom}} </span><br> 
-        </div>
+          <!-- Name -->
+          <div class="data">
+            <span @click="$router.push({path: `/sortie/${sortie.id_sortie}`})" class="date"> {{sortie.date}} </span>
+            <span @click="$router.push({path: `/sortie/${sortie.id_sortie}`})" class="nom"> {{sortie.nom}} </span><br> 
+          </div>
 
-        <div>
-          <!-- Buttons -->
-          <div class="data row" style="padding-left: 29px;">
-            <!-- View activity-->
-            <div class="view" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
-              Voir <img src="../assets/view.png" width="20">
-            </div>&ensp;
-            <!-- Edit button -->
-            <div class="edit" @click="$router.push({path: `/modification-sortie/${sortie.id_sortie}`})">
-              Modifier <img src="../assets/edit.png" width="20">
-            </div>&ensp;
-            <!-- Delete activity -->
-            <div class="delete" v-b-modal="'suppression-modal'" @click="selectedSortie = sortie">
-              Supprimer <img src="../assets/delete.png" width="20">
+          <div>
+            <!-- Buttons -->
+            <div class="data row" style="padding-left: 29px;">
+              <!-- View activity-->
+              <div class="view" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
+                Voir <img src="../assets/view.png" width="20">
+              </div>&ensp;
+              <!-- Edit button -->
+              <div class="edit" @click="$router.push({path: `/modification-sortie/${sortie.id_sortie}`})">
+                Modifier <img src="../assets/edit.png" width="20">
+              </div>&ensp;
+              <!-- Delete activity -->
+              <div class="delete" v-b-modal="'suppression-modal'" @click="selectedSortie = sortie">
+                Supprimer <img src="../assets/delete.png" width="20">
+              </div>
+              <br>
             </div>
-            <br>
           </div>
         </div>
       </li>
@@ -56,7 +59,7 @@
     <!-- Suppression -->
     <b-modal ref="suppression"
         id="suppression-modal"
-        size="xl"
+        size="l"
         title="Page de suppression de sortie"
         hide-footer>
 
@@ -178,7 +181,6 @@ i:hover {
 }
 li {
   display: inline-block;
-  padding: 4em;
 }
 .fit-picture {
   width: 320px;
