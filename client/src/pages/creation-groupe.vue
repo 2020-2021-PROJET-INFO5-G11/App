@@ -27,7 +27,7 @@
             <div>
               <label> Photo </label>
               <div class="rect">
-                <img @click="$bvModal.show('photo-modal')" class="fit-picture" :src="getImgUrl(addSortieForm.photo)">
+                <img @click="$bvModal.show('photo-modal')" class="fit-picture" :src="getImgUrl(addGroupForm.photo)">
               </div>
             </div>
 
@@ -47,12 +47,6 @@
               </ul>
 
             </b-modal>
-
-            <br><br><br>
-            <label> Description </label>
-            <div>
-              <textarea v-model="addSortieForm.description" cols="40" rows="5" style="width:300px; height:220px;" required/>
-            </div>
           </li>
 
           <!-- center -->
@@ -61,25 +55,15 @@
             <br><br><br><br>
 
             <div>
-              <span> Préciser le type du groupe </span>
-              <select v-model="addSortieForm.typeSortie">
-                <option v-for="t in types" :key="t">
-                  {{ t }}
-                </option>
-              </select>
-              <br><br>
+              <label> Nom </label>
+              <input v-model="addGroupForm.nom" type="text" style="width: 500px;" required/>
             </div>
+            <br><br>
 
+            <br>
+            <label> Description </label>
             <div>
-              <input v-model="addSortieForm.nom" type="text" style="width: 500px;" placeholder="Nom" required/>
-            </div>
-            <br><br>
-            <div>
-              <span> Capacité minimum </span>
-              <input  v-model="addSortieForm.capaciteMin" type="number" style="width:70px;" required/>
-              <span style="margin-left: 10px;"> Capacité maximum </span>
-              <input  v-model="addSortieForm.capaciteMax" type="number" style="width:70px;" required/>
-            <br><br>
+              <textarea v-model="addGroupForm.description" cols="40" rows="5" style="width:500px; height:220px;" required/>
             </div>
 
           </li>
@@ -110,10 +94,10 @@
             <ul class = "scrollmenu">
               <br>
               <li class="veritcal">
-                <span class="vertical"> {{username}} (vous) </span>
+                <span class="vertical"> {{current_user.nom}} {{current_user.prenom}} (vous) </span>
               </li>
 
-              <li class="veritcal" v-for="o in organisateurs" v-bind:key="o">
+              <li class="veritcal" v-for="o in administrators" v-bind:key="o">
                 <span class="vertical"> {{o}} </span>
                 <i class="fa fa-trash-o fa-1x" @click="suprimerOrganisateur(o)"></i>
               </li>
@@ -150,78 +134,66 @@ export default {
   components: { Header, NavBar, Footer },
   data() {
     return {
-      username: 'Vernet Maxime',
-      addSortieForm: {
+      addGroupForm: {
         nom: '',
-        lieu: '',
-        date: '',
-        heure: '',
-        duree: '',
-        point_rdv: '',
         capaciteMin: 1,
         capaciteMax: 50,
-        privee: false,
-        id_groupe: 0,
         typeSortie: 'Autre',
         photo: 'pas-de-photo',
-        nbInscrits: 0,
         description: '',
-        dateLimite: '',
-        commentaires: '',
       },
-      types: ['Autre', 'Cinéma', 'Culture', 'Musée', 'Musique', 'Repas', 'Sport'],
-      organisateurs: [],
-      images: ['cinema', 'escalade', 'escalade-sur-glace', 'football', 'foot-us', 'gymnastique', 'musée', 'parc', 'piscine', 'randonnée', 'rugby', 'salle-de-bloc', 'ski', 'tennis'],
-      organisateur: null,
+      current_user: {},
+      administrators: [],
+      images: ['basketball', 'cinema', 'escalade', 'escalade-sur-glace', 'football', 'foot-us', 'gymnastique', 'musée', 'parc', 'piscine', 'randonnée', 'rugby', 'salle-de-bloc', 'ski', 'tennis'],
     };
   },
   methods: {
     checkForm() {
       this.submit = true;
-      if (this.addSortieForm.nom && this.addSortieForm.lieu && this.addSortieForm.point_rdv && this.addSortieForm.date
-      && this.addSortieForm.heure && this.addSortieForm.dateLimite && this.addSortieForm.capaciteMin && this.addSortieForm.capaciteMax && this.addSortieForm.description) {
+      if (this.addGroupForm.nom && this.addGroupForm.capaciteMin && this.addGroupForm.capaciteMax && this.addGroupForm.description) {
         return true;
       }
       return false;
     },
     reset() {
-      this.addSortieForm = {
+      this.addGroupForm = {
         nom: '',
-        lieu: '',
-        date: '',
-        heure: '',
-        duree: '',
-        point_rdv: '',
         capaciteMin: 1,
         capaciteMax: 50,
-        privee: false,
-        id_groupe: 0,
         typeSortie: 'Autre',
         photo: 'pas-de-photo',
         description: '',
-        dateLimite: '',
-        commentaires: [],
       }
-      this.organisateurs = ['ElJraidi Rim', 'Sajide Idriss', 'Manissadjian Gabriel'];
+      this.administrators = ['ElJraidi Rim', 'Sajide Idriss', 'Manissadjian Gabriel'];
       this.organisateur = null;
+    },
+    getCurrentUser() {
+      const path = 'http://localhost:5000/api/user/current';
+      axios.get(path)
+        .then((res) => {
+          this.current_user = res.data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     },
     ajouterOrganisateur() {
       let exist = false;
       if (this.organisateur) {
-        this.organisateurs.forEach((value) => {
+        this.administrators.forEach((value) => {
           if (value === this.organisateur) {
             exist = true;
           }
         });
         if (!exist) {
-          this.organisateurs.push(this.organisateur);
+          this.administrators.push(this.organisateur);
         }
       }
     },
     suprimerOrganisateur(o) {
-      this.organisateurs.forEach((value, index) => {
+      this.administrators.forEach((value, index) => {
         if (value === o) {
-          this.organisateurs.splice(index, 1);
+          this.administrators.splice(index, 1);
         }
       });
     },
@@ -229,17 +201,17 @@ export default {
       return require('../'+image+'.jpg');
     },
     setImage(i) {
-      this.addSortieForm.photo = i;
+      this.addGroupForm.photo = i;
     },
     onHide(evt) {
       evt.preventDefault();
       this.$refs.addPhoto.hide("photo-modal");
     },
-    addSortie(payload) {
-      const path = 'http://localhost:5000/api/sortie';
+    addGroup(payload) {
+      const path = 'http://localhost:5000/api/groupe';
       axios.post(path, payload)
         .then(() => {
-          this.$router.push({path: `/sorties`});
+          this.$router.push({path: `/groupes`});
         })
         .catch((error) => {
           console.log(error);
@@ -249,26 +221,17 @@ export default {
       if(this.checkForm() === true ){
         evt.preventDefault();
         const payload = {
-          nom: this.addSortieForm.nom,
-          lieu: this.addSortieForm.lieu,
-          date: this.addSortieForm.date,
-          heure: this.addSortieForm.heure,
-          duree: this.addSortieForm.duree,
-          point_rdv: this.addSortieForm.point_rdv,
-          capaciteMin: parseInt(this.addSortieForm.capaciteMin),
-          capaciteMax: parseInt(this.addSortieForm.capaciteMax),
-          privee: this.addSortieForm.privee,
-          id_groupe: this.addSortieForm.id_groupe,
-          typeSortie: this.addSortieForm.typeSortie,
-          photo: this.addSortieForm.photo,
-          nbInscrits: 1,
-          description: this.addSortieForm.description,
-          dateLimite: this.addSortieForm.dateLimite,
-          //commentaires: this.addSortieForm.commentaires,
+          nom: this.addGroupForm.nom,
+          photo: this.addGroupForm.photo,
+          description: this.addGroupForm.description,
+          nbMembres: 0,
         };
-        this.addSortie(payload);
+        this.addGroup(payload);
       }
     }
+  },
+  created() {
+    this.getCurrentUser();
   },
 };
 </script>

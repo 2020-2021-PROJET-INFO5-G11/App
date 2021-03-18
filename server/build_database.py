@@ -221,12 +221,24 @@ SORTIES = [
 
 GROUPES = [
     {
+        'id_groupe' : 1,
         'nom': 'Polytech',
         'description': 'Rando entre popos',
         'nbMembres': 0,
         'membres': [],
         'sorties': [],
         'demandes': [],
+        'photo': 'randonnée',
+    },
+    {
+        'id_groupe': 7,
+        'nom': 'Equipe 7',
+        'description': 'L\'équipe de naruto',
+        'nbMembres': 0,
+        'membres': [],
+        'sorties': [],
+        'demandes': [],
+        'photo': 'naruto',
     }
 ]
 
@@ -258,7 +270,7 @@ for sort in SORTIES:
     db.session.add(s)
 
 for groupe in GROUPES:
-    g = Groupe(nom=groupe['nom'], description=groupe['description'], nbMembres=groupe['nbMembres'], membres=groupe['membres'], sorties=groupe['sorties'])
+    g = Groupe(nom=groupe['nom'], description=groupe['description'], photo=groupe['photo'], nbMembres=groupe['nbMembres'], membres=groupe['membres'], sorties=groupe['sorties'])
 
     db.session.add(g)
 

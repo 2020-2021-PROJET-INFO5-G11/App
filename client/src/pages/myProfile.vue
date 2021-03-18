@@ -7,7 +7,7 @@
     />
 
     <!-- Header -->
-    <Header :title='user.pseudo' />
+    <Header title='Votre profil' />
     <!-- NavBar -->
     <NavBar />
 
@@ -73,13 +73,6 @@
         </li>
       </ul>
 
-      <button type="button"
-                  class="button"
-                  v-b-modal.sortie-update-modal
-                  @click="$router.push({path: `/modifier_profil/${user.id}`})">
-              Modifier
-      </button>&ensp;
-
       <!-- Location, Date etc.. --> 
       <ul>
         <li>
@@ -99,7 +92,7 @@
             Né(e) le : {{ user.dateNaissance }}
           </span>
 
-          <br><br><br>
+          <br><br>
         </li>
 
         <!-- Separateur -->
@@ -120,8 +113,14 @@
         </li>
       </ul>
 
+      <!-- Edit button -->
+      <div @click="$router.push({path: `/modifier_profil/${user.id}`})" class="edit">
+        <img src="../edit.png" width="60">
+        <br> <span> Modifier </span>
+      </div>
+
       <!-- Separator -->
-      <br><br><br>
+      <br><br><br><br>
       <div class="horizontalSeparator">
         <br>
       </div>
@@ -184,6 +183,13 @@ export default {
 </script>
 
 <style scoped>
+
+.edit {
+  float: right; 
+  padding-right: 8%;
+  cursor: pointer;
+  font-size: 13px;
+}
 
 .title {
   margin-left: 20px;

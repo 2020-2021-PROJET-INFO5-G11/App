@@ -80,7 +80,7 @@
 <script>
 
 import Header from './header.vue';
-import Footer from './footer.vue';
+import Footer from './footer2.vue';
 
   export default {
     components: { Header, Footer },

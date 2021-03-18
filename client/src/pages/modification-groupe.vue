@@ -47,12 +47,6 @@
               </ul>
 
             </b-modal>
-
-            <br><br><br>
-            <label> Description </label>
-            <div>
-              <textarea v-model="description" @input="onChange()" cols="40" rows="5" style="width:300px; height:220px;" required/>
-            </div>
           </li>
 
           <!-- center -->
@@ -65,11 +59,50 @@
             </div>
             <br><br>
 
+            <br>
+            <label> Description </label>
+            <div>
+              <textarea v-model="description" cols="40" rows="5" style="width:500px; height:220px;" required/>
+            </div>
+
           </li>
 
-        </ul>
+          <!-- Separateur -->
+          <li style="padding: 10px; width: 2px;
+                    display: inline-table;  margin-left:4em;">
+            <div style="border: solid; width: 1px; border-width:1px; border-color: grey;">
+              <br><br><br><br><br><br><br><br><br><br><br><br><br>
+              <br><br><br><br><br><br><br><br><br><br><br><br><br>
+            </div>
+          </li>
 
-        <br><br>
+          <!-- right -->
+          <li class="horizontal">
+
+            <h3> Administrateurs </h3><br>
+
+            <br>
+            <div>
+              <span> Ajouter un administrateur </span><br>
+              <input type="text" style="width: 450px;"
+                     v-model="organisateur" placeholder="ID ou nom"/>
+              &ensp; <i class="add fa fa-user" @click="ajouterOrganisateur()"></i>
+            </div>
+            <br><br>
+            <span> Liste des administrateurs </span><br>
+            <ul class = "scrollmenu">
+              <br>
+              <li class="veritcal">
+                <span class="vertical"> {{current_user.nom}} {{current_user.prenom}} (vous) </span>
+              </li>
+
+              <li class="veritcal" v-for="o in administrators" v-bind:key="o">
+                <span class="vertical"> {{o}} </span>
+                <i class="fa fa-trash-o fa-1x" @click="suprimerOrganisateur(o)"></i>
+              </li>
+            </ul>
+          </li>
+        </ul>        
 
         <!-- submit button -->
         <div style="padding-left:800px">
@@ -103,12 +136,14 @@ export default {
       editForm: {}, 
       groupe: {},
       photo: 'pas-de-photo',
+      administrators: [],
+      images: ['basketball', 'cinema', 'escalade', 'escalade-sur-glace', 'football', 'foot-us', 'gymnastique', 'musée', 'parc', 'piscine', 'randonnée', 'rugby', 'salle-de-bloc', 'ski', 'tennis'],
     };
   },
   methods: {
     checkForm() {
       this.submit = true;
-      if (this.nom && this.description) {
+      if (this.nom && this.description && this.photo) {
         return true;
       }
       return false;
@@ -143,6 +178,19 @@ export default {
           console.error(error);
         });
     },
+    ajouterOrganisateur() {
+      let exist = false;
+      if (this.organisateur) {
+        this.administrators.forEach((value) => {
+          if (value === this.organisateur) {
+            exist = true;
+          }
+        });
+        if (!exist) {
+          this.administrators.push(this.organisateur);
+        }
+      }
+    },
     getGroupe() {
       const path = `http://localhost:5000/api/groupe/${this.$route.params.id}`;
       axios.get(path)
@@ -151,7 +199,9 @@ export default {
           this.nom = res.data.nom,
           this.editForm.nom = res.data.nom,
           this.description = res.data.description,
-          this.editForm.description = res.data.description
+          this.editForm.description = res.data.description,
+          this.editForm.photo = res.data.photo,
+          this.photo = res.data.photo
         })
         .catch((error) => {
           console.error(error);
@@ -174,7 +224,8 @@ export default {
       return require('../'+image+'.jpg');
     },
     setImage(i) {
-      
+      this.photo = i;
+      this.editForm.photo = i;
     },
     onHide(evt) {
       evt.preventDefault();
@@ -183,6 +234,7 @@ export default {
     onChange() {
       this.editForm.nom = this.nom;
       this.editForm.description = this.description;
+      this.editForm.photo = this.photo;
     },
     updateGroupe(payload, groupeID) {
       const path = `http://localhost:5000/api/groupe/${groupeID}`;
@@ -200,6 +252,7 @@ export default {
         const payload = {
           nom: this.editForm.nom,
           description: this.editForm.description,
+          photo: this.editForm.photo,
         };
         this.updateGroupe(payload, this.$route.params.id);
       }
