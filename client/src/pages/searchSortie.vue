@@ -32,54 +32,27 @@
           <span @click="$router.push({path: `/sortie/${sortie.id_sortie}`})" class="nom"> {{sortie.nom}} </span><br> 
         </div>
 
-        <!-- Buttons -->
-        <div style="text-align: center;">
-          <!-- View activity-->
-          <button type="button"
-                  class="bouton btn-sm"
-                  v-b-modal.sortie-view-modal
-                  @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
-              Voir sortie
-          </button>&ensp;
-          <!-- Edit activity -->
-          <button type="button"
-                  class="btn btn-warning btn-sm"
-                  v-b-modal.sortie-update-modal
-                  @click="$router.push({path: `/modification-sortie/${sortie.id_sortie}`})">
-              Modifier
-          </button>&ensp;
-          <!-- Delete activity -->
-          <button type="button"
-                  class="btn btn-danger btn-sm"
-                  @click="onDeleteSortie(sortie)">
-              Supprimer
-          </button>
+        <div>
+          <!-- Buttons -->
+          <div class="data row" style="padding-left: 29px;">
+            <!-- View activity-->
+            <div class="view" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
+              Voir <img src="../view.png" width="20">
+            </div>&ensp;
+            <!-- Edit button -->
+            <div class="edit" @click="$router.push({path: `/modification-sortie/${sortie.id_sortie}`})">
+              Modifier <img src="../edit.png" width="20">
+            </div>&ensp;
+            <!-- Delete activity -->
+            <div class="delete" @click="onDeleteSortie(sortie)">
+              Supprimer <img src="../delete.png" width="20">
+            </div>
+            <br>
+          </div>
         </div>
       </li>
     </ul>
-
-    <!-- Sorties 
-    <div class="row">
-      <div class="col-sm-10">
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th scope="col">Nom</th>
-              <th scope="col">Type</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(sortie, index) in sorties" :key="index">
-              <td>{{ sortie.nom }}</td>
-              <td>{{ sortie.typeSortie }}</td>
-              <td>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-    </div> 
-    </div>-->
+    
     <!-- Footer -->
     <Footer />
   </div>
@@ -120,13 +93,11 @@ export default {
       const path = `http://localhost:5000/api/sortie/${sortieID}`;
       axios.delete(path)
         .then(() => {
-          this.getSorties();
-          this.message = 'Sortie supprimée!';
-          this.showMessage = true;
+          this.getSearch();
         })
         .catch((error) => {
           console.error(error);
-          this.getSorties();
+          this.getSearch();
         });
     },
     onDeleteSortie(sortie) {
@@ -219,4 +190,21 @@ img:hover {
   font-size: 20px;
   text-align: center;
 }
+.view, .edit, .delete, .switch {
+  padding: 4px;
+  cursor: pointer;
+}
+
+.view {
+  color: green;
+}
+
+.edit {
+  color: rgb(204, 134, 4);
+}
+
+.delete {
+  color: rgb(175, 29, 29);
+}
+
 </style>

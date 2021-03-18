@@ -240,7 +240,7 @@
       <div v-for="c in comments" v-bind:key="c"
              class="comment">
         <div style="padding: 5px;">
-          {{ c }}
+          {{c.timestamp}} - {{ c.contenu }}
         </div>
       </div>
 
@@ -279,6 +279,7 @@ export default {
         .then((res) => {
           this.id = this.$route.params.id;
           this.sortie = res.data;
+          this.comments= res.data.commentaires;
           this.getCurrentUser();
         })
         .catch((error) => {
