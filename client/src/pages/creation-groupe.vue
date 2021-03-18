@@ -198,7 +198,7 @@ export default {
       });
     },
     getImgUrl(image) {
-      return require('../'+image+'.jpg');
+      return require('../assets/'+image+'.jpg');
     },
     setImage(i) {
       this.addGroupForm.photo = i;

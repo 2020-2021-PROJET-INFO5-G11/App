@@ -22,7 +22,7 @@
         <!-- Image -->
         <div class="rect img-container" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
           <img class="fit-picture" :src="getImgUrl(sortie.photo)"  >
-          <img v-if="sortie.capaciteMax - sortie.nbInscrits == 0" class="overlay-img fit-picture" src="../complet.png"  >
+          <img v-if="sortie.capaciteMax - sortie.nbInscrits == 0" class="overlay-img fit-picture" src="../assets/complet.png"  >
           {{sortie.nbInscrits}} inscrits
         </div> <br>
 
@@ -37,15 +37,15 @@
           <div class="data row" style="padding-left: 29px;">
             <!-- View activity-->
             <div class="view" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
-              Voir <img src="../view.png" width="20">
+              Voir <img src="../assets/view.png" width="20">
             </div>&ensp;
             <!-- Edit button -->
             <div class="edit" @click="$router.push({path: `/modification-sortie/${sortie.id_sortie}`})">
-              Modifier <img src="../edit.png" width="20">
+              Modifier <img src="../assets/edit.png" width="20">
             </div>&ensp;
             <!-- Delete activity -->
             <div class="delete" @click="onDeleteSortie(sortie)">
-              Supprimer <img src="../delete.png" width="20">
+              Supprimer <img src="../assets/delete.png" width="20">
             </div>
             <br>
           </div>
@@ -104,7 +104,7 @@ export default {
       this.removeSortie(sortie.id_sortie);
     },
      getImgUrl(image) {
-      return require('../'+image+'.jpg');
+      return require('../assets/'+image+'.jpg');
     },
   },
   created() {

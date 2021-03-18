@@ -34,20 +34,20 @@
               <div class="data row" style="padding-left: 29px;">
                 <!-- View activity-->
                 <div class="view" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
-                  Voir <img src="../view.png" width="20">
+                  Voir <img src="../assets/view.png" width="20">
                 </div>&ensp;
                 <!-- Edit button -->
                 <div class="edit" @click="$router.push({path: `/modification-sortie/${sortie.id_sortie}`})">
-                  Modifier <img src="../edit.png" width="20">
+                  Modifier <img src="../assets/edit.png" width="20">
                 </div>&ensp;
                 <!-- Delete activity -->
                 <div class="delete" @click="onDeleteSortie(sortie)">
-                  Supprimer <img src="../delete.png" width="20">
+                  Supprimer <img src="../assets/delete.png" width="20">
                 </div>
                 <br>
                 <!-- View activity-->
                 <div class="switch" @click="switchSortie(sortie.id_sortie)">
-                  Déplacer vers votre historique <img src="../switch.png" width="20">
+                  Déplacer vers votre historique <img src="../assets/switch.png" width="20">
                 </div>&ensp;
               </div>
             </div>
@@ -77,15 +77,15 @@
               <div class="data row" style="padding-left: 29px;">
                 <!-- View activity-->
                 <div class="view" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
-                  Voir <img src="../view.png" width="20">
+                  Voir <img src="../assets/view.png" width="20">
                 </div>&ensp;
                 <!-- Edit button -->
                 <div class="edit" @click="$router.push({path: `/modification-sortie/${sortie.id_sortie}`})">
-                  Modifier <img src="../edit.png" width="20">
+                  Modifier <img src="../assets/edit.png" width="20">
                 </div>&ensp;
                 <!-- Delete activity -->
                 <div class="delete" @click="onDeleteSortie(sortie)">
-                  Supprimer <img src="../delete.png" width="20">
+                  Supprimer <img src="../assets/delete.png" width="20">
                 </div>
               </div>  
             </div>
@@ -127,7 +127,7 @@ export default {
         });
     },
     getImgUrl(image) {
-      return require('../'+image+'.jpg');
+      return require('../assets/'+image+'.jpg');
     },
     removeSortie(sortieID) {
       const path = `http://localhost:5000/api/sortie/${sortieID}`;

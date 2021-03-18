@@ -10,6 +10,30 @@ from models import Demande
 
 
 # Data to initialize database with
+
+GROUPES = [
+    {
+        'id_groupe' : 1,
+        'nom': 'Polytech',
+        'description': 'Rando entre popos',
+        'nbMembres': 1,
+        'membres': [],
+        'sorties': [],
+        'demandes': [],
+        'photo': 'randonnée',
+    },
+    {
+        'id_groupe': 2,
+        'nom': 'Equipe 7',
+        'description': 'L\'équipe de naruto',
+        'nbMembres': 0,
+        'membres': [],
+        'sorties': [],
+        'demandes': [],
+        'photo': 'naruto',
+    }
+]
+
 USERS = [
     {
         'password_hash': 'string',
@@ -33,6 +57,7 @@ USERS = [
             ("coucou", "2019-01-08 22:02:54"),
         ],
         'demandes': [],
+        'groupes' : [],
     },
 ]
 
@@ -216,29 +241,6 @@ SORTIES = [
         'description': 'Ça vous dit d\'aller voir le marathon HP avec moi mercredi ?',
         'dateLimite': '2021-03-11',
         'commentaires': [],
-    }
-]
-
-GROUPES = [
-    {
-        'id_groupe' : 1,
-        'nom': 'Polytech',
-        'description': 'Rando entre popos',
-        'nbMembres': 0,
-        'membres': [],
-        'sorties': [],
-        'demandes': [],
-        'photo': 'randonnée',
-    },
-    {
-        'id_groupe': 7,
-        'nom': 'Equipe 7',
-        'description': 'L\'équipe de naruto',
-        'nbMembres': 0,
-        'membres': [],
-        'sorties': [],
-        'demandes': [],
-        'photo': 'naruto',
     }
 ]
 

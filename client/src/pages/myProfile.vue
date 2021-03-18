@@ -115,7 +115,7 @@
 
       <!-- Edit button -->
       <div @click="$router.push({path: `/modifier_profil/${user.id}`})" class="edit">
-        <img src="../edit.png" width="60">
+        <img src="../assets/edit.png" width="60">
         <br> <span> Modifier </span>
       </div>
 
