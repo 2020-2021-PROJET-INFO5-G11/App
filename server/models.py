@@ -89,6 +89,7 @@ class Sortie(db.Model):
     nbInscrits = db.Column(db.Integer)
     description = db.Column(db.String(1024))
     dateLimite = db.Column(db.String(32))
+    archivee = db.Column(db.Boolean)
     commentaires = db.relationship('Commentaire', backref='sortie', cascade='all, delete, delete-orphan',
         single_parent=True, order_by='asc(Commentaire.timestamp)'
     )

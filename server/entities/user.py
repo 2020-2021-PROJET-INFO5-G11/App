@@ -259,7 +259,8 @@ def switch_to_previous(id_sortie):              # Une sortie à venir devient un
 
     if sortie_a_venir is None:
         abort(404, f'Sortie not found for Id: {id}')
-    
+
+    # user
     user = User.query.get(1)
     user.sorties_a_venir.remove(sortie_a_venir) ## TEST : HERE I USE FIRST USER INSTEAD OF CURRENT USER
     user.sorties_finies.append(sortie_a_venir) ## TEST : HERE I USE FIRST USER INSTEAD OF CURRENT USER

@@ -153,7 +153,7 @@
 
         <!-- submit button -->
         <div style="padding-left:800px">
-          <input class="submit" type="submit" value="Envoyer"> &ensp;
+          <input class="submit" @submit="submit" type="submit" value="Envoyer"> &ensp;
           <input class="reset" type="reset" value="Reinitialiser">
           <br>
         </div>
@@ -217,7 +217,8 @@ export default {
     checkForm() {
       this.submit = true;
       if (this.addSortieForm.nom && this.addSortieForm.lieu && this.addSortieForm.point_rdv && this.addSortieForm.date
-      && this.addSortieForm.heure && this.addSortieForm.dateLimite && this.addSortieForm.capaciteMin && this.addSortieForm.capaciteMax && this.addSortieForm.description) {
+      && this.addSortieForm.heure && this.addSortieForm.dateLimite && this.addSortieForm.capaciteMin && this.addSortieForm.capaciteMax && this.addSortieForm.description
+      && this.addSortieForm.capaciteMin < this.addSortieForm.capaciteMax) {
         return true;
       }
       return false;
@@ -284,7 +285,7 @@ export default {
         });
     },
     submit(evt) {
-      if(this.checkForm() === true ){
+      if(this.checkForm()){
         evt.preventDefault();
         const payload = {
           nom: this.addSortieForm.nom,
@@ -302,9 +303,14 @@ export default {
           nbInscrits: 0,
           description: this.addSortieForm.description,
           dateLimite: this.addSortieForm.dateLimite,
+          archivee: false,
           //commentaires: this.addSortieForm.commentaires,
         };
         this.addSortie(payload);
+      }
+      else{
+        console.log("Doesn't passed the checkform");
+        this.getCurrentUser();
       }
     }
   },

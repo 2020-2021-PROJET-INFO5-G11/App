@@ -2,7 +2,7 @@
   <div>
 
     <!-- Header -->
-    <Header title="Toutes les sorties encore disponibles"/>
+    <Header title="Toutes les sorties à venir"/>
 
     <!-- NavBar -->
     <NavBar> </NavBar>
@@ -10,10 +10,11 @@
     <!-- Boutton créer une sortie -->
     <br>
     <i class="right fa fa-plus-circle fa-3x"
-      @click="$router.push('/creation-sortie')"> Créer une sortie</i> <br>
+      @click="$router.push('/creation-sortie')"> Créer une sortie</i> <br><br>
 
     <!-- Title -->
-    <h1> Toutes les sorties </h1>
+    <br><hr>
+    <h1> Sorties à venir </h1>
     <hr>
 
     <!-- Alert message -->
@@ -35,35 +36,37 @@
     <ul class="scrollmenu">
       <!-- -->
       <li v-for="(sortie, index) in sorties" :key="index">
-        <!-- Image -->
-        <div class="rect img-container" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
-          <img class="fit-picture" :src="getImgUrl(sortie.photo)"  >
-          <img v-if="sortie.capaciteMax - sortie.nbInscrits == 0" class="overlay-img fit-picture" src="../assets/complet.png"  >
-          {{sortie.nbInscrits}} inscrits
-        </div> <br>
+        <div v-if="sortie.archivee == false" style="padding: 4em;">
+          <!-- Image -->
+          <div class="rect img-container" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
+            <img class="fit-picture" :src="getImgUrl(sortie.photo)"  >
+            <img v-if="sortie.capaciteMax - sortie.nbInscrits == 0" class="overlay-img fit-picture" src="../assets/complet.png"  >
+            {{sortie.nbInscrits}} inscrits
+          </div> <br>
 
-        <!-- Name -->
-        <div class="data">
-          <span @click="$router.push({path: `/sortie/${sortie.id_sortie}`})" class="date"> {{sortie.date}} </span>
-          <span @click="$router.push({path: `/sortie/${sortie.id_sortie}`})" class="nom"> {{sortie.nom}} </span><br> 
-        </div>
-
-        <!-- Buttons -->
-        <div class="data row" style="padding-left: 29px;">
-          <!-- View activity-->
-          <div class="view" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
-            Voir <img src="../assets/view.png" width="20">
-          </div>&ensp;
-          <!-- Edit button -->
-          <div class="edit" @click="$router.push({path: `/modification-sortie/${sortie.id_sortie}`})">
-            Modifier <img src="../assets/edit.png" width="20">
-          </div>&ensp;
-          <!-- Delete activity -->
-          <div class="delete" v-b-modal="'suppression-modal'" @click="selectedSortie = sortie">
-            Supprimer <img src="../assets/delete.png" width="20">
+          <!-- Name -->
+          <div class="data">
+            <span @click="$router.push({path: `/sortie/${sortie.id_sortie}`})" class="date"> {{sortie.date}} </span>
+            <span @click="$router.push({path: `/sortie/${sortie.id_sortie}`})" class="nom"> {{sortie.nom}} </span><br> 
           </div>
 
-        </div>  
+          <!-- Buttons -->
+          <div class="data row" style="padding-left: 29px;">
+            <!-- View activity-->
+            <div class="view" @click="$router.push({path: `/sortie/${sortie.id_sortie}`})">
+              Voir <img src="../assets/view.png" width="20">
+            </div>&ensp;
+            <!-- Edit button -->
+            <div class="edit" @click="$router.push({path: `/modification-sortie/${sortie.id_sortie}`})">
+              Modifier <img src="../assets/edit.png" width="20">
+            </div>&ensp;
+            <!-- Delete activity -->
+            <div class="delete" v-b-modal="'suppression-modal'" @click="selectedSortie = sortie">
+              Supprimer <img src="../assets/delete.png" width="20">
+            </div>
+
+          </div> 
+        </div>
       </li>
 
     </ul>
@@ -71,7 +74,7 @@
     <!-- Suppression -->
     <b-modal ref="suppression"
         id="suppression-modal"
-        size="xl"
+        size="l"
         title="Page de suppression de sortie"
         hide-footer>
 
@@ -295,7 +298,6 @@ i:hover {
 }
 li {
   display: inline-block;
-  padding: 4em;
 }
 .fit-picture {
   width: 320px;

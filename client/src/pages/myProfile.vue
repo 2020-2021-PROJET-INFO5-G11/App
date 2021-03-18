@@ -125,7 +125,10 @@
         <br>
       </div>
 
-      <br><br><br>
+      <br><br>
+      <h1 class="title"> Les avis qu'on vous a laissé : </h1>
+
+      <br><br><br><br><br><br>
     </body>
     <!-- Footer -->
     <Footer />

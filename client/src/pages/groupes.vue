@@ -11,7 +11,8 @@
         <i class="right fa fa-plus-circle fa-3x"
          @click="$router.push('/creation-groupe')"> Créer un groupe</i> <br><br>
 
-      <h1> Vos groupes </h1><br> 
+      <br><hr>
+      <h1> Vos groupes </h1><hr><br> 
       <ul class="scrollmenu">
         <li v-for="groupe in current_user.groupes" :key="groupe">
 
@@ -26,7 +27,7 @@
             <br>
             <div>
               <!-- Buttons -->
-              <div class="data row" style="padding-left: 29px;">
+              <div class="data row" style="justify-content: center;">
                 <!-- View activity-->
                 <div class="view" @click="$router.push({path: `/groupe/${groupe.id_groupe}`})">
                   Voir <img src="../assets/view.png" width="20">
@@ -47,8 +48,8 @@
         </li>
       </ul>
 
-      <br><br>
-      <h1> Invitations à des groupes </h1> <br>
+      <br><hr>
+      <h1> Invitations à des groupes </h1><hr><br>
       <ul class="scrollmenu">
         <li v-for="(demande, index) in current_user.demandes" :key="demande">
           <!-- Nom + Image -->
@@ -58,9 +59,9 @@
               <span class="nom"> Nom : {{getDemande(index).nom}} </span>
               <span class="id"> Id : {{demande.id_groupe}} </span>
             </div>
-          </div> <br><br><br>
+          </div> <br><br><br><br>
           <!-- Buttons -->
-          <div class="data row" style="padding-left: 59px;">
+          <div class="data row" style="justify-content: center;">
             <!-- View activity-->
             <div class="accept" @click="accept(demande.id_groupe)">
               Accepter <img src="../assets/accept.png" width="20">
@@ -78,8 +79,8 @@
       <!-- Suppression -->
       <b-modal ref="suppression"
         id="suppression-modal"
-        size="xl"
-        title="Page de suppression de sortie"
+        size="l"
+        title="Page de suppression de groupe"
         hide-footer>
 
         <div style="text-align: center;">
