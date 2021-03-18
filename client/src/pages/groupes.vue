@@ -2,23 +2,27 @@
   <div>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Header -->
-    <Header title="Groupes"/>
+    <Header title="Tous vos groupes"/>
     <!-- NavBar -->
     <NavBar/>
     <!-- Body -->
     <!-- Boutton créer un groupe -->
     <br>
         <i class="right fa fa-plus-circle fa-3x"
-         @click="$router.push('/creation-groupe')"> Créer un groupe</i> <br><br><br>
+         @click="$router.push('/creation-groupe')"> Créer un groupe</i> <br><br>
 
-      <h1> Vos groupes </h1>
+      <h1> Vos groupes </h1><br> 
       <ul class="scrollmenu">
         <li v-for="groupe in current_user.groupes" :key="groupe">
 
           <!-- Name -->
           <div class="data">
-            <span @click="$router.push({path: `/groupe/${groupe.id_groupe}`})" class="nom"> {{groupe.nom}} </span>
-            <span @click="$router.push({path: `/groupe/${groupe.id_groupe}`})" class="nbMembres"> Nb. membres : {{groupe.nbMembres}} </span>
+            <!-- Image -->
+            <div class="rect img-container" @click="$router.push({path: `/groupe/${groupe.id_groupe}`})">
+              <img class="fit-picture" v-bind:src="getImgUrl(groupe.photo)"><br><br>
+              <span class="nom"> Nom : {{groupe.nom}} </span>
+              <span class="nbMembres"> Nombre de membres : {{groupe.nbMembres}} </span>
+            </div> <br><br>
             <br>
             <div>
               <!-- Buttons -->
@@ -31,38 +35,41 @@
                 <div class="edit" @click="$router.push({path: `/modification-groupe/${groupe.id_groupe}`})">
                   Modifier <img src="../edit.png" width="20">
                 </div>&ensp;
+                <!-- Delete activity -->
+                <div class="delete" @click="onDeleteGroupe(groupe)">
+                  Supprimer <img src="../delete.png" width="20">
+                </div>
                 <br>
                 &ensp;
               </div>
             </div>
           </div>
         </li>
-        <br><br>
       </ul>
 
       <br><br>
       <h1> Invitations à des groupes </h1> <br>
       <ul class="scrollmenu">
-        <li v-for="demande in current_user.demandes" :key="demande">
-
-          <!-- Name -->
+        <li v-for="(demande, index) in current_user.demandes" :key="demande">
+          <!-- Nom + Image -->
           <div class="data">
-            <span class="invitation"> {{demande.id_groupe}} </span>
-            <br> 
-            <div>
-            <!-- Buttons -->
-              <div class="data row" style="padding-left: 29px;">
-                <!-- View activity-->
-                <div class="accept" @click="accept(demande.id_groupe)">
-                  Accepter <img src="../view.png" width="20">
-                </div>&ensp;
-                <!-- Edit button -->
-                <div class="refuse" @click="refuse(demande.id_groupe)">
-                  Refuser <img src="../edit.png" width="20">
-                </div>&ensp;
-              </div>  
+            <div class="rect img-container" @click="$router.push({path: `/groupe/${demande.id_groupe}`})">
+              <img class="fit-picture" v-bind:src="getImgUrl(getDemande(index).photo)"><br><br>
+              <span class="nom"> Nom : {{getDemande(index).nom}} </span>
+              <span class="id"> Id : {{demande.id_groupe}} </span>
             </div>
-          </div>
+          </div> <br><br><br>
+          <!-- Buttons -->
+          <div class="data row" style="padding-left: 59px;">
+            <!-- View activity-->
+            <div class="accept" @click="accept(demande.id_groupe)">
+              Accepter <img src="../accept.png" width="20">
+            </div>&ensp;
+            <!-- Edit button -->
+            <div class="refuse" @click="refuse(demande.id_groupe)">
+              Refuser <img src="../refuse.png" width="20">
+            </div>&ensp;
+          </div>  
         </li>
         <br><br>
       </ul>
@@ -86,37 +93,73 @@ export default {
   data() {
     return {
       groupes: [],
-      invitation_groupe: {},
+      invitation_groupe: [],
       demandes: [],
       current_user: {},
     };
   },
   methods: {
-    getCurrentUser() {
-      const path = 'http://localhost:5000/api/user/current';
+    getGroupe(groupeID) {
+      const path = `http://localhost:5000/api/groupe/${groupeID}`;
       axios.get(path)
         .then((res) => {
-          this.current_user = res.data;
+          this.invitation_groupe.push(res.data);
+          console.log(this.invitation_groupe);
         })
         .catch((error) => {
           console.error(error);
         });
     },
-    getGroupe(groupeID) {
-      const path = `http://localhost:5000/api/groupe/${groupeID}`;
+    getCurrentUser() {
+      const path = 'http://localhost:5000/api/user/current';
       axios.get(path)
         .then((res) => {
-          this.invitation_groupe = res.data;
+          this.current_user = res.data;
+          for(const d of this.current_user.demandes){
+            this.getGroupe(d.id_groupe);
+          };
         })
         .catch((error) => {
           console.error(error);
+        });
+    },
+    getDemande(index) {
+      return this.invitation_groupe[index];
+    },
+    getGroupePhoto : function(groupeID) {
+      const path = `http://localhost:5000/api/groupe/${groupeID}`;
+      axios.get(path)
+        .then((res) => {
+          const result = res.data;
+          console.log("photo");
+          console.log(result.photo);
+          return result.photo;
+        })
+        .catch((error) => {
+          console.error(error);
+          return "pas-de-photo";
+        });
+    },
+    getGroupeNom(groupeID){
+      const path = `http://localhost:5000/api/groupe/${groupeID}`;
+      axios.get(path)
+        .then((res) => {
+          const result = res.data;
+          console.log("nom");
+          console.log(result.nom);
+          return result.nom;       
+        })
+        .catch((error) => {
+          console.error(error);
+          return "null";
         });
     },
     accept(groupeID) {
       const path = `http://localhost:5000/api/groupe/${groupeID}/membres`;
       axios.post(path)
         .then((res) => {
-          this.$router.go();
+          this.getCurrentUser();
+          this.invitation_groupe= [];
         })
         .catch((error) => {
           console.error(error);
@@ -237,12 +280,12 @@ h1{
   cursor: pointer;
 }
 
-.view, .edit, .delete, .switch {
+.view, .edit, .delete, .switch, .accept, .refuse {
   padding: 4px;
   cursor: pointer;
 }
 
-.view {
+.view, .accept {
   color: green;
 }
 
@@ -250,7 +293,7 @@ h1{
   color: rgb(204, 134, 4);
 }
 
-.delete {
+.delete, .refuse {
   color: rgb(175, 29, 29);
 }
 

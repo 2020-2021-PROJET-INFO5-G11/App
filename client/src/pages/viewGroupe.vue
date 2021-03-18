@@ -95,9 +95,11 @@
 
       <!-- Photo + type + description -->
       <ul>
+
         <!-- Activity's photo-->
         <li style="height: 250px;">
-          <div class="rect img-container" @click="$router.push({path: `/groupe/${groupe.id_groupe}`})">
+          <div class="rect img-container">
+            <img class="fit-picture" :src="getImgUrl(groupe.photo)">
           </div> <br>
         </li>
 
@@ -123,12 +125,20 @@
       <div @click="$router.push({path: `/modification-groupe/${id}`})" class="edit">
         <img src="../edit.png" width="60">
         <br> <span> Modifier </span>
+      </div>
 
+      <br><br>
+      <!-- Separator -->
+      <br><br><br>
+      <div class="horizontalSeparator">
+        <br>
       </div>
 
       <br><br>
 
-      <br><br><br>
+      <h1 class="nom"> Activités proposée pour ce groupe : </h1>
+
+      <br><br><br><br>
     </body>
 
     <!-- Footer -->
@@ -202,6 +212,9 @@ export default {
         .catch((error) => {
           console.error(error);
         });
+    },
+   getImgUrl(image) {
+      return require('../'+image+'.jpg');
     },
     accept(groupeID) {
       const path = `http://localhost:5000/api/groupe/${groupeID}/membres`;

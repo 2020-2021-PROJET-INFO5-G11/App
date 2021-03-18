@@ -22,17 +22,6 @@
           <i class="fa fa-instagram fa-3x"> Instagram </i>
         </div>
       </li>
-
-      <li>
-        <div> Redirections </div>
-        <div>
-          <i class="fa fa-home fa-3x" @click="$router.push('/accueil')"> Acceuil </i>
-        </div>
-        <div>
-          <i class="fa fa-user fa-3x" @click="$router.push({path: `/profil/${current_user.id}`})"> Profil </i>
-        </div>
-      </li>
-
     </ul>
   </div>
 </template>

@@ -82,7 +82,7 @@
 
           <!-- Notifications -->
           <li class="activity" @click="$bvModal.show('notification-modal')">
-            <div @click="$router.push('/sorties')">
+            <div>
               <div>
                 <i class="fa fa-bell-o fa-3x"></i>
               </div>
@@ -99,7 +99,7 @@
           </li>
 
           <!-- log out button -->
-          <li class="logout" @click="$router.push('/connexion')">
+          <li class="logout" @click="$router.push('/')">
             <div>
               <i class="fa fa-sign-out fa-3x"></i>
             </div>
@@ -115,8 +115,9 @@
               title="Notifications">
 
       <ul style="overflow-y: scroll;">
-        <li v-for="n in notifications" v-bind:key="n">
-          <div class="notification"> {{n}} <br></div>
+        <li style="display: block" v-for="n in notifications" v-bind:key="n">
+          <br>
+          <div class="notification"> {{n}}</div>
         </li>
         <br>
       </ul>
@@ -133,7 +134,7 @@ export default {
     return {
       current_user: {},
       search_expression: '',
-      notifications: ["Nouvelle sortie créee : Foot Us", "Sortie supprimée : Aquagym"],
+      notifications: ["Nouvelle sortie créee : Foot Us", "Sortie supprimée : Aquagym", "Invitation à un nouveau groupe"],
     };
   },
   methods: {

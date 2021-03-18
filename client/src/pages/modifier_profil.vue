@@ -2,7 +2,7 @@
   <div>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Header -->
-    <Header title="Modification profil"/>
+    <Header title="Page de modification du profil"/>
     <!-- NavBar -->
     <NavBar> </NavBar>
     <!-- Body -->
@@ -23,36 +23,12 @@
           <!-- left -->
           <li class="horizontal" style="width:300px;">
 
-            <h3> Champs obligatoires </h3><br>
+            <h3> Champs obligatoires </h3>
 
-            <div>
-              <label> Photo </label>
-              <div class="rect">
-                <img @click="$bvModal.show('photo-modal')" class="fit-picture" :src="getImgUrl(editUserForm.photo)">
-              </div>
-            </div>
-
-            <b-modal ref="addPhoto"
-                     id="photo-modal"
-                     title="Choisir une photo de couverture pour l'activité"
-                     hide-footer>
-
-              <div>
-                <div class="veritcal" style="text-align: center;" v-for="i in images" v-bind:key="i">
-                  {{i}}
-                  <br>
-                  <img class="fit-picture" :src="getImgUrl(i)" @click="$bvModal.hide('photo-modal')"
-                       v-on:click="setImage(i)"/>
-                  <br><br>
-                </div>
-              </div>
-
-            </b-modal>
-
-            <br><br><br>
+            <br><br>
             <label> Bio </label>
             <div>
-              <textarea v-model="editUserForm.bio" cols="40" rows="5" style="width:300px; height:220px;" required/>
+              <textarea v-model="editUserForm.bio" cols="70" rows="5" style="width:700px; height:220px;" required/>
             </div>
           </li>
 
@@ -62,10 +38,12 @@
             <br><br><br><br>
 
             <div>
+              <label> Nom </label>
               <input v-model="editUserForm.nom" type="text" style="width: 500px;" placeholder="Nom" required/>
             </div>
             <br><br>
             <div>
+              <label> Prenom </label>
               <input v-model="editUserForm.prenom" type="text" style="width: 500px;" placeholder="Prenom" required/>
             </div>
             <br><br>
@@ -73,8 +51,8 @@
         </ul>
         <!-- submit button -->
         <div style="padding-left:800px">
-          <input class="submit" @click="submit" type="submit" value="Submit"> &ensp;
-          <input class="reset" type="reset" value="Reset">
+          <input class="submit" @click="submit" type="submit" value="Modifier le profil"> &ensp;
+          <input class="reset" @click="reset" type="reset" value="Réinitialiser">
           <br>
         </div>
         <br><br>
@@ -102,12 +80,25 @@ export default {
         nom: '',
         prenom: '',
         bio: '',
-        photo: 'pas-de-photo',
       },
-      images: ['randonnée', 'cinema', 'musée', 'parc'],
     };
   },
   methods: {
+    getCurrentUser() {
+      const path = 'http://localhost:5000/api/user/current';
+      axios.get(path)
+        .then((res) => {
+          this.nom = res.data.nom;
+          this.editUserForm.nom = res.data.nom;
+          this.prenom = res.data.prenom;
+          this.editUserForm.prenom = res.data.prenom;
+          this.nom = res.data.nom;
+          this.editUserForm.bio = res.data.bio;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
     checkForm(e) {
       if (this.nom && this.prenom) {
         return true;
@@ -119,18 +110,10 @@ export default {
       return false;
     },
     reset() {
-      this.editUserForm = {
-        nom: '',
-        prenom: '',
-        bio:'',
-        photo: 'pas-de-photo',
-      }
+      this.getCurrentUser();
     },
     getImgUrl(image) {
       return require('../'+image+'.jpg');
-    },
-    setImage(i) {
-      this.editUserForm.photo = i;
     },
     onHide(evt) {
       evt.preventDefault();
@@ -144,7 +127,7 @@ export default {
         bio: this.editUserForm.bio,
         photo: this.editUserForm.photo,
       };
-      this.updateUser(payload, 0);
+      this.updateUser(payload, this.$route.params.id);
       this.$router.push({path: `/profil/${this.$route.params.id}`});
     },
     updateUser(payload, userID) {
@@ -158,6 +141,9 @@ export default {
         });
     },
   },
+  created() {
+    this.getCurrentUser();
+  }
 };
 </script>
 
@@ -208,7 +194,8 @@ img:hover {
 }
 
 .submit, .reset {
-  font-size: 25px;
+  width: 300px;
+  font-size: 35px;
   color: whitesmoke;
   border-color: rgb(15, 138, 117);
   background-color: rgb(65, 192, 171);
