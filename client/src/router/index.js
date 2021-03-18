@@ -58,6 +58,11 @@ export default new Router({
       component: () => import('../pages/searchSortie.vue'),
     },
     {
+      path: '/recherche/',
+      name: 'sorties',
+      component: () => import('../pages/sorties.vue'),
+    },
+    {
       path: '/profil/:id',
       name: 'profil',
       component: () => import('../pages/myProfile.vue')
