@@ -26,7 +26,7 @@
             <br>
             <div>
               <!-- Buttons -->
-              <div class="data row" style="padding-left: 29px;">
+              <div class="data row" style="justify-content: center;">
                 <!-- View activity-->
                 <div class="view" @click="$router.push({path: `/groupe/${groupe.id_groupe}`})">
                   Voir <img src="../assets/view.png" width="20">
@@ -58,9 +58,9 @@
               <span class="nom"> Nom : {{getDemande(index).nom}} </span>
               <span class="id"> Id : {{demande.id_groupe}} </span>
             </div>
-          </div> <br><br><br>
+          </div> <br><br><br><br>
           <!-- Buttons -->
-          <div class="data row" style="padding-left: 59px;">
+          <div class="data row" style="justify-content: center;">
             <!-- View activity-->
             <div class="accept" @click="accept(demande.id_groupe)">
               Accepter <img src="../assets/accept.png" width="20">
